@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "375077501160",
+    "firebase_url": "https://greenkey-f6b82.firebaseio.com",
+    "project_id": "greenkey-f6b82",
+    "storage_bucket": "greenkey-f6b82.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:375077501160:android:989c483bf7d72633a3715d",
+        "android_client_info": {
+          "package_name": "com.example.my_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "375077501160-cd6ae1h5bvk28ssplpmaisesf4sjtu1p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBC4l94zOTOnhoLDQgZrpmuwpaLPIH3BUk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "375077501160-cd6ae1h5bvk28ssplpmaisesf4sjtu1p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
