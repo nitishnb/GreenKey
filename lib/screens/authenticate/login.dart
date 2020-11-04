@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:GreenKey/services/auth.dart';
 import 'package:GreenKey/shared/loading.dart';
+import 'package:GreenKey/screens/authenticate/forgotpassword.dart';
 
 class LoginPage extends StatefulWidget {
 
@@ -96,7 +97,10 @@ class _State extends State<LoginPage> {
                   SizedBox(height: 20.0),
                   FlatButton(
                     onPressed: (){
-                      //forgot password screen
+                        Navigator.push(
+                          context, 
+                          MaterialPageRoute(builder: (context) => ForgotPassword()),
+                        );  //forgot password screen
                     },
                     textColor: Colors.white,
                     child: Text('Forgot Password..?',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
