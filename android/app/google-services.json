@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "666849964830",
+    "firebase_url": "https://greenkey-ce45e.firebaseio.com",
+    "project_id": "greenkey-ce45e",
+    "storage_bucket": "greenkey-ce45e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:666849964830:android:4a25cc1d4da7cb7c9b8f0f",
+        "android_client_info": {
+          "package_name": "com.mnnp.green_key"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "666849964830-7uu4mq9oikps0kgs1to6qilupfl6lmai.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDP02sMTFKZ28fbAVmW-5xGu251Fr4s2V4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "666849964830-7uu4mq9oikps0kgs1to6qilupfl6lmai.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
