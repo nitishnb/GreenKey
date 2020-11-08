@@ -44,6 +44,8 @@ class _HomelayoutState  extends State<Homelayout> {
 
   GlobalKey<ScaffoldState> _stackKey = GlobalKey<ScaffoldState>();
   int _currentIndex =0;
+  dynamic _bottomSelect = MyApp2();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,11 +53,11 @@ class _HomelayoutState  extends State<Homelayout> {
       body: Stack(
         children:<Widget>[
           Positioned(
-            top: 130,
-            left: 20,
-            right: 15,
-            bottom: 12,
-            child: MyApp2(),
+            top: 110,
+            left: 18,
+            right: 10,
+            bottom: 2,
+            child: _bottomSelect,
           ),
           Positioned(
             width: 70,
@@ -116,7 +118,7 @@ class _HomelayoutState  extends State<Homelayout> {
             ),
           ),
           Positioned(
-            left: 158,
+            left: 156,
             top: 40,
             child: Column(
               children: [
@@ -275,6 +277,18 @@ class _HomelayoutState  extends State<Homelayout> {
         ],
         onTap: (index){setState(() {
           _currentIndex=index;
+          switch(_currentIndex){
+            case 0 : _bottomSelect = MyApp2();
+                     break;
+            case 1 : _bottomSelect = Message();
+                     break;
+            case 2 : _bottomSelect = GreenPay();
+                     break;
+            case 3 : _bottomSelect = Contact();
+                     break;
+            case 4 : _bottomSelect = Cart();
+                     break;
+          }
         });},
       ),
     );
@@ -580,7 +594,7 @@ class CategoriesScroller extends StatelessWidget {
                 width: 250,
                 margin: EdgeInsets.only(right: 20),
                 height: categoryHeight,
-                decoration: BoxDecoration(color: Colors.lightGreenAccent, borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                decoration: BoxDecoration(color: Colors.yellow.shade500, borderRadius: BorderRadius.all(Radius.circular(20.0))),
                 child: Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Column(
@@ -634,3 +648,38 @@ class CategoriesScroller extends StatelessWidget {
   }
 }
 
+class Message extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Center(child: Text("NO MESSAGES",style: TextStyle(fontSize: 40,color: Colors.grey[800]))),
+    );
+  }
+}
+
+class GreenPay extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Center(child: Text("Well come to GREENPAY",style: TextStyle(fontSize: 40,color: Colors.grey[800]))),
+    );
+  }
+}
+
+class Contact extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Center(child: Text("9632068562",style: TextStyle(fontSize: 40,color: Colors.grey[800]))),
+    );
+  }
+}
+
+class Cart extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Center(child: Text("Please Select the items to update Cart",style: TextStyle(fontSize: 40,color: Colors.grey[800]))),
+    );
+  }
+}
