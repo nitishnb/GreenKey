@@ -108,7 +108,7 @@ class _State extends State<LoginPage> {
                               if(result == null) {
                                 setState(() {
                                   loading = false;
-                                  error = "Could'nt sign in with these credentials!";
+                                  error = "Could'nt sign in with\nthese credentials!";
                                 });
                               }
                             }

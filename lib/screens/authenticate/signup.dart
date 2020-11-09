@@ -22,6 +22,7 @@ class _State extends State<SignupPage> {
   bool loading = false;
   String error = '';
 
+  String uname = '';
   String email = '';
   String password = '';
   String mobile = '';
@@ -59,6 +60,19 @@ class _State extends State<SignupPage> {
                             fontFamily: 'fonts/IndieFlower-Regular.ttf',
                             fontSize: 50),
                       )),
+                  Container(
+                    padding: EdgeInsets.fromLTRB(10, 0, 10, 12),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0),borderSide: BorderSide(color: Colors.lightGreenAccent.shade400)),
+                        labelText: 'User Name :',
+                        labelStyle: TextStyle(color: Colors.lightGreenAccent.shade400,fontWeight: FontWeight.bold),
+                      ),
+                      validator: (val) => val.isEmpty ? 'User nam  is mandatory' : null,
+                      onChanged: (val) {
+                        setState(() => uname = val);},
+                    ),
+                  ),
                   Container(
                     padding: EdgeInsets.fromLTRB(10, 0, 10, 12),
                     child: TextFormField(
@@ -129,7 +143,7 @@ class _State extends State<SignupPage> {
                           onPressed: () async {
                             if(_formKey.currentState.validate()){
                               setState(() => loading = true);
-                              dynamic result = await _auth.registerWithEmailAndPassword(email, password);
+                              dynamic result = await _auth.registerWithEmailAndPassword(uname,mobile,email, password);
                               if(result == null) {
                                 setState(() {
                                   loading = false;

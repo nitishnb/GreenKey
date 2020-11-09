@@ -4,7 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:green_key/screens/home/sidebar/sidebarlayout.dart';
 import 'package:green_key/screens/authenticate/login.dart';
 import 'package:green_key/services/auth.dart';
+import 'package:green_key/services/database.dart';
+import 'package:provider/provider.dart';
 import 'constants.dart';
+import 'package:green_key/screens/home/green_list.dart';
+import 'package:green_key/models/green.dart';
+import 'package:green_key/models/user.dart';
 
 void main() {
   runApp(
@@ -23,12 +28,15 @@ class _HomeState extends State<Home> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-      key: _scaffoldKey,
-      body: Container(
-        child: Homelayout(),
+    return  StreamProvider<List<Green>>.value(
+      value: DatabaseService().green,
+      child: Scaffold(
+        key: _scaffoldKey,
+        body: Container(
+          child: Homelayout(),
+        ),
+        endDrawer:SidebarLayout(),
       ),
-      endDrawer:SidebarLayout(),
     );
   }
 }
@@ -48,6 +56,9 @@ class _HomelayoutState  extends State<Homelayout> {
 
   @override
   Widget build(BuildContext context) {
+
+    User user = Provider.of<User>(context);
+
     return Scaffold(
       key: _stackKey,
       body: Stack(
@@ -152,18 +163,32 @@ class _HomelayoutState  extends State<Homelayout> {
                       margin: EdgeInsets.only(top: 20,bottom: 16),
                       child: Icon(Icons.account_circle,size: 90,color: Colors.lightGreenAccent.shade400,),
                     ),
-                    Text('Nikhil Gowda',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22.0,
-                        color: Colors.lightGreenAccent.shade400,
-                      ),),
-                    Text('nikhianad@gmail.com',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20.0,
-                        color: Colors.lightGreenAccent.shade400,
-                      ),
+                    StreamBuilder<UserData>(
+                        stream: DatabaseService(uid: user.uid).userData,
+                        builder: (context, snapshot) {
+                          UserData userData = snapshot.data;
+                          return Text(userData.uname,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20.0,
+                              color: Colors.lightGreenAccent.shade400,
+                            ),
+                          );
+                        }
+                    ),
+                      
+                    StreamBuilder<UserData>(
+                      stream: DatabaseService(uid: user.uid).userData,
+                      builder: (context, snapshot) {
+                        UserData userData = snapshot.data;
+                        return Text(userData.email,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20.0,
+                            color: Colors.lightGreenAccent.shade400,
+                          ),
+                        );
+                      }
                     ),
                     SizedBox(height: 18,),
                     Container(
