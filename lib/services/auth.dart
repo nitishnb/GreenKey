@@ -1,6 +1,6 @@
 import 'package:GreenKey/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:GreenKey/services/database.dart';
 
 class AuthService {
 
@@ -44,10 +44,13 @@ class AuthService {
 
 
   // register with email and password
-  Future registerWithEmailAndPassword(String email, String password) async {
+  Future registerWithEmailAndPassword (String email, String password, String name, String phoneNumber) async {
     try {
       AuthResult result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       FirebaseUser user = result.user;
+
+      // create a new document for the user with uid
+      await DatabaseService(uid: user.uid).updateUserData(name, phoneNumber, email, '');
       return _userFromFirebaseUser(user);
     } catch(e){
       print(e.toString());

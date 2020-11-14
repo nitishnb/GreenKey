@@ -20,7 +20,10 @@ class _State extends State<SignupPage> {
 
   //text field state
   String email = '';
+  String name = '';
+  String phoneNumber = '';
   String password = '';
+  String confirmPassword = '';
   String error = '';
 
   TextEditingController nameController = TextEditingController();
@@ -75,17 +78,40 @@ class _State extends State<SignupPage> {
                     ),
                   ),
                   SizedBox(height: 20.0),
-  //                Container(
-  //                  padding: EdgeInsets.fromLTRB(10, 0, 10, 2),
-  //                  child: TextField(
-  //                    controller: nameController,
-  //                    decoration: InputDecoration(
-  //                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0),borderSide: BorderSide(color: Colors.lightGreenAccent)),
-  //                      labelText: 'Mobile no :',
-  //                      labelStyle: TextStyle(color: Colors.lightGreenAccent,fontWeight: FontWeight.bold),
-  //                    ),
-  //                  ),
-  //                ),
+                  Container(
+                    padding: EdgeInsets.fromLTRB(10, 0, 10, 2),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0),borderSide: BorderSide(color: Colors.lightGreen)),
+                        fillColor: Colors.lightGreen[200],
+                        filled: true,
+                        labelText: 'Name :',
+                        labelStyle: TextStyle(color: Colors.grey[600],fontWeight: FontWeight.bold),
+                      ),
+                      validator: (val) => val.length < 1 ? 'Enter name' : null,
+                      onChanged: (val){
+                        setState(() => name = val);
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 20.0),
+                  Container(
+                    padding: EdgeInsets.fromLTRB(10, 0, 10, 2),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0),borderSide: BorderSide(color: Colors.lightGreen)),
+                        fillColor: Colors.lightGreen[200],
+                        filled: true,
+                        labelText: 'Phone Number :',
+                        labelStyle: TextStyle(color: Colors.grey[600],fontWeight: FontWeight.bold),
+                      ),
+                      validator: (val) => val.length == 10 ? null : 'Enter 10 digit phone number' ,
+                      onChanged: (val){
+                        setState(() => phoneNumber = val);
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 20.0),
                   Container(
                     padding: EdgeInsets.fromLTRB(10, 0, 10, 2),
                     child: TextFormField(
@@ -104,20 +130,25 @@ class _State extends State<SignupPage> {
                     ),
                   ),
                   SizedBox(height: 20.0),
-  //                Container(
-  //                  padding: EdgeInsets.fromLTRB(10, 0, 10, 2),
-  //                  child: TextField(
-  //                    obscureText: true,
-  //                    controller: passwordController,
-  //                    decoration: InputDecoration(
-  //                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0),borderSide: BorderSide(color: Colors.lightGreenAccent)),
-  //                      labelText: ' Conform Password :',
-  //                      labelStyle: TextStyle(color: Colors.lightGreenAccent,fontWeight: FontWeight.bold),
-  //                    ),
-  //                  ),
-  //                ),
+                 Container(
+                   padding: EdgeInsets.fromLTRB(10, 0, 10, 2),
+                   child: TextFormField(
+                     obscureText: true,
+                     decoration: InputDecoration(
+                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0),borderSide: BorderSide(color: Colors.lightGreen)),
+                       fillColor: Colors.lightGreen[200],
+                       filled: true,
+                       labelText: ' Confirm Password :',
+                       labelStyle: TextStyle(color: Colors.grey[600],fontWeight: FontWeight.bold),
+                     ),
+                     validator: (val) => val.length <6 ? 'Enter a password 6+ chars long' : null,
+                      onChanged: (val){
+                        setState(() => confirmPassword = val);
+                      },
+                   ),
+                 ),
                   SizedBox(
-                    height: 10.0,
+                    height: 20.0,
                   ),
                   Container(
                       height: 50,
@@ -129,12 +160,20 @@ class _State extends State<SignupPage> {
                         onPressed: () async {
                           if (_formKey.currentState.validate()){
                             setState(() => loading = true);
-                            dynamic result = await _auth.registerWithEmailAndPassword(email, password);
-                            if(result == null){
+                            if(password == confirmPassword){
+                              dynamic result = await _auth.registerWithEmailAndPassword(email, password, name, phoneNumber);
+                              if(result == null){
+                                setState(() {
+                                  error = 'Please supply a valid email';
+                                  loading = false;
+                                });
+                              }
+                            }
+                            else{
                               setState(() {
-                                error = 'Please supply a valid email';
-                                loading = false;
-                              });
+                                  error = 'Passwords does not match';
+                                  loading = false;
+                                });
                             }
                           }
                         },

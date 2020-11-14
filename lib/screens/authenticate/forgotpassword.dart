@@ -61,15 +61,19 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         child: Text('Reset',style: TextStyle(fontSize: 24),),
                         onPressed: () async {
                             if (_formKey.currentState.validate()){
-                              setState(() {
-                                loading = true;
-                              });
-                              await _auth.sendPasswordResetEmail(email);
-                              setState(() {
-                                loading = false;
-                                error = 'Email sent succefully';
-                              });
-                                Navigator.pop(context);
+                                setState(() {
+                                  loading = true;
+                                });
+                                try{
+                                  await _auth.sendPasswordResetEmail(email);
+                                  setState(() => error = 'Email sent succefully');
+                                }catch(e){
+                                  print(e.toString());
+                                  setState(() => error = 'User Not Found');
+                                }
+                                setState(() {
+                                  loading = false;
+                                });
                               }
                             }
                       ),

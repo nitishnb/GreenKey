@@ -76,7 +76,6 @@ class _State extends State<LoginPage> {
                         }
                     ),
                   ),
-                  SizedBox(height: 20.0),
                   Container(
                     padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
                     child: TextFormField(
@@ -95,16 +94,6 @@ class _State extends State<LoginPage> {
                     ),
                   ),
                   SizedBox(height: 20.0),
-                  FlatButton(
-                    onPressed: (){
-                        Navigator.push(
-                          context, 
-                          MaterialPageRoute(builder: (context) => ForgotPassword()),
-                        );  //forgot password screen
-                    },
-                    textColor: Colors.white,
-                    child: Text('Forgot Password..?',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
-                  ),
                   Container(
                       height: 50,
                       padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
@@ -129,7 +118,17 @@ class _State extends State<LoginPage> {
                         },
                       ),
                   ),
-                  SizedBox(height: 12.0),
+                  SizedBox(height: 15.0),
+                  FlatButton(
+                    onPressed: (){
+                        Navigator.push(
+                          context, 
+                          MaterialPageRoute(builder: (context) => ForgotPassword()),
+                        );  //forgot password screen
+                    },
+                    textColor: Colors.white,
+                    child: Text('Forgot Password..?',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
+                  ),
                   Text(
                     error,
                     style: TextStyle(color: Colors.red, fontSize: 14.0),
