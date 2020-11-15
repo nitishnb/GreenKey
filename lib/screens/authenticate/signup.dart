@@ -141,7 +141,7 @@ class _State extends State<SignupPage> {
                        labelText: ' Confirm Password :',
                        labelStyle: TextStyle(color: Colors.grey[600],fontWeight: FontWeight.bold),
                      ),
-                     validator: (val) => val.length <6 ? 'Enter a password 6+ chars long' : null,
+                     validator: (val) => val.length < 6 ? 'Enter a password 6+ chars long' : null,
                       onChanged: (val){
                         setState(() => confirmPassword = val);
                       },

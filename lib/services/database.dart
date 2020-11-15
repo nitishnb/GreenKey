@@ -15,7 +15,7 @@ class DatabaseService {
       'name': name,
       'phoneNumber' : phoneNumber,
       'email' : email,
-      'address': null,
+      'address': address==''? null: address,
     });
   }
 

@@ -4,6 +4,10 @@ import 'package:GreenKey/screens/home/sidebar/sidebarlayout.dart';
 import 'package:GreenKey/services/auth.dart';
 import 'package:GreenKey/screens/home/constants.dart';
 import 'package:GreenKey/screens/home/profile.dart';
+import 'package:GreenKey/shared/loading.dart';
+import 'package:GreenKey/services/database.dart';
+import 'package:GreenKey/models/user.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(
@@ -32,6 +36,8 @@ class _HomeState extends State<Home> {
   }
 }
 
+
+
 class Homelayout extends StatefulWidget   {
 
   @override
@@ -41,267 +47,455 @@ class Homelayout extends StatefulWidget   {
 class _HomelayoutState  extends State<Homelayout> {
   final AuthService _auth = AuthService();
 
+  final Color selectedTileColor = Colors.lightGreen;
+
   GlobalKey<ScaffoldState> _stackKey = GlobalKey<ScaffoldState>();
-  int _currentIndex =0;
+  int _currentIndex = 0, _selectedindex = -1;
   dynamic _bottomSelect = MyApp2();
+
+  showAlertDialog(BuildContext context) {
+
+    // set up the buttons
+    Widget cancelButton = FlatButton(
+      child: Text("Cancel",
+        style: TextStyle(
+          color: Colors.black,
+        ),
+      ),
+      onPressed:  () {
+        setState(() {
+          _selectedindex = -1;
+        });
+        Navigator.pop(context);
+      },
+    );
+    Widget continueButton = FlatButton(
+      child: Text("Logout",
+        style: TextStyle(
+            color: Colors.red,
+        ),
+      ),
+      onPressed:  () async {
+        await _auth.signOut();
+        Navigator.pop(context);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Logout"),
+      content: Text("Are you sure?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _stackKey,
-      body: Stack(
-        children:<Widget>[
-          Positioned(
-            top: 110,
-            left: 18,
-            right: 10,
-            bottom: 2,
-            child: _bottomSelect,
-          ),
-          Positioned(
-            width: 70,
-            top: 0,
-            bottom: 0,
-            right:  -40,
-            child: ClipPath(
-              clipper: SidebarClipper(180,290),
-              child: Container(
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomRight,
-                      colors:[
-                        Colors.lightGreenAccent.shade400,
-                        Colors.lightGreenAccent.shade400,
-                        Colors.lightGreenAccent.shade400
-                      ],
-                      stops: [
-                        0.0,1.0,1.0
-                      ],
-                    )
-                ),
-              ),
-            ),
-          ),
 
-          Positioned(
-            right: -10,
-            top: 211,
-            child: IconButton(icon: Icon(Icons.arrow_back_ios,color: Colors.grey[500]),onPressed: (){},),
-            //Text('<<',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 24,color: Colors.grey[500]),),
-          ),
-          Positioned(
-            left: 3,
-            top: 15,
-            child: Column(
-              children: [
-                SizedBox(height: 22,),
-                IconButton(
-                    icon:Icon(Icons.menu,
-                      size: 30,
-                      color: Colors.grey[800],
+  final user = Provider.of<User>(context);
+
+    return StreamBuilder<Info>(
+        stream: DatabaseService(uid: user.uid).userData,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            Info userData = snapshot.data;
+            return Scaffold(
+              key: _stackKey,
+              body: Stack(
+                children: <Widget>[
+                  Positioned(
+                    top: 110,
+                    left: 18,
+                    right: 10,
+                    bottom: 2,
+                    child: _bottomSelect,
+                  ),
+                  Positioned(
+                    width: 70,
+                    top: 0,
+                    bottom: 0,
+                    right: -40,
+                    child: ClipPath(
+                      clipper: SidebarClipper(180, 290),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topRight,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                Colors.lightGreenAccent.shade400,
+                                Colors.lightGreenAccent.shade400,
+                                Colors.lightGreenAccent.shade400
+                              ],
+                              stops: [
+                                0.0, 1.0, 1.0
+                              ],
+                            )
+                        ),
+                      ),
                     ),
-                    onPressed: () {_stackKey.currentState.openDrawer();}
-                ),
+                  ),
 
-              ],
-            ),
-          ),
-          Positioned(
-            left: 50,
-            top: 30,
-            child: Column(
-              children: [
-                SizedBox(height: 10,),
-                Text("Green",style: TextStyle(fontSize: 40,fontWeight: FontWeight.bold,color: Colors.lightGreenAccent.shade400,),),
-              ],
-            ),
-          ),
-          Positioned(
-            left: 148,
-            top: 30,
-            child: Column(
-              children: [
-                SizedBox(height: 10,),
-                Text("Key",style: TextStyle(fontSize: 40,fontWeight: FontWeight.bold,color: Colors.grey[900]),),
-              ],
-            ),
-          ),
-          Positioned(
-            top: 90,
-            left: 46,
-            child: AnimatedSearchBar(),
-          ),
+                  Positioned(
+                    right: -10,
+                    top: 211,
+                    child: IconButton(
+                      icon: Icon(Icons.arrow_back_ios, color: Colors.grey[500]),
+                      onPressed: () {},),
+                    //Text('<<',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 24,color: Colors.grey[500]),),
+                  ),
+                  Positioned(
+                    left: 3,
+                    top: 15,
+                    child: Column(
+                      children: [
+                        SizedBox(height: 22,),
+                        IconButton(
+                            icon: Icon(Icons.menu,
+                              size: 30,
+                              color: Colors.grey[800],
+                            ),
+                            onPressed: () {
+                              _stackKey.currentState.openDrawer();
+                            }
+                        ),
 
-        ],
+                      ],
+                    ),
+                  ),
+                  Positioned(
+                    left: 50,
+                    top: 30,
+                    child: Column(
+                      children: [
+                        SizedBox(height: 10,),
+                        Text("Green", style: TextStyle(fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.lightGreenAccent.shade400,),),
+                      ],
+                    ),
+                  ),
+                  Positioned(
+                    left: 148,
+                    top: 30,
+                    child: Column(
+                      children: [
+                        SizedBox(height: 10,),
+                        Text("Key", style: TextStyle(fontSize: 40,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey[900]),),
+                      ],
+                    ),
+                  ),
+                  Positioned(
+                    top: 90,
+                    left: 46,
+                    child: AnimatedSearchBar(),
+                  ),
+
+                ],
 
 
-      ),
+              ),
 
 
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            Container(
-              color: Colors.grey[800],
-              child: Center(
-                child: Column(
+              drawer: Drawer(
+                child: ListView(
+                  padding: EdgeInsets.zero,
                   children: <Widget>[
                     Container(
-                      margin: EdgeInsets.only(top: 20,bottom: 16),
-                      child: Icon(Icons.account_circle,size: 90,color: Colors.lightGreenAccent.shade400,),
-                    ),
-                    Text('Nikhil Gowda',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22.0,
-                        color: Colors.lightGreenAccent.shade400,
-                      ),),
-                    Text('nikhianad@gmail.com',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20.0,
-                        color: Colors.lightGreenAccent.shade400,
+                      color: Colors.grey[800],
+                      child: Center(
+                        child: Column(
+                          children: <Widget>[
+                            SizedBox(height: 10.0),
+                            Container(
+                              margin: EdgeInsets.only(top: 20, bottom: 16),
+                              child: Icon(Icons.account_circle, size: 90,
+                                color: Colors.lightGreenAccent.shade400,),
+                            ),
+                            Text(userData.name,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20.0,
+                                color: Colors.lightGreenAccent.shade400,
+                              ),
+                            ),
+                            Text(userData.email,
+                              style: TextStyle(
+                                fontWeight: FontWeight.normal,
+                                fontSize: 18.0,
+                                color: Colors.lightGreenAccent.shade400,
+                              ),
+                            ),
+                            SizedBox(height: 18,),
+                            Container(
+                              color: Colors.white,
+                              child: Column(
+                                children: <Widget>[
+                                  ListTile(
+                                    selected: _selectedindex == 0,
+                                    selectedTileColor: Colors.grey,
+                                    leading: Icon(Icons.account_box,
+                                      color: Colors.lightGreenAccent.shade400,
+                                    ),
+                                    title: Text('My Account', style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey[800],
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      setState(() {
+                                        _bottomSelect = Profile();
+                                        _selectedindex = 0;
+                                      });
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                  ListTile(
+                                    selected: _selectedindex == 1,
+                                    selectedTileColor: Colors.grey,
+                                    leading: Icon(Icons.build,
+                                      color: Colors.lightGreenAccent.shade400,
+                                    ),
+                                    title: Text('Settings', style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey[800],
+                                    ),),
+                                    onTap: () {
+                                      setState(() {
+                                        _selectedindex = 1;
+                                      });
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                  ListTile(
+                                    selected: _selectedindex == 2,
+                                    selectedTileColor: Colors.grey,
+                                    leading: Icon(Icons.lock_outline,
+                                      color: Colors.lightGreenAccent.shade400
+                                    ),
+                                    title: Text('Logout',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey[800],
+                                      ),
+                                    ),
+                                    onTap: () async {
+                                      setState(() {
+                                        _selectedindex = 2;
+                                      });
+                                      showAlertDialog(context);
+                                    },
+                                  ),
+                                  ListTile(
+                                    selected: _selectedindex == 3,
+                                    selectedTileColor: Colors.grey,
+                                    leading: Icon(Icons.favorite,
+                                      color: Colors.lightGreenAccent.shade400,),
+                                    title: Text('Fav Lists', style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey[800],
+                                    ),),
+                                    onTap: () {
+                                      setState(() {
+                                        _selectedindex = 3;
+                                      });
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                  ListTile(
+                                    selected: _selectedindex == 4,
+                                    selectedTileColor: Colors.grey,
+                                    leading: Icon(Icons.local_offer,
+                                      color: Colors.lightGreenAccent.shade400,),
+                                    title: Text('Offer/Reward Area',
+                                      style: TextStyle(fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey[800],
+                                      ),),
+                                    onTap: () {
+                                      setState(() {
+                                        _selectedindex = 4;
+                                      });
+                                      Navigator.pop(context);
+                                      },
+                                  ),
+                                  ListTile(
+                                    selected: _selectedindex == 5,
+                                    selectedTileColor: Colors.grey,
+                                    leading: Icon(Icons.business_center,
+                                      color: Colors.lightGreenAccent.shade400,),
+                                    title: Text('Sell on GreenKey',
+                                      style: TextStyle(fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey[800],
+                                      ),),
+                                    onTap: () {
+                                      setState(() {
+                                        _selectedindex = 5;
+                                      });
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 2.0),
+                                    child: Container(
+                                      height: 2.0,
+                                      width: 290.0,
+                                      color: Colors.grey,),),
+                                  ListTile(
+                                    selected: _selectedindex == 6,
+                                    selectedTileColor: Colors.grey,
+                                    title: Text('Privacy Policies',
+                                      style: TextStyle(fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey[800],
+                                      ),),
+                                    onTap: () {
+                                      setState(() {
+                                        _selectedindex = 6;
+                                      });
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                  ListTile(
+                                    selected: _selectedindex == 7,
+                                    selectedTileColor: Colors.grey,
+                                    title: Text('Help Center', style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey[800],
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      setState(() {
+                                        _selectedindex = 7;
+                                      });
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                  ListTile(
+                                    selected: _selectedindex == 8,
+                                    selectedTileColor: Colors.grey,
+                                    title: Text('Green Plus Zone',
+                                      style: TextStyle(fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey[800],
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      setState(() {
+                                        _selectedindex = 8;
+                                      });
+                                      Navigator.pop(context);
+                                      },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 18,),
-                    Container(
-                      color: Colors.white,
-                      child: Column(
-                        children: <Widget>[
-                          ListTile(
-                            leading: Icon(Icons.account_box,color: Colors.lightGreenAccent.shade400,),
-                            title: Text('My Account',style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color: Colors.grey[800],
-                            ),),
-                            onTap: (){
-                              setState(() {
-                                _bottomSelect = Profile();
-                              });
-                              Navigator.pop(context);
-                            },
-                          ),
-                          ListTile(
-                            leading: Icon(Icons.build,color: Colors.lightGreenAccent.shade400,),
-                            title: Text('Settings',style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color: Colors.grey[800],
-                            ),),
-                            onTap: (){},
-                          ),
-                          ListTile(
-                            leading: Icon(Icons.lock_outline,color: Colors.lightGreenAccent.shade400,),
-                            title: Text('Logout',style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color: Colors.grey[800],
-                            ),),
-                            onTap: () async {
-                              await _auth.signOut();
-                              Navigator.pop(context);
-                            },
-                          ),
-                          ListTile(
-                            leading: Icon(Icons.favorite,color: Colors.lightGreenAccent.shade400,),
-                            title: Text('Fav Lists',style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color: Colors.grey[800],
-                            ),),
-                            onTap: (){},
-                          ),
-                          ListTile(
-                            leading: Icon(Icons.local_offer,color: Colors.lightGreenAccent.shade400,),
-                            title: Text('Offer/Reward Area',style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color: Colors.grey[800],
-                            ),),
-                            onTap: (){},
-                          ),
-                          ListTile(
-                            leading: Icon(Icons.business_center, color: Colors.lightGreenAccent.shade400,),
-                            title: Text('Sell on GreenKey',style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color: Colors.grey[800],
-                            ),),
-                            onTap: (){},
-                          ),
-                          Padding(
-                            padding:EdgeInsets.symmetric(horizontal:2.0),
-                            child:Container(
-                              height:2.0,
-                              width:290.0,
-                              color:Colors.grey,),),
-                          ListTile(
-                            title: Text('Privacy Policies',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.grey[800],
-                            ),),
-                            onTap: (){},
-                          ),
-                          ListTile(
-                            title: Text('Help Center',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.grey[800],
-                            ),),
-                            onTap: (){},
-                          ),
-                          ListTile(
-                            title: Text('Green Plus Zone',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.grey[800],
-                            ),),
-                            onTap: (){},
-                          ),
-                        ],
-                      ),
-                    ),
+                    )
                   ],
                 ),
               ),
-            )
-          ],
-        ),
-      ),
 
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.grey[900],
-        iconSize: 24.0,
-        currentIndex: _currentIndex,
-        type: BottomNavigationBarType.fixed,
-        selectedFontSize: 19,
-        selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
-        unselectedFontSize: 12,
-        items: [
-          new BottomNavigationBarItem(
-            icon: Icon(Icons.home,color: Colors.lightGreenAccent.shade400,),
-            title: Text('Home',style: TextStyle(color: Colors.white,),),
-            backgroundColor: Colors.grey[900],
-          ),
-          new BottomNavigationBarItem(
-            icon: Icon(Icons.mail,color: Colors.lightGreenAccent.shade400,),
-            title: Text('Msg',style: TextStyle(color: Colors.white,),),
-            backgroundColor: Colors.grey[900],
-          ),
-          new BottomNavigationBarItem(
-            icon: Icon(Icons.mobile_screen_share,color: Colors.lightGreenAccent.shade400,),
-            title: Text('GreenPay',style: TextStyle(color: Colors.white,),),
-            backgroundColor: Colors.grey[900],
-          ),
-          new BottomNavigationBarItem(
-            icon: Icon(Icons.contact_phone,color: Colors.lightGreenAccent.shade400,),
-            title: Text('Contact',style: TextStyle(color: Colors.white,),),
-            backgroundColor: Colors.grey[900],
-          ),
-          new BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart,color: Colors.lightGreenAccent.shade400,),
-            title: Text('Cart',style: TextStyle(color: Colors.white,),),
-            backgroundColor: Colors.grey[900],
-          ),
-        ],
-        onTap: (index){setState(() {
-              _currentIndex = index;
-              switch(_currentIndex){
-                case 0 : _bottomSelect = MyApp2();
-                break;
-                case 1 : _bottomSelect = Message();
-                break;
-                case 2 : _bottomSelect = GreenPay();
-                break;
-                case 3 : _bottomSelect = Contact();
-                break;
-                case 4 : _bottomSelect = Cart();
-                break;
-              }
-            }
-          );
-        },
-      ),
+              bottomNavigationBar: BottomNavigationBar(
+                backgroundColor: Colors.grey[900],
+                iconSize: 24.0,
+                currentIndex: _currentIndex,
+                type: BottomNavigationBarType.fixed,
+                selectedFontSize: 19,
+                selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+                unselectedFontSize: 12,
+                items: [
+                  new BottomNavigationBarItem(
+                    icon: Icon(
+                      Icons.home, color: Colors.lightGreenAccent.shade400,),
+                    title: Text(
+                      'Home', style: TextStyle(color: Colors.white,),),
+                    backgroundColor: Colors.grey[900],
+                  ),
+                  new BottomNavigationBarItem(
+                    icon: Icon(
+                      Icons.mail, color: Colors.lightGreenAccent.shade400,),
+                    title: Text('Msg', style: TextStyle(color: Colors.white,),),
+                    backgroundColor: Colors.grey[900],
+                  ),
+                  new BottomNavigationBarItem(
+                    icon: Icon(Icons.mobile_screen_share,
+                      color: Colors.lightGreenAccent.shade400,),
+                    title: Text(
+                      'GreenPay', style: TextStyle(color: Colors.white,),),
+                    backgroundColor: Colors.grey[900],
+                  ),
+                  new BottomNavigationBarItem(
+                    icon: Icon(Icons.contact_phone,
+                      color: Colors.lightGreenAccent.shade400,),
+                    title: Text(
+                      'Contact', style: TextStyle(color: Colors.white,),),
+                    backgroundColor: Colors.grey[900],
+                  ),
+                  new BottomNavigationBarItem(
+                    icon: Icon(Icons.shopping_cart,
+                      color: Colors.lightGreenAccent.shade400,),
+                    title: Text(
+                      'Cart', style: TextStyle(color: Colors.white,),),
+                    backgroundColor: Colors.grey[900],
+                  ),
+                ],
+                onTap: (index) {
+                  setState(() {
+                    _selectedindex = -1;
+                    _currentIndex = index;
+                    switch (_currentIndex) {
+                      case 0 :
+                        _bottomSelect = MyApp2();
+                        break;
+                      case 1 :
+                        _bottomSelect = Message();
+                        break;
+                      case 2 :
+                        _bottomSelect = GreenPay();
+                        break;
+                      case 3 :
+                        _bottomSelect = Contact();
+                        break;
+                      case 4 :
+                        _bottomSelect = Cart();
+                        break;
+                    }
+                  }
+                  );
+                },
+              ),
+            );
+          } else {
+            return Loading();
+          }
+        }
     );
+    }
   }
-}
+
 
 
 class AnimatedSearchBar extends StatefulWidget {

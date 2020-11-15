@@ -3,6 +3,7 @@ import 'package:GreenKey/shared/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:GreenKey/services/database.dart';
+import 'package:GreenKey/screens/home/profileform.dart';
 
 class Profile extends StatefulWidget {
 
@@ -18,6 +19,18 @@ class _ProfileState extends State<Profile> {
 
     final user = Provider.of<User>(context);
 
+    void _showSettingsPanel() {
+      showModalBottomSheet(
+          context: context,
+          builder: (context) {
+            return Container(
+              padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 60.0),
+              child: SettingsForm(),
+            );
+          });
+    }
+
+
     return StreamBuilder<Info>(
       stream: DatabaseService(uid: user.uid).userData,
       builder: (context, snapshot) {
@@ -31,7 +44,7 @@ class _ProfileState extends State<Profile> {
                   SizedBox(height: 40.0),
                   CircleAvatar(
                     radius: 80,
-                    backgroundImage: AssetImage('images/protocoder.png'),
+                    backgroundImage: AssetImage('assets/account.png'),
                   ),
                   SizedBox(height: 20.0),
                   Text(
@@ -41,18 +54,13 @@ class _ProfileState extends State<Profile> {
                       fontSize: 25,
                     ),
                   ),
-                  SizedBox(height: 20.0),
-                  Text(
-                    'Welcome',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontFamily: 'SourceSansPro',
-                      color: Colors.red[400],
-                      letterSpacing: 2.5,
-                    ),
+                  FlatButton.icon(
+                    icon: Icon(Icons.edit),
+                    label: Text('Edit'),
+                    onPressed: () => _showSettingsPanel(),
                   ),
                   SizedBox(
-                    height: 20.0,
+                    height: 10.0,
                     width: 200,
                     child: Divider(
                       color: Colors.teal[100],
@@ -70,7 +78,7 @@ class _ProfileState extends State<Profile> {
                       ),
                       title: Text(
                         userData.name,
-                        style: TextStyle(fontSize: 20.0, fontFamily: 'Neucha'),
+                        style: TextStyle(fontSize: 18.0, fontFamily: 'Neucha'),
                       ),
                     ),
                   ),
@@ -86,7 +94,7 @@ class _ProfileState extends State<Profile> {
                       title: Text(
                         userData.email,
                         style:
-                        TextStyle(fontFamily: 'BalooBhai', fontSize: 20.0),
+                        TextStyle(fontFamily: 'BalooBhai', fontSize: 18.0),
                       ),
                     ),
                   ),
@@ -102,7 +110,7 @@ class _ProfileState extends State<Profile> {
                       title: Text(
                         userData.phoneNumber,
                         style:
-                        TextStyle(fontFamily: 'BalooBhai', fontSize: 20.0),
+                        TextStyle(fontFamily: 'BalooBhai', fontSize: 18.0),
                       ),
                     ),
                   ),
@@ -118,7 +126,7 @@ class _ProfileState extends State<Profile> {
                       title: Text(
                         userData.address ?? 'Not Entered' ,
                         style:
-                        TextStyle(fontFamily: 'BalooBhai', fontSize: 20.0),
+                        TextStyle(fontFamily: 'BalooBhai', fontSize: 18.0),
                       ),
                     ),
                   ),
