@@ -1,3 +1,7 @@
+import 'dart:ffi';
+
+import 'package:GreenKey/screens/home/product.dart';
+import 'package:GreenKey/screens/home/settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:GreenKey/screens/home/sidebar/sidebarlayout.dart';
@@ -47,10 +51,10 @@ class Homelayout extends StatefulWidget   {
 class _HomelayoutState  extends State<Homelayout> {
   final AuthService _auth = AuthService();
 
-  final Color selectedTileColor = Colors.lightGreen;
 
   GlobalKey<ScaffoldState> _stackKey = GlobalKey<ScaffoldState>();
   int _currentIndex = 0, _selectedindex = -1;
+  bool _toggle = true;
   dynamic _bottomSelect = MyApp2();
 
   showAlertDialog(BuildContext context) {
@@ -116,8 +120,8 @@ class _HomelayoutState  extends State<Homelayout> {
                 children: <Widget>[
                   Positioned(
                     top: 110,
-                    left: 18,
-                    right: 10,
+                    left: 0,
+                    right: 0,
                     bottom: 2,
                     child: _bottomSelect,
                   ),
@@ -157,7 +161,7 @@ class _HomelayoutState  extends State<Homelayout> {
                   ),
                   Positioned(
                     left: 3,
-                    top: 15,
+                    top: 25,
                     child: Column(
                       children: [
                         SizedBox(height: 22,),
@@ -176,7 +180,7 @@ class _HomelayoutState  extends State<Homelayout> {
                   ),
                   Positioned(
                     left: 50,
-                    top: 30,
+                    top: 40,
                     child: Column(
                       children: [
                         SizedBox(height: 10,),
@@ -188,7 +192,7 @@ class _HomelayoutState  extends State<Homelayout> {
                   ),
                   Positioned(
                     left: 148,
-                    top: 30,
+                    top: 40,
                     child: Column(
                       children: [
                         SizedBox(height: 10,),
@@ -201,7 +205,7 @@ class _HomelayoutState  extends State<Homelayout> {
                   Positioned(
                     top: 90,
                     left: 46,
-                    child: AnimatedSearchBar(),
+                    child: (_toggle) ? AnimatedSearchBar() : Container() ,
                   ),
 
                 ],
@@ -219,11 +223,12 @@ class _HomelayoutState  extends State<Homelayout> {
                       child: Center(
                         child: Column(
                           children: <Widget>[
-                            SizedBox(height: 10.0),
+                            SizedBox(height: 20.0),
                             Container(
                               margin: EdgeInsets.only(top: 20, bottom: 16),
                               child: Icon(Icons.account_circle, size: 90,
-                                color: Colors.lightGreenAccent.shade400,),
+                                color: Colors.lightGreenAccent.shade400,
+                              ),
                             ),
                             Text(userData.name,
                               style: TextStyle(
@@ -246,7 +251,7 @@ class _HomelayoutState  extends State<Homelayout> {
                                 children: <Widget>[
                                   ListTile(
                                     selected: _selectedindex == 0,
-                                    selectedTileColor: Colors.grey,
+                                    selectedTileColor: Colors.green[100],
                                     leading: Icon(Icons.account_box,
                                       color: Colors.lightGreenAccent.shade400,
                                     ),
@@ -260,13 +265,14 @@ class _HomelayoutState  extends State<Homelayout> {
                                       setState(() {
                                         _bottomSelect = Profile();
                                         _selectedindex = 0;
+                                        _toggle = false;
                                       });
                                       Navigator.pop(context);
                                     },
                                   ),
                                   ListTile(
                                     selected: _selectedindex == 1,
-                                    selectedTileColor: Colors.grey,
+                                    selectedTileColor: Colors.green[100],
                                     leading: Icon(Icons.build,
                                       color: Colors.lightGreenAccent.shade400,
                                     ),
@@ -277,14 +283,16 @@ class _HomelayoutState  extends State<Homelayout> {
                                     ),),
                                     onTap: () {
                                       setState(() {
+                                        _bottomSelect = SettingsScreen();
                                         _selectedindex = 1;
+                                        _toggle = false;
                                       });
                                       Navigator.pop(context);
                                     },
                                   ),
                                   ListTile(
                                     selected: _selectedindex == 2,
-                                    selectedTileColor: Colors.grey,
+                                    selectedTileColor: Colors.green[100],
                                     leading: Icon(Icons.lock_outline,
                                       color: Colors.lightGreenAccent.shade400
                                     ),
@@ -304,7 +312,7 @@ class _HomelayoutState  extends State<Homelayout> {
                                   ),
                                   ListTile(
                                     selected: _selectedindex == 3,
-                                    selectedTileColor: Colors.grey,
+                                    selectedTileColor: Colors.green[100],
                                     leading: Icon(Icons.favorite,
                                       color: Colors.lightGreenAccent.shade400,),
                                     title: Text('Fav Lists', style: TextStyle(
@@ -315,13 +323,14 @@ class _HomelayoutState  extends State<Homelayout> {
                                     onTap: () {
                                       setState(() {
                                         _selectedindex = 3;
+                                        _toggle = false;
                                       });
                                       Navigator.pop(context);
                                     },
                                   ),
                                   ListTile(
                                     selected: _selectedindex == 4,
-                                    selectedTileColor: Colors.grey,
+                                    selectedTileColor: Colors.green[100],
                                     leading: Icon(Icons.local_offer,
                                       color: Colors.lightGreenAccent.shade400,),
                                     title: Text('Offer/Reward Area',
@@ -332,13 +341,14 @@ class _HomelayoutState  extends State<Homelayout> {
                                     onTap: () {
                                       setState(() {
                                         _selectedindex = 4;
+                                        _toggle = false;
                                       });
                                       Navigator.pop(context);
                                       },
                                   ),
                                   ListTile(
                                     selected: _selectedindex == 5,
-                                    selectedTileColor: Colors.grey,
+                                    selectedTileColor: Colors.green[100],
                                     leading: Icon(Icons.business_center,
                                       color: Colors.lightGreenAccent.shade400,),
                                     title: Text('Sell on GreenKey',
@@ -349,6 +359,7 @@ class _HomelayoutState  extends State<Homelayout> {
                                     onTap: () {
                                       setState(() {
                                         _selectedindex = 5;
+                                        _toggle = false;
                                       });
                                       Navigator.pop(context);
                                     },
@@ -362,7 +373,7 @@ class _HomelayoutState  extends State<Homelayout> {
                                       color: Colors.grey,),),
                                   ListTile(
                                     selected: _selectedindex == 6,
-                                    selectedTileColor: Colors.grey,
+                                    selectedTileColor: Colors.green[100],
                                     title: Text('Privacy Policies',
                                       style: TextStyle(fontSize: 16,
                                         fontWeight: FontWeight.bold,
@@ -371,13 +382,14 @@ class _HomelayoutState  extends State<Homelayout> {
                                     onTap: () {
                                       setState(() {
                                         _selectedindex = 6;
+                                        _toggle = false;
                                       });
                                       Navigator.pop(context);
                                     },
                                   ),
                                   ListTile(
                                     selected: _selectedindex == 7,
-                                    selectedTileColor: Colors.grey,
+                                    selectedTileColor: Colors.green[100],
                                     title: Text('Help Center', style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
@@ -387,13 +399,14 @@ class _HomelayoutState  extends State<Homelayout> {
                                     onTap: () {
                                       setState(() {
                                         _selectedindex = 7;
+                                        _toggle = false;
                                       });
                                       Navigator.pop(context);
                                     },
                                   ),
                                   ListTile(
                                     selected: _selectedindex == 8,
-                                    selectedTileColor: Colors.grey,
+                                    selectedTileColor: Colors.green[100],
                                     title: Text('Green Plus Zone',
                                       style: TextStyle(fontSize: 16,
                                         fontWeight: FontWeight.bold,
@@ -402,7 +415,9 @@ class _HomelayoutState  extends State<Homelayout> {
                                     ),
                                     onTap: () {
                                       setState(() {
+                                        _bottomSelect = Product();
                                         _selectedindex = 8;
+                                        _toggle = false;
                                       });
                                       Navigator.pop(context);
                                       },
@@ -464,6 +479,7 @@ class _HomelayoutState  extends State<Homelayout> {
                 ],
                 onTap: (index) {
                   setState(() {
+                    _toggle = true;
                     _selectedindex = -1;
                     _currentIndex = index;
                     switch (_currentIndex) {
@@ -632,12 +648,12 @@ class _MyHomePageState extends State<MyHomePage> {
                     Text(
                       "\$ ${post["price"]}",
                       style: const TextStyle(fontSize: 25, color: Colors.black, fontWeight: FontWeight.bold),
-                    )
+                    ),
                   ],
                 ),
                 Image.asset(
-                  "assets/images/${post["image"]}",
-                  height: double.infinity,
+                  "assets/${post["image"]}",
+                  fit: BoxFit.fill,
                 )
               ],
             ),
@@ -744,7 +760,15 @@ class CategoriesScroller extends StatelessWidget {
                 width: 250,
                 margin: EdgeInsets.only(right: 10),
                 height: categoryHeight,
-                decoration: BoxDecoration(color: Colors.orange.shade400, borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(
+                          'assets/equip1.jpg'
+                      ),
+                      fit: BoxFit.fill,
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(20.0))
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Column(
@@ -769,7 +793,15 @@ class CategoriesScroller extends StatelessWidget {
                 width: 250,
                 margin: EdgeInsets.only(right: 20),
                 height: categoryHeight,
-                decoration: BoxDecoration(color: Colors.blue.shade400, borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(
+                          'assets/new.jpg'
+                      ),
+                      fit: BoxFit.fill,
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(20.0))
+                ),
                 child: Container(
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
@@ -796,7 +828,14 @@ class CategoriesScroller extends StatelessWidget {
                 width: 250,
                 margin: EdgeInsets.only(right: 20),
                 height: categoryHeight,
-                decoration: BoxDecoration(color: Colors.yellow.shade500, borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(
+                          'assets/agri.jpg'
+                      ),
+                      fit: BoxFit.fill,
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(20.0))),
                 child: Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Column(
@@ -821,7 +860,15 @@ class CategoriesScroller extends StatelessWidget {
                 width: 250,
                 margin: EdgeInsets.only(right: 20),
                 height: categoryHeight,
-                decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(
+                          'assets/deepa.jpg'
+                      ),
+                      fit: BoxFit.fill,
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(20.0))
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Column(
@@ -863,7 +910,7 @@ class GreenPay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Center(child: Text("Well come to GREENPAY",style: TextStyle(fontSize: 40,color: Colors.grey[800]))),
+      child: Center(child: Text("Welcome to GREENPAY",style: TextStyle(fontSize: 40,color: Colors.grey[800]))),
     );
   }
 }

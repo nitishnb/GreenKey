@@ -68,7 +68,7 @@ class _ProfileState extends State<Profile> {
                   ),
                   SizedBox(height: 20.0),
                   Card(
-                    color: Colors.white,
+                    color: Colors.green[100],
                     margin:
                     EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
                     child: ListTile(
@@ -83,7 +83,7 @@ class _ProfileState extends State<Profile> {
                     ),
                   ),
                   Card(
-                    color: Colors.white,
+                    color: Colors.green[100],
                     margin:
                     EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
                     child: ListTile(
@@ -99,7 +99,7 @@ class _ProfileState extends State<Profile> {
                     ),
                   ),
                   Card(
-                    color: Colors.white,
+                    color: Colors.green[100],
                     margin:
                     EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
                     child: ListTile(
@@ -115,7 +115,7 @@ class _ProfileState extends State<Profile> {
                     ),
                   ),
                   Card(
-                    color: Colors.white,
+                    color: Colors.green[100],
                     margin:
                     EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
                     child: ListTile(
