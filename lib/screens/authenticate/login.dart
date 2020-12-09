@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:green_key/services/auth.dart';
 import 'signup.dart';
-import 'package:green_key/shared/loding.dart';
+import 'package:green_key/shared/loading.dart';
 
 class LoginPage extends StatefulWidget {
   final Function toggleView;

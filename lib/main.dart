@@ -57,7 +57,7 @@ class _StartState extends State<Start> {
     return Scaffold(
     backgroundColor: Colors.white,
     body: Center(
-      child: Image.asset('assets/greenkey2.png',height: 300.0,width: 3000.0,
+      child: Image.asset('assets/greenkey4.jpg',fit: BoxFit.fill,
       ),
     ),
     );

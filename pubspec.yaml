@@ -29,11 +29,15 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.3
   firebase_auth: ^0.14.0+5
+  firebase_core: ^0.4.5
   cloud_firestore: ^0.12.9+4
   provider: ^4.3.2+2
   after_layout: ^1.0.7+2
   flutter_spinkit: "^4.1.2"
   flutter_search_bar: ^2.1.0
+  image_picker: ^0.6.7+14
+  firebase_storage: ^3.1.6
+  permission_handler: ^5.0.1+1
 
 
 dev_dependencies:
@@ -63,6 +67,9 @@ flutter:
       - assets/greenkey1.jpg
       - assets/greenkey.png
       - assets/greenkey3.png
+      - assets/greenkey4.jpg
+      - assets/tractor1.png
+      - assets/tractor2.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

@@ -8,11 +8,13 @@ class DatabaseService {
 
   // collection reference
   final CollectionReference greenCollection = Firestore.instance.collection('green');
-  Future<void> updateUserData(String uname, String mobile,String email) async {
+  Future<void> updateUserData(String uname, String mobile,String email,String address,String profile_pic) async {
     return await greenCollection.document(uid).setData({
       'uname': uname,
       'mobile': mobile,
       'email': email,
+      'address': address,
+      'profile_pic': profile_pic,
     });
   }
 
@@ -35,7 +37,9 @@ class DatabaseService {
         uid: uid,
         uname: snapshot.data['uname'],
         mobile: snapshot.data['mobile'],
-        email: snapshot.data['email']
+        email: snapshot.data['email'],
+        address: snapshot.data['address'],
+        profile_pic: snapshot.data['profile_pic'],
     );
   }
 

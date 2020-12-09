@@ -10,6 +10,8 @@ import 'constants.dart';
 import 'package:green_key/screens/home/green_list.dart';
 import 'package:green_key/models/green.dart';
 import 'package:green_key/models/user.dart';
+import 'package:green_key/screens/home/profileform.dart';
+import 'package:green_key/screens/home/profile.dart';
 
 void main() {
   runApp(
@@ -26,6 +28,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
 
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return  StreamProvider<List<Green>>.value(
@@ -52,6 +55,7 @@ class _HomelayoutState  extends State<Homelayout> {
 
   GlobalKey<ScaffoldState> _stackKey = GlobalKey<ScaffoldState>();
   int _currentIndex =0;
+  String _currentProfilepic ="";
   dynamic _bottomSelect = MyApp2();
 
   @override
@@ -64,10 +68,10 @@ class _HomelayoutState  extends State<Homelayout> {
       body: Stack(
         children:<Widget>[
           Positioned(
-            top: 110,
-            left: 18,
-            right: 10,
-            bottom: 2,
+            top: 126,
+            left: 14,
+            right: 12,
+            bottom: 20,
             child: _bottomSelect,
           ),
           Positioned(
@@ -119,7 +123,7 @@ class _HomelayoutState  extends State<Homelayout> {
             ),
           ),
           Positioned(
-            left: 50,
+            left: MediaQuery.of(context).size.width/8,
             top: 40,
             child: Column(
               children: [
@@ -129,7 +133,7 @@ class _HomelayoutState  extends State<Homelayout> {
             ),
           ),
           Positioned(
-            left: 156,
+            left: (MediaQuery.of(context).size.width/8) + 107,
             top: 40,
             child: Column(
               children: [
@@ -159,9 +163,28 @@ class _HomelayoutState  extends State<Homelayout> {
               child: Center(
                 child: Column(
                   children: <Widget>[
-                    Container(
+                    /*Container(
                       margin: EdgeInsets.only(top: 20,bottom: 16),
                       child: Icon(Icons.account_circle,size: 90,color: Colors.lightGreenAccent.shade400,),
+                    ),*/
+
+                    StreamBuilder<UserData>(
+                      stream: DatabaseService(uid: user.uid).userData,
+                        builder: (context, snapshot) {
+                          UserData userData = snapshot.data;
+                          _currentProfilepic = userData.profile_pic;
+                          return CircleAvatar(
+                            radius: 40,
+                            backgroundColor: Colors.white,
+                              //child: _currentProfilepic != "" ? Image.network('$_currentProfilepic',fit: BoxFit.fill,) : Icon(Icons.account_circle,size: 90,color: Colors.lightGreenAccent.shade400,),
+                              backgroundImage: _currentProfilepic != "" ? NetworkImage('$_currentProfilepic') : NetworkImage('')//Icon(Icons.account_circle,size: 90,color: Colors.lightGreenAccent.shade400,),
+
+
+                          );
+                        }
+                    ),
+                    SizedBox(
+                      height: 20,
                     ),
                     StreamBuilder<UserData>(
                         stream: DatabaseService(uid: user.uid).userData,
@@ -199,7 +222,12 @@ class _HomelayoutState  extends State<Homelayout> {
                             leading: Icon(Icons.account_box,color: Colors.lightGreenAccent.shade400,),
                             title: Text('My Account',style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color: Colors.grey[800],
                             ),),
-                            onTap: (){},
+                            onTap: (){
+                                 Navigator.push(
+                                     context,
+                                     MaterialPageRoute(builder: (context) => Profile()),
+                                 );
+                            },
                           ),
                           ListTile(
                             leading: Icon(Icons.build,color: Colors.lightGreenAccent.shade400,),
@@ -349,11 +377,14 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar> {
               child: !_folded
                   ? TextField(
                 decoration: InputDecoration(
-                    hintText: 'Key Search',
+                    hintText: 'Type Now',
                     hintStyle: TextStyle(color: Colors.grey),
                     border: InputBorder.none),
               )
-                  : null,
+                  : Text(
+                'Key Search',
+                style: TextStyle(color: Colors.grey),
+              ),
             ),
           ),
           Container(
@@ -400,7 +431,7 @@ class MyApp2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -426,7 +457,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void getPostsData() {
     List<dynamic> responseList = FARM_DATA;
     List<Widget> listItems = [];
-    responseList.forEach((post) {
+    /*responseList.forEach((post) {
       listItems.add(Container(
           height: 150,
           margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -465,7 +496,8 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
           )));
-    });
+    });*/
+
     setState(() {
       itemsData = listItems;
     });
@@ -489,57 +521,178 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    final double categoryHeight = size.height*0.30;
+    final double categoryHeight = size.height*0.34;
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.white,
 
-        body: Container(
-          height: size.height,
-          child: Column(
-            children: <Widget>[
 
-              const SizedBox(
-                height: 20,
-              ),
-              AnimatedOpacity(
-                duration: const Duration(milliseconds: 200),
-                opacity: closeTopContainer?0:1,
-                child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    width: size.width,
-                    alignment: Alignment.topCenter,
-                    height: closeTopContainer?0:categoryHeight,
-                    child: categoriesScroller),
-              ),
-              Expanded(
-                  child: ListView.builder(
-                      controller: controller,
-                      itemCount: itemsData.length,
-                      physics: BouncingScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        double scale = 1.0;
-                        if (topContainer > 0.5) {
-                          scale = index + 0.5 - topContainer;
-                          if (scale < 0) {
-                            scale = 0;
-                          } else if (scale > 1) {
-                            scale = 1;
-                          }
-                        }
-                        return Opacity(
-                          opacity: scale,
-                          child: Transform(
-                            transform:  Matrix4.identity()..scale(scale,scale),
-                            alignment: Alignment.bottomCenter,
-                            child: Align(
-                                heightFactor: 0.7,
-                                alignment: Alignment.topCenter,
-                                child: itemsData[index]),
+        body: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          physics: BouncingScrollPhysics(),
+          child: Container(
+            height: size.height,
+            child: Column(
+              children: <Widget>[
+
+                const SizedBox(
+                  height: 20,
+                ),
+                AnimatedOpacity(
+                  duration: const Duration(milliseconds: 200),
+                  opacity: closeTopContainer?0:1,
+                  child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      width: size.width,
+                      alignment: Alignment.topCenter,
+                      height: closeTopContainer?0:categoryHeight,
+                      child: categoriesScroller),
+                ),
+            Column(
+              children:<Widget>[
+                Align(alignment: Alignment.centerLeft,child: Text('  Recommended:',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,),textAlign: TextAlign.left,)),
+                Container(
+                height: 100,
+                margin: const EdgeInsets.symmetric(vertical: 6),
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: FARM_DATA.length,
+                  itemBuilder: (ctx, i) {
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                           // builder: (ctx) => DetailsScreen(id: i),
                           ),
                         );
-                      })),
-            ],
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 9.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(9.0),
+                            color: Colors.white,
+                          ),
+
+                         /* child: ClipRRect(
+                              borderRadius: BorderRadius.circular(9.0),
+                              child: Center(
+                                child: Column(
+                                  children: <Widget>[ Image.asset(
+                                      ""
+                                  ),
+                                    Text('Test[$i]')
+                                  ],
+                                ),
+                              )
+                          ),*/
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: MediaQuery.of(context).size.width / 3.4,
+                            margin: const EdgeInsets.only(right: 2),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15.0),
+                              color: Colors.transparent,
+                            ),
+                            //child: Text("Test[$i]",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                            child: Image.asset("assets/tractor1.png",fit:BoxFit.fitHeight ,),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              ],
+            ),
+                Column(
+                  children:<Widget>[
+                    SizedBox(height: 14,),
+                    Align(alignment: Alignment.centerLeft,child: Text('  Popular:',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,),textAlign: TextAlign.left,)),
+                 Container(
+                  height: 100,
+                  margin: const EdgeInsets.symmetric(vertical: 6),
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: FARM_DATA.length,
+                    itemBuilder: (ctx, i) {
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              // builder: (ctx) => DetailsScreen(id: i),
+                            ),
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 9.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(9.0),
+                              color: Colors.white,
+                            ),
+
+                            /*child: ClipRRect(
+                                borderRadius: BorderRadius.circular(9.0),
+                                child: Center(
+                                  child: Column(
+                                    children: <Widget>[ Image.asset(
+                                      ""
+                                    ),
+                                      Text('Test[$i]')
+                                    ],
+                                  ),
+                                )
+                            ),*/
+                            child: Container(
+                              alignment: Alignment.center,
+                              width: MediaQuery.of(context).size.width / 3.4,
+                              margin: const EdgeInsets.only(right: 2),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15.0),
+                                color: Colors.transparent,
+                              ),
+                              //child: Text("Test[$i]",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                              child: Image.asset("assets/tractor2.png"),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                ],
+            ),
+                /*Expanded(
+                    child: ListView.builder(
+                        controller: controller,
+                        itemCount: itemsData.length,
+                        physics: BouncingScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          double scale = 1.0;
+                          if (topContainer > 0.5) {
+                            scale = index + 0.5 - topContainer;
+                            if (scale < 0) {
+                              scale = 0;
+                            } else if (scale > 1) {
+                              scale = 1;
+                            }
+                          }
+                          return Opacity(
+                            opacity: scale,
+                            child: Transform(
+                              transform:  Matrix4.identity()..scale(scale,scale),
+                              alignment: Alignment.bottomCenter,
+                              child: Align(
+                                  heightFactor: 0.7,
+                                  alignment: Alignment.topCenter,
+                                  child: itemsData[index]),
+                            ),
+                          );
+                        })),*/
+              ],
+            ),
           ),
         ),
       ),
@@ -552,55 +705,92 @@ class CategoriesScroller extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double categoryHeight = MediaQuery.of(context).size.height * 0.30 - 50;
-    return SingleChildScrollView(
-      physics: BouncingScrollPhysics(),
-      scrollDirection: Axis.horizontal,
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-        child: FittedBox(
-          fit: BoxFit.fill,
-          alignment: Alignment.topCenter,
-          child: Row(
-            children: <Widget>[
-              Container(
-                width: 250,
-                margin: EdgeInsets.only(right: 10),
-                height: categoryHeight,
-                decoration: BoxDecoration(color: Colors.orange.shade400, borderRadius: BorderRadius.all(Radius.circular(20.0))),
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        "Most Rated\nEquipments",
-                        style: TextStyle(fontSize: 25, color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "20 Items",
-                        style: TextStyle(fontSize: 16, color: Colors.white),
-                      ),
-                    ],
+    int index = 0;
+    final double categoryHeight = MediaQuery.of(context).size.height * 0.22 - 24;
+    return Column(
+        children: <Widget>[
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 10),
+            height: 50,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                Container(
+                  alignment: Alignment.center,
+                  width: MediaQuery.of(context).size.width / 3,
+                  margin: const EdgeInsets.only(right: 4),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15.0),
+                    color: Colors.grey[900],
                   ),
+                  child: Text("Scientific Farming",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
                 ),
-              ),
-              Container(
-                width: 250,
-                margin: EdgeInsets.only(right: 20),
-                height: categoryHeight,
-                decoration: BoxDecoration(color: Colors.blue.shade400, borderRadius: BorderRadius.all(Radius.circular(20.0))),
-                child: Container(
+                Container(
+                  alignment: Alignment.center,
+                  width: MediaQuery.of(context).size.width / 3,
+                  margin: const EdgeInsets.only(right: 4),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15.0),
+                    color: Colors.grey[900],
+                  ),
+                  child: Text("Solar Tech",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  width: MediaQuery.of(context).size.width / 3,
+                  margin: const EdgeInsets.only(right: 4),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15.0),
+                    color: Colors.grey[900],
+                  ),
+                  child: Text("Organic Farm",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  width: MediaQuery.of(context).size.width / 3,
+                  margin: const EdgeInsets.only(right: 4),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15.0),
+                    color: Colors.grey[900],
+                  ),
+                  child: Text("Machinery",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  width: MediaQuery.of(context).size.width /2.6,
+                  margin: const EdgeInsets.only(right: 4),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15.0),
+                    color: Colors.grey[900],
+                  ),
+                  child: Text("Chemical Fertilisers",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                ),
+              ],
+            ),
+          ),
+
+          SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        scrollDirection: Axis.horizontal,
+        child: Container(
+          margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+          child: FittedBox(
+            fit: BoxFit.fill,
+            alignment: Alignment.topCenter,
+            child: Row(
+              children: <Widget>[
+                Container(
+                  width: 250,
+                  margin: EdgeInsets.only(right: 10),
+                  height: categoryHeight,
+                  decoration: BoxDecoration(color: Colors.orange.shade400, borderRadius: BorderRadius.all(Radius.circular(20.0))),
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          "Newest",
+                          "Most Rated\nEquipments",
                           style: TextStyle(fontSize: 25, color: Colors.white, fontWeight: FontWeight.bold),
                         ),
                         SizedBox(
@@ -614,62 +804,110 @@ class CategoriesScroller extends StatelessWidget {
                     ),
                   ),
                 ),
-              ),
-              Container(
-                width: 250,
-                margin: EdgeInsets.only(right: 20),
-                height: categoryHeight,
-                decoration: BoxDecoration(color: Colors.yellow.shade500, borderRadius: BorderRadius.all(Radius.circular(20.0))),
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        "Farmese\nZone",
-                        style: TextStyle(fontSize: 25, color: Colors.white, fontWeight: FontWeight.bold),
+                Container(
+                  width: 250,
+                  margin: EdgeInsets.only(right: 10),
+                  height: categoryHeight,
+                  decoration: BoxDecoration(color: Colors.blue.shade400, borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                  child: Container(
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            "Newest",
+                            style: TextStyle(fontSize: 25, color: Colors.white, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            "20 Items",
+                            style: TextStyle(fontSize: 16, color: Colors.white),
+                          ),
+                        ],
                       ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "20 Items",
-                        style: TextStyle(fontSize: 16, color: Colors.white),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
-              Container(
-                width: 250,
-                margin: EdgeInsets.only(right: 20),
-                height: categoryHeight,
-                decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.all(Radius.circular(20.0))),
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        "Deepavali\nOffers",
-                        style: TextStyle(fontSize: 25, color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "20 Items",
-                        style: TextStyle(fontSize: 16, color: Colors.white),
-                      ),
-                    ],
+                Container(
+                  width: 250,
+                  margin: EdgeInsets.only(right: 10),
+                  height: categoryHeight,
+                  decoration: BoxDecoration(color: Colors.yellow.shade500, borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          "Farmese\nZone",
+                          style: TextStyle(fontSize: 25, color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "20 Items",
+                          style: TextStyle(fontSize: 16, color: Colors.white),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+                Container(
+                  width: 250,
+                  margin: EdgeInsets.only(right: 10),
+                  height: categoryHeight,
+                  decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          "Deepavali\nOffers",
+                          style: TextStyle(fontSize: 25, color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          "20 Items",
+                          style: TextStyle(fontSize: 16, color: Colors.white),
+                        ),
+
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
+          SizedBox(height: 0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(
+              4,
+                  (i) {
+                return Container(
+                  width: 9,
+                  height: 9,
+                  margin: EdgeInsets.symmetric(horizontal: 10),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: i == index ? Colors.black : Colors.grey,
+                  ),
+                );
+              },
+            ),
+          )
+    ],
     );
+
   }
 }
 

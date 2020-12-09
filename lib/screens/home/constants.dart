@@ -3,54 +3,54 @@ const FARM_DATA = [
     "name":"Agri Equip",
     "brand":"Ben & Jerry's",
     "price":"***",
-    "image":"ice_cream.png"
+    "image":"assets/greenkey4.jpg"
   },
   {
     "name":"Scientifc Farm Pro",
     "brand":"Farience",
     "price":"****",
-    "image":"wrap.png"
+    "image":"assets/greenkey4.jpg"
   },
   {
     "name":"Seeds",
     "brand":"Howladie",
     "price":"**",
-    "image":"burger.png"
+    "image":"assets/greenkey4.jpg"
   },{
     "name":"Pestisides",
     "brand":"Howladie",
     "price":"***",
-    "image":"cheese_dip.png"
+    "image":"assets/greenkey4.jpg"
   },
   {
     "name":"N P K",
     "brand":"Neuroieras",
     "price":"*****",
-    "image":"cola.png"
+    "image":"assets/greenkey4.jpg"
   },
   {
     "name":"Micronutrients",
     "brand":"Mlureries",
     "price":"***",
-    "image":"fries.png"
+    "image":"assets/greenkey4.jpg"
   },
   {
     "name":"Solar",
     "brand":"Solories",
     "price":"***",
-    "image":"noodles.png"
+    "image":"assets/greenkey4.jpg"
   },
   {
     "name":"Sprayers",
     "brand":"Shakthi",
     "price":"***",
-    "image":"pizza.png"
+    "image":"assets/greenkey4.jpg"
   },
   {
     "name":"Farm Pro",
     "brand":"Swarna Gowri",
     "price":"***",
-    "image":"sandwich.png"
+    "image":"assets/greenkey4.jpg"
   },
 
 ];

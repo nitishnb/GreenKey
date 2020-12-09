@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:green_key/services/auth.dart';
-import 'package:green_key/shared/loding.dart';
+import 'package:green_key/shared/loading.dart';
 import 'login.dart';
 
 class SignupPage extends StatefulWidget {
@@ -27,6 +27,8 @@ class _State extends State<SignupPage> {
   String password = '';
   String mobile = '';
   String conpassword= '';
+  String address='';
+  String profile_pic='';
 
   @override
   Widget build(BuildContext context) {
@@ -143,7 +145,7 @@ class _State extends State<SignupPage> {
                           onPressed: () async {
                             if(_formKey.currentState.validate()){
                               setState(() => loading = true);
-                              dynamic result = await _auth.registerWithEmailAndPassword(uname,mobile,email, password);
+                              dynamic result = await _auth.registerWithEmailAndPassword(uname,mobile,email,password,address,profile_pic);
                               if(result == null) {
                                 setState(() {
                                   loading = false;
