@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:settings_ui/settings_ui.dart';
+import 'package:GreenKey/services/auth.dart';
 
 
 class SettingsScreen extends StatefulWidget {
@@ -10,6 +11,52 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   bool lockInBackground = true;
   bool notificationsEnabled = true;
+  final AuthService _auth = AuthService();
+
+  showAlertDialog(BuildContext context) {
+
+    // set up the buttons
+    Widget cancelButton = FlatButton(
+      child: Text("Cancel",
+        style: TextStyle(
+          color: Colors.black,
+        ),
+      ),
+      onPressed:  () {
+        Navigator.pop(context);
+      },
+    );
+    Widget continueButton = FlatButton(
+      child: Text("Logout",
+        style: TextStyle(
+          color: Colors.red,
+        ),
+      ),
+      onPressed:  () async {
+        await _auth.signOut();
+        Navigator.pop(context);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Logout"),
+      content: Text("Are you sure?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +93,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
             tiles: [
               SettingsTile(title: 'Phone number', leading: Icon(Icons.phone)),
               SettingsTile(title: 'Email', leading: Icon(Icons.email)),
-              SettingsTile(title: 'Sign out', leading: Icon(Icons.exit_to_app)),
+              SettingsTile(
+                title: 'Sign out',
+                leading: Icon(Icons.exit_to_app),
+                onTap: () async {
+                    showAlertDialog(context);
+                }
+              ),
             ],
           ),
           SettingsSection(

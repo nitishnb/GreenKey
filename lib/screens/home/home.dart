@@ -1,6 +1,7 @@
-import 'dart:ffi';
-
+import 'package:GreenKey/screens/home/cart.dart';
+import 'package:GreenKey/screens/home/details.dart';
 import 'package:GreenKey/screens/home/product.dart';
+import 'package:GreenKey/screens/home/producthome.dart';
 import 'package:GreenKey/screens/home/settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ import 'package:GreenKey/shared/loading.dart';
 import 'package:GreenKey/services/database.dart';
 import 'package:GreenKey/models/user.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(
@@ -109,12 +111,7 @@ class _HomelayoutState  extends State<Homelayout> {
 
   final user = Provider.of<User>(context);
 
-    return StreamBuilder<Info>(
-        stream: DatabaseService(uid: user.uid).userData,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            Info userData = snapshot.data;
-            return Scaffold(
+    return Scaffold(
               key: _stackKey,
               body: Stack(
                 children: <Widget>[
@@ -230,19 +227,33 @@ class _HomelayoutState  extends State<Homelayout> {
                                 color: Colors.lightGreenAccent.shade400,
                               ),
                             ),
-                            Text(userData.name,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20.0,
-                                color: Colors.lightGreenAccent.shade400,
-                              ),
-                            ),
-                            Text(userData.email,
-                              style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 18.0,
-                                color: Colors.lightGreenAccent.shade400,
-                              ),
+                            StreamBuilder<Info>(
+                              stream: DatabaseService(uid: user.uid).userData,
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  Info userData = snapshot.data;
+                                  return Column(
+                                    children: <Widget>[
+                                      Text(userData.name,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20.0,
+                                          color: Colors.lightGreenAccent.shade400,
+                                        ),
+                                      ),
+                                      Text(userData.email,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.normal,
+                                          fontSize: 18.0,
+                                          color: Colors.lightGreenAccent.shade400,
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                } else {
+                                  return Loading();
+                                }
+                              }
                             ),
                             SizedBox(height: 18,),
                             Container(
@@ -263,11 +274,14 @@ class _HomelayoutState  extends State<Homelayout> {
                                     ),
                                     onTap: () {
                                       setState(() {
-                                        _bottomSelect = Profile();
                                         _selectedindex = 0;
                                         _toggle = false;
                                       });
                                       Navigator.pop(context);
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => Profile()),
+                                        );
                                     },
                                   ),
                                   ListTile(
@@ -399,6 +413,7 @@ class _HomelayoutState  extends State<Homelayout> {
                                     onTap: () {
                                       setState(() {
                                         _selectedindex = 7;
+                                        _bottomSelect = Help();
                                         _toggle = false;
                                       });
                                       Navigator.pop(context);
@@ -415,7 +430,6 @@ class _HomelayoutState  extends State<Homelayout> {
                                     ),
                                     onTap: () {
                                       setState(() {
-                                        _bottomSelect = Product();
                                         _selectedindex = 8;
                                         _toggle = false;
                                       });
@@ -451,8 +465,8 @@ class _HomelayoutState  extends State<Homelayout> {
                   ),
                   new BottomNavigationBarItem(
                     icon: Icon(
-                      Icons.mail, color: Colors.lightGreenAccent.shade400,),
-                    title: Text('Msg', style: TextStyle(color: Colors.white,),),
+                      Icons.category, color: Colors.lightGreenAccent.shade400,),
+                    title: Text('Category', style: TextStyle(color: Colors.white,),),
                     backgroundColor: Colors.grey[900],
                   ),
                   new BottomNavigationBarItem(
@@ -487,16 +501,16 @@ class _HomelayoutState  extends State<Homelayout> {
                         _bottomSelect = MyApp2();
                         break;
                       case 1 :
-                        _bottomSelect = Message();
+                        _bottomSelect = PHome();
                         break;
                       case 2 :
                         _bottomSelect = GreenPay();
                         break;
                       case 3 :
-                        _bottomSelect = Contact();
+                        _bottomSelect = Help();
                         break;
                       case 4 :
-                        _bottomSelect = Cart();
+                        _bottomSelect = CartScreen();
                         break;
                     }
                   }
@@ -504,11 +518,6 @@ class _HomelayoutState  extends State<Homelayout> {
                 },
               ),
             );
-          } else {
-            return Loading();
-          }
-        }
-    );
     }
   }
 
@@ -929,6 +938,64 @@ class Cart extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: Center(child: Text("Please Select the items to update Cart",style: TextStyle(fontSize: 40,color: Colors.grey[800]))),
+    );
+  }
+}
+
+class Help extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Center(
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(height: 60.0,),
+              Text(
+                'Help Center',
+                style: TextStyle(
+                  fontFamily: 'SourceSansPro',
+                  fontSize: 45,
+                ),
+              ),
+              SizedBox(height: 60.0,),
+              Card(
+                color: Colors.green[100],
+                margin:
+                EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
+                child: ListTile(
+                  leading: Icon(
+                    Icons.mail_sharp,
+                    color: Colors.teal[900],
+                  ),
+                  title: Text(
+                    'customercare@greenkey.com',
+                    style:
+                    TextStyle(fontFamily: 'BalooBhai', fontSize: 18.0),
+                  ),
+                  onTap: () => launch("mailto:customercare@greenkey.com"),
+                ),
+              ),
+              Card(
+                color: Colors.green[100],
+                margin:
+                EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
+                child: ListTile(
+                  leading: Icon(
+                    Icons.phone,
+                    color: Colors.teal[900],
+                  ),
+                  title: Text(
+                    '+91 99723 94504',
+                    style:
+                    TextStyle(fontFamily: 'BalooBhai', fontSize: 18.0),
+                  ),
+                  onTap: () => launch("tel:+91 99723 94504"),
+                ),
+              ),
+              ]
+        )
+      ),
     );
   }
 }

@@ -12,13 +12,13 @@ class SettingsForm extends StatefulWidget {
 class _SettingsFormState extends State<SettingsForm> {
 
   final _formKey = GlobalKey<FormState>();
-  final List<String> sugars = ['0', '1', '2', '3', '4'];
 
   //form values
   String _currentName;
   String _currentPhonenumber;
   String _currentAddress;
   String _currentEmail;
+  String _currentProfilepic;
 
   @override
   Widget build(BuildContext context) {
@@ -106,6 +106,7 @@ class _SettingsFormState extends State<SettingsForm> {
                               _currentPhonenumber ?? userData.phoneNumber,
                               _currentEmail ?? userData.email,
                               _currentAddress ?? userData.address,
+                              _currentProfilepic ?? userData.profile_pic,
                           );
                           Navigator.pop(context);
                         }
@@ -121,3 +122,4 @@ class _SettingsFormState extends State<SettingsForm> {
     );
   }
 }
+

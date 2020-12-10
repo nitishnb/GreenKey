@@ -25,6 +25,7 @@ class _State extends State<SignupPage> {
   String password = '';
   String confirmPassword = '';
   String error = '';
+  String profile_pic='';
 
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();

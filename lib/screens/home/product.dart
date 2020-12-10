@@ -12,7 +12,6 @@ class _ProductState extends State<Product> {
       child: Center(
         child: Column(
           children: [
-            SizedBox(height: 40.0,),
             titleSection,
             Image.asset(
                 'assets/equip.jpg',
@@ -21,13 +20,22 @@ class _ProductState extends State<Product> {
                 fit: BoxFit.cover,
             ),
             SizedBox(height: 20.0,),
+            Text("\$ 25.00",
+              textDirection: TextDirection.ltr,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+            ),
+            Text("MRP \$̶3̶0̶.̶0̶0̶\n",
+              textDirection: TextDirection.ltr,
+              style: TextStyle(fontSize: 15.0),
+            ),
+            SizedBox(height: 20.0,),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                SizedBox(),
                 _buildButtonColumn(Colors.blueGrey, Icons.shopping_bag_rounded, 'Buy Now'),
-                _buildButtonColumn(Colors.blueGrey, Icons.share, 'Share'),
                 _buildButtonColumn(Colors.blueGrey, Icons.shopping_cart, 'Add to Cart'),
+                _buildButtonColumn(Colors.blueGrey, Icons.favorite, 'Add to fav'),
+                _buildButtonColumn(Colors.blueGrey, Icons.share, 'Share'),
               ],
             ),
             textSection,
@@ -83,7 +91,7 @@ class _ProductState extends State<Product> {
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(icon, color: color),
+        Icon(icon, color: color,),
         Container(
           margin: const EdgeInsets.only(top: 8),
           child: Text(
@@ -111,5 +119,4 @@ class _ProductState extends State<Product> {
       softWrap: true,
     ),
   );
-
 }
