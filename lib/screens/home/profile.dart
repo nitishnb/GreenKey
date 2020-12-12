@@ -23,13 +23,13 @@ class _ProfileState extends State<Profile> {
 
   PickedFile _imageFile;
   File newimg;
-  PickedFile tempimg;
+  var tempimg;
   dynamic x;
   bool upload =false;
   Future getImage(x) async {
-    tempimg = await ImagePicker().getImage(source: x);
+    tempimg = await ImagePicker.pickImage(source: x);
     setState((){
-      newimg = File(tempimg.path);
+      newimg = tempimg;
       upload = tempimg==null ? false : true;
     });
   }
@@ -118,7 +118,8 @@ class _ProfileState extends State<Profile> {
                               CircleAvatar(
                                 radius: 66,
                                 backgroundColor: Colors.lightGreenAccent.shade200,
-                                backgroundImage: AssetImage('$newimg'),
+                                backgroundImage:  FileImage(newimg),
+                                //backgroundImage: AssetImage('$newimg'),
 
                               ),
                             ),
@@ -222,8 +223,12 @@ class _ProfileState extends State<Profile> {
                             Icons.location_on,
                             color: Colors.grey[800],
                           ),
-                          title: userData.address == null ? Text('Not Entered', style: TextStyle(color: Colors.grey, fontFamily: 'BalooBhai', fontSize: 18.0),) :
-                          Text(userData.address, style: TextStyle(fontFamily: 'BalooBhai', fontSize: 18.0),),
+                          title: Text(
+                            //userData.address ?? 'Not Entered' ,
+                            userData.address == null ? 'Not Entered' : userData.address,
+                            style:
+                            userData.address == "" ? TextStyle(fontFamily: 'BalooBhai', fontSize: 18.0,color: Colors.black26) : TextStyle(fontFamily: 'BalooBhai', fontSize: 18.0),
+                          ),
                         ),
                       ),
                       SizedBox(height: 12.0),

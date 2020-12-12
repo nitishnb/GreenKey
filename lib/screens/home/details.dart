@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:GreenKey/global.dart';
 import 'package:GreenKey/ui/widgets/carouselproductslist.dart';
 import 'package:GreenKey/ui/widgets/sizeselector.dart';
+import 'package:share/share.dart';
 
 class DetailsScreen extends StatefulWidget {
 
@@ -17,6 +18,9 @@ class DetailsScreen extends StatefulWidget {
 }
 
 class _DetailsScreenState extends State<DetailsScreen> {
+
+  String text = 'https://www.linkedin.com/in/nitish-n-banakar-7772a5199/';
+  String subject = 'follow me';
   final int id;
   _DetailsScreenState({this.id});
 
@@ -145,7 +149,7 @@ Features:
                                 height: double.infinity,
                                 child: RaisedButton(
                                   child: Text(
-                                    "ADD TO BAG",
+                                    "BUY NOW",
                                     style: Theme
                                         .of(context)
                                         .textTheme
@@ -173,7 +177,7 @@ Features:
                               ),
                               child: IconButton(
                                 icon: Icon(
-                                  Icons.favorite_border,
+                                  Icons.shopping_cart,
                                   color: Colors.white,
                                 ),
                                 onPressed: () {},
@@ -192,7 +196,14 @@ Features:
                                   Icons.share,
                                   color: Colors.white,
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  final RenderBox box = context.findRenderObject();
+                                  Share.share(text,
+                                      subject: subject,
+                                      sharePositionOrigin:
+                                      box.localToGlobal(Offset.zero) &
+                                      box.size);
+                                },
                               ),
                             ),
                           ],

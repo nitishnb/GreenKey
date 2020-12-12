@@ -40,6 +40,9 @@ dependencies:
   permission_handler: ^5.0.1+1
   settings_ui: ^0.4.0
   url_launcher: ^5.4.0
+  share: any
+  razorpay_flutter: ^1.1.1
+  fluttertoast: ^3.1.0
 
 dev_dependencies:
   flutter_launcher_icons: "^0.7.3"
