@@ -18,7 +18,7 @@ class GreenTile extends StatelessWidget {
             backgroundColor: Colors.brown[200],
           ),
           title: Text(green.uname),
-          subtitle: Text('Takes ${green.mobile} sugar(s)'),
+          subtitle: Text( green.mobile ),
         ),
       ),
     );

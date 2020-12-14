@@ -1,6 +1,8 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:green_key/screens/home/sidebar/sidebarlayout.dart';
 import 'package:green_key/screens/authenticate/login.dart';
 import 'package:green_key/services/auth.dart';
@@ -12,6 +14,7 @@ import 'package:green_key/models/green.dart';
 import 'package:green_key/models/user.dart';
 import 'package:green_key/screens/home/profileform.dart';
 import 'package:green_key/screens/home/profile.dart';
+import 'package:green_key/screens/home/green_tile.dart';
 
 void main() {
   runApp(
@@ -503,9 +506,13 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  List products = [];
+
   @override
   void initState() {
     super.initState();
+    fetchDatabaseProducts();
+
     getPostsData();
     controller.addListener(() {
 
@@ -517,9 +524,21 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     });
   }
+  fetchDatabaseProducts() async{
+    dynamic resultant = await DatabaseService().getProductsList();
+
+    if (resultant == null) {
+      print('Loading Product , please wait.....');
+    } else {
+      setState(() {
+        products = resultant;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final green = Provider.of<List<Green>>(context) ?? [];
     final Size size = MediaQuery.of(context).size;
     final double categoryHeight = size.height*0.34;
     return SafeArea(
@@ -530,7 +549,7 @@ class _MyHomePageState extends State<MyHomePage> {
           scrollDirection: Axis.vertical,
           physics: BouncingScrollPhysics(),
           child: Container(
-            height: size.height,
+            height: size.height + 286,
             child: Column(
               children: <Widget>[
 
@@ -552,10 +571,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 Align(alignment: Alignment.centerLeft,child: Text('  Recommended:',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,),textAlign: TextAlign.left,)),
                 Container(
                 height: 100,
-                margin: const EdgeInsets.symmetric(vertical: 6),
+                margin: const EdgeInsets.symmetric(vertical: 4),
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: FARM_DATA.length,
+                  physics: BouncingScrollPhysics(),
+                  itemCount: products.length,
                   itemBuilder: (ctx, i) {
                     return GestureDetector(
                       onTap: () {
@@ -567,35 +587,23 @@ class _MyHomePageState extends State<MyHomePage> {
                         );
                       },
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 9.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(9.0),
                             color: Colors.white,
                           ),
 
-                         /* child: ClipRRect(
-                              borderRadius: BorderRadius.circular(9.0),
-                              child: Center(
-                                child: Column(
-                                  children: <Widget>[ Image.asset(
-                                      ""
-                                  ),
-                                    Text('Test[$i]')
-                                  ],
-                                ),
-                              )
-                          ),*/
                           child: Container(
                             alignment: Alignment.center,
-                            width: MediaQuery.of(context).size.width / 3.4,
-                            margin: const EdgeInsets.only(right: 2),
+                            width: MediaQuery.of(context).size.width / 3.0,
+                            margin: const EdgeInsets.only(right: 8),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(15.0),
                               color: Colors.transparent,
                             ),
                             //child: Text("Test[$i]",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
-                            child: Image.asset("assets/tractor1.png",fit:BoxFit.fitHeight ,),
+                            child: Image.network('${products[i]['img_url']}',fit:BoxFit.cover ,),
                           ),
                         ),
                       ),
@@ -614,7 +622,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   margin: const EdgeInsets.symmetric(vertical: 6),
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: FARM_DATA.length,
+                    physics: BouncingScrollPhysics(),
+                    itemCount: products.length,
                     itemBuilder: (ctx, i) {
                       return GestureDetector(
                         onTap: () {
@@ -626,35 +635,24 @@ class _MyHomePageState extends State<MyHomePage> {
                           );
                         },
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 9.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
                           child: Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(9.0),
                               color: Colors.white,
                             ),
 
-                            /*child: ClipRRect(
-                                borderRadius: BorderRadius.circular(9.0),
-                                child: Center(
-                                  child: Column(
-                                    children: <Widget>[ Image.asset(
-                                      ""
-                                    ),
-                                      Text('Test[$i]')
-                                    ],
-                                  ),
-                                )
-                            ),*/
+
                             child: Container(
                               alignment: Alignment.center,
-                              width: MediaQuery.of(context).size.width / 3.4,
-                              margin: const EdgeInsets.only(right: 2),
+                              width: MediaQuery.of(context).size.width / 3.0,
+                              margin: const EdgeInsets.only(right: 8),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(15.0),
                                 color: Colors.transparent,
                               ),
                               //child: Text("Test[$i]",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
-                              child: Image.asset("assets/tractor2.png"),
+                              child: Image.network('${products[i]['img_url']}',fit:BoxFit.cover ,),
                             ),
                           ),
                         ),
@@ -664,6 +662,33 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 ],
             ),
+                SizedBox(height: 24,),
+                Align(alignment: Alignment.centerLeft,child: Text('  Explore:',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,),textAlign: TextAlign.left,)),
+                SizedBox(height: 8,),
+              SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                physics: BouncingScrollPhysics(),
+                child: Container(
+                  height: 340,
+                  child:
+                  GridView.builder(
+                  itemCount: products.length,
+                  gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                  ),
+                  itemBuilder: (BuildContext context, int i){
+                    return Single_prod(
+                      name: products[i]['name'],
+                      img_url: products[i]['img_url'],
+                      actual_price: products[i]['actual_price'],
+                      discount_price: products[i]['discount_price'],
+                    );
+                  }
+                ),),
+              ),
+
+
+
                 /*Expanded(
                     child: ListView.builder(
                         controller: controller,
@@ -714,6 +739,7 @@ class CategoriesScroller extends StatelessWidget {
             height: 50,
             child: ListView(
               scrollDirection: Axis.horizontal,
+              physics: BouncingScrollPhysics(),
               children: [
                 Container(
                   alignment: Alignment.center,
@@ -943,6 +969,54 @@ class Cart extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: Center(child: Text("Please Select the items to update Cart",style: TextStyle(fontSize: 40,color: Colors.grey[800]))),
+    );
+  }
+}
+
+
+//class to display products in explore section
+class Single_prod extends StatelessWidget {
+  final name;
+  final img_url;
+  final actual_price;
+  final discount_price;
+  Single_prod({
+   this.name,
+    this.img_url,
+    this.actual_price,
+    this.discount_price,
+});
+  @override
+
+
+  Widget build(BuildContext context) {
+    return Card(
+      child: Hero(
+        tag: name,
+        child: Material(
+          child: InkWell(
+            onTap: (){},
+            child: GridTile(
+                footer: Container(
+                  color: Colors.white70,
+                  child: /*ListTile(
+                    leading: Text('$name', style: TextStyle(fontWeight: FontWeight.bold),),
+                    title: Text('₹ $actual_price', style: TextStyle(fontWeight: FontWeight.bold),),
+                    subtitle: Text('₹ $actual_price', style: TextStyle(fontWeight: FontWeight.bold),),
+                  ),*/Column(
+                    children: <Widget>[
+                      //Text('$name\n', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),),
+                      Align(alignment: Alignment.centerLeft,child: Text('$name',textAlign: TextAlign.left,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),)),
+                      Align(alignment: Alignment.centerLeft,child: Text('₹ $discount_price',textAlign: TextAlign.left,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16,color: Colors.grey[900]),)),
+                      Align(alignment: Alignment.centerLeft,child: Text('₹ $actual_price',textAlign: TextAlign.left,style: TextStyle(fontSize: 14,color: Colors.red,decoration: TextDecoration.lineThrough),)),
+                    ],
+                  ),
+                ),
+              child: Image.network(img_url,fit: BoxFit.cover,),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

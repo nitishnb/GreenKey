@@ -8,6 +8,7 @@ class DatabaseService {
 
   // collection reference
   final CollectionReference greenCollection = Firestore.instance.collection('green');
+  final CollectionReference allProducts = Firestore.instance.collection('products');
   Future<void> updateUserData(String uname, String mobile,String email,String address,String profile_pic) async {
     return await greenCollection.document(uid).setData({
       'uname': uname,
@@ -54,5 +55,29 @@ class DatabaseService {
     return greenCollection.document(uid).snapshots()
         .map(_userDataFromSnapshot);
   }
+  Future<void> createUserData(
+      String name, int discount_price, int actual_price, String img_url) async {
+    return await allProducts
+        .document(uid)
+        .setData({'name': name, 'discount_price': discount_price, 'actual_price': actual_price,'img_url':img_url});
+  }
+
+
+  Future getProductsList() async {
+    List itemsList = [];
+
+    try {
+      await allProducts.getDocuments().then((querySnapshot) {
+        querySnapshot.documents.forEach((element) {
+          itemsList.add(element.data);
+        });
+      });
+      return itemsList;
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
 
 }
+

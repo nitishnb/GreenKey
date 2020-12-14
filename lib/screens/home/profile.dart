@@ -15,6 +15,7 @@ import 'package:green_key/screens/home/profileform.dart';
 
 
 
+
 class Profile extends StatefulWidget {
 
   @override
@@ -35,6 +36,7 @@ class _ProfileState extends State<Profile> {
       upload = tempimg==null ? false : true;
     });
   }
+  bool loading = false;
   String _currentName;
   String _currentPhonenumber;
   String _currentAddress;
@@ -47,6 +49,10 @@ class _ProfileState extends State<Profile> {
 
     final user = Provider.of<User>(context);
     Future uploadPic(BuildContext context) async{
+      setState(() {
+        loading=true;
+      });
+      _currentProfilepic=null;
       var randomno = Random(50);
       StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child('Profile Pics/$_currentEmail.jpg');
       StorageUploadTask uploadTask = firebaseStorageRef.putFile(newimg);
@@ -62,10 +68,12 @@ class _ProfileState extends State<Profile> {
           _currentProfilepic,
       );
       setState(() {
+        loading = false;
         newimg = null;
         tempimg = null;
-        print(downloadUrl);
+        print(_currentProfilepic);
       });
+
     }
 
     void _showSettingsPanel() {
@@ -90,7 +98,7 @@ class _ProfileState extends State<Profile> {
             _currentAddress = userData.address;
             _currentEmail = userData.email;
             _currentProfilepic = userData.profile_pic;
-            return Scaffold(
+            return loading ? Loading() : Scaffold(
               appBar: AppBar(
                 leading: IconButton(icon: Icon(Icons.arrow_back,size: 30,color: Colors.grey[700],),
                   highlightColor: Colors.white,
@@ -114,7 +122,6 @@ class _ProfileState extends State<Profile> {
                               radius:66,
                               backgroundColor: Colors.lightGreenAccent.shade200,
                               backgroundImage: NetworkImage('$_currentProfilepic'),
-
                             )  
                                 :
                           CircleAvatar(
@@ -125,7 +132,6 @@ class _ProfileState extends State<Profile> {
 
                           ),
                           ),
-
                             Positioned(
                               top: 90.0,
                               right: 150.0,
@@ -142,7 +148,7 @@ class _ProfileState extends State<Profile> {
                                   size: 28.0,
                                 ),
                               ) : FlatButton(
-                                onPressed: () {
+                                onPressed: () async{
                                   uploadPic(context);
                                 },
                                 visualDensity: VisualDensity.compact,
