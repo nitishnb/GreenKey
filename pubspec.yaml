@@ -43,6 +43,7 @@ dependencies:
   share: any
   razorpay_flutter: ^1.1.1
   fluttertoast: ^3.1.0
+  flutter_rating_bar: ^3.2.0+1
 
 dev_dependencies:
   flutter_launcher_icons: "^0.7.3"

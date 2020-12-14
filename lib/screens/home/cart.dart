@@ -70,15 +70,14 @@ class _CartScreenState extends State<CartScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          SizedBox(height: 20.0,),
+          SizedBox(height: 25.0,),
           Text(
-            "ನಿಮ್ಮ ಚೀಲ",
+            "My Bag",
             style: Theme.of(context)
                 .textTheme
                 .display1
                 .copyWith(fontWeight: FontWeight.bold, color: Colors.black),
           ),
-          SizedBox(height: 15),
           Expanded(
             child: ListView.builder(
               itemCount: bag.length,

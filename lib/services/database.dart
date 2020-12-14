@@ -1,5 +1,3 @@
-import 'package:GreenKey/models/account.dart';
-import 'package:GreenKey/models/products.dart';
 import 'package:GreenKey/models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -29,7 +27,8 @@ class DatabaseService {
         name: snapshot.data['name'],
         email: snapshot.data['email'],
         phoneNumber: snapshot.data['phoneNumber'],
-        address: snapshot.data['address']
+        address: snapshot.data['address'],
+        profile_pic: snapshot.data['profile_pic']
     );
   }
 
@@ -39,37 +38,4 @@ class DatabaseService {
     return accountCollection.document(uid).snapshots()
         .map(_userDataFromSnapshot);
   }
-}
-
-class ProdDatabase{
-  final String pid;
-
-  ProdDatabase({ this.pid });
-
-  // collection reference
-  final CollectionReference productCollection = Firestore.instance.collection('products');
-
-
-
-  Prod _prodDataFromSnapshot(DocumentSnapshot snapshot) {
-    print(snapshot.data['name']);
-    return Prod(
-        pid: pid,
-        name: snapshot.data['name'],
-        mrp: snapshot.data['mrp'],
-        price: snapshot.data['price'],
-        stars: snapshot.data['stars'],
-        company: snapshot.data['company'],
-        category: snapshot.data['category'],
-        description: snapshot.data['description'],
-    );
-  }
-
-
-  // get user doc stream
-  Stream<Prod> get prodData {
-    return productCollection.document(pid).snapshots()
-        .map(_prodDataFromSnapshot);
-  }
-
 }

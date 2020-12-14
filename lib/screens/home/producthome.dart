@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:GreenKey/screens/home/ProductList.dart';
+import 'package:GreenKey/screens/home/product/productshome.dart';
 import 'package:GreenKey/screens/home/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:GreenKey/global.dart';
@@ -85,7 +85,7 @@ class _PHomeState extends State<PHome> {
                         margin: EdgeInsets.only(bottom: 10),
                         padding: const EdgeInsets.all(1.0),
                         decoration: BoxDecoration(
-                          color: Colors.green[100],
+                          color: Colors.lightGreenAccent.shade100,
                           borderRadius: BorderRadius.circular(15.0),
                         ),
                         child: Row(

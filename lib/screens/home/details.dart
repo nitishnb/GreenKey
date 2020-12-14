@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:GreenKey/models/products.dart';
 import 'package:GreenKey/services/database.dart';
 import 'package:GreenKey/shared/loading.dart';
@@ -5,28 +7,35 @@ import 'package:flutter/material.dart';
 import 'package:GreenKey/global.dart';
 import 'package:GreenKey/ui/widgets/carouselproductslist.dart';
 import 'package:GreenKey/ui/widgets/sizeselector.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:share/share.dart';
+import 'package:GreenKey/services/proddatabase.dart';
 
 class DetailsScreen extends StatefulWidget {
 
-  final int id;
+  final String pid;
 
-  const DetailsScreen({Key key, this.id}) : super(key: key);
+  const DetailsScreen({Key key, this.pid}) : super(key: key);
 
   @override
-  _DetailsScreenState createState() => _DetailsScreenState(id: id);
+  _DetailsScreenState createState() => _DetailsScreenState(pid: pid);
 }
 
 class _DetailsScreenState extends State<DetailsScreen> {
 
   String text = 'https://www.linkedin.com/in/nitish-n-banakar-7772a5199/';
   String subject = 'follow me';
-  final int id;
-  _DetailsScreenState({this.id});
+  final String pid;
+  _DetailsScreenState({this.pid});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return StreamBuilder<Prod>(
+        stream: ProdDatabase(pid: pid).prodData,
+        builder: (context, snapshot) {
+          if(snapshot.hasData){
+          Prod product = snapshot.data;
+          return Scaffold(
               backgroundColor: bgColor,
               body: SafeArea(
                 child: Padding(
@@ -42,7 +51,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                         child: IconButton(
                           icon: Icon(
                             Icons.chevron_left,
-                            color: Colors.black,
+                            color: Colors.green[800],
                           ),
                           onPressed: () {
                             Navigator.pop(context);
@@ -50,7 +59,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                         ),
                       ),
                       CarouselProductsList(
-                        productsList: products[id].images,
+                        productsList: [product.image_url],
                         type: CarouselTypes.details,
                       ),
                       Expanded(
@@ -67,12 +76,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                   return Padding(
                                     padding: const EdgeInsets.only(right: 15.0),
                                     child: Chip(
-                                      backgroundColor: Colors.black,
+                                      backgroundColor: Colors.green[800],
                                       padding:
                                       const EdgeInsets.symmetric(
-                                          horizontal: 15.0),
+                                          horizontal: 10.0),
                                       label: Text(
-                                        'Seeds',
+                                        product.category,
                                         style:
                                         Theme
                                             .of(context)
@@ -88,8 +97,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
                               ),
                             ),
                             Spacer(),
+                            Text(product.brand),
                             Text(
-                              products[id].title,
+                              product.name,
                               style: Theme
                                   .of(context)
                                   .textTheme
@@ -99,17 +109,30 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                 color: Colors.black,
                               ),
                             ),
-                            Text("MRP ₹ 500"),
                             Spacer(),
+                            Text("MRP : ₹ ${product.mrp}", style: TextStyle(color: Colors.red[900], fontStyle: FontStyle.italic),),
                             Text(
-                              "Price ${products[id].price}",
+                              "Price : ₹ ${product.price}",
                               style: Theme
                                   .of(context)
                                   .textTheme
                                   .headline
                                   .copyWith(
-                                color: Colors.black,
+                                color: Colors.red[800], fontStyle: FontStyle.italic
                               ),
+                            ),
+                            Spacer(),
+                            Text("Rating : ${product.stars}", style: TextStyle(fontWeight: FontWeight.w900),),
+                            RatingBarIndicator(
+                              rating: product.stars,
+                              itemBuilder: (context, index) => Icon(
+                                Icons.agriculture_rounded,
+                                color: Colors.red,
+                              ),
+                              itemCount: 5,
+                              itemSize: 25.0,
+                              unratedColor: Colors.red.withAlpha(50),
+                              direction: Axis.horizontal,
                             ),
                             Spacer(),
                             Text(
@@ -120,18 +143,13 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                   .headline
                                   .copyWith(
                                 color: Colors.black,
+                                fontWeight: FontWeight.bold
                               ),
                             ),
                             Container(
                               padding: const EdgeInsets.all(10),
                               child: Text(
-                                """We are ranked amongst the renowned organizations that are engaged in providing the best quality range of Hariyali Annual Ryegrass.
-Features:
-*) Hariyali is high nutritional multi cut annual Rye grass
-*) Hariyali is highly succulent and more palatable grass
-*) Rye grass feeding improves animal health and increases milk production
-*) Best part in Rye grass feeding is increases SNF (solids not FAT) is advantage for farmer
-*) Hariyali is excellent for hill region as well as plains""",
+                                product.description,
                                 softWrap: true,
                               ),
                             ),
@@ -159,7 +177,7 @@ Features:
                                     ),
                                   ),
                                   onPressed: () {},
-                                  color: Colors.black,
+                                  color: Colors.green[800],
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(15.0),
                                   ),
@@ -170,7 +188,7 @@ Features:
                               margin: const EdgeInsets.only(right: 15),
                               height: double.infinity,
                               decoration: BoxDecoration(
-                                color: Colors.black,
+                                color: Colors.green[800],
                                 borderRadius: BorderRadius.circular(
                                   15.0,
                                 ),
@@ -186,7 +204,7 @@ Features:
                             Container(
                               height: double.infinity,
                               decoration: BoxDecoration(
-                                color: Colors.black,
+                                color: Colors.green[800],
                                 borderRadius: BorderRadius.circular(
                                   15.0,
                                 ),
@@ -214,5 +232,10 @@ Features:
                 ),
               ),
             );
+          } else {
+            return Loading();
+          }
+    }
+    );
   }
 }

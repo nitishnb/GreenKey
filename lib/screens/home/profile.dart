@@ -89,13 +89,15 @@ class _ProfileState extends State<Profile> {
             _currentEmail = userData.email;
             _currentProfilepic = userData.profile_pic;
             return Scaffold(
+              backgroundColor: Colors.green[50],
               appBar: AppBar(
-                leading: IconButton(icon: Icon(Icons.arrow_back,size: 30,color: Colors.grey[700],),
+                leading: IconButton(icon: Icon(Icons.arrow_back,size: 30,color: Colors.white,),
                   highlightColor: Colors.white,
                   onPressed: () {
                     Navigator.pop(context);
                   },),
-                backgroundColor: Colors.lightGreenAccent.shade400,
+                title: Text("My Account", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25.0),),
+                backgroundColor: Colors.lightGreen[700],
               ),
               body: Container(
                 color: Colors.white,
@@ -103,7 +105,7 @@ class _ProfileState extends State<Profile> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      SizedBox(height: 10.0),
+                      SizedBox(height: 30.0),
                       Center(
                         child: Stack(
                             children:<Widget>[ Center(
@@ -157,20 +159,12 @@ class _ProfileState extends State<Profile> {
 
                       ),
 
-                      SizedBox(height: 20.0),
-                      Text(
-                        'My Account',
-                        style: TextStyle(
-                          fontFamily: 'SourceSansPro',
-                          fontSize: 25,
-                        ),
-                      ),
-                      SizedBox(height: 50.0),
+                      SizedBox(height: 30.0),
 
                       Card(
                         color: Colors.lightGreenAccent.shade100,
                         margin:
-                        EdgeInsets.symmetric(vertical: 4.0, horizontal: 25.0),
+                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
                         child: ListTile(
                           leading: Icon(
                             Icons.account_circle,
@@ -183,41 +177,43 @@ class _ProfileState extends State<Profile> {
                         ),
                       ),
                       Card(
-                        color: Colors.white,
+                        color: Colors.lightGreenAccent.shade100,
                         margin:
-                        EdgeInsets.symmetric(vertical: 4.0, horizontal: 25.0),
+                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
                         child: ListTile(
                           leading: Icon(
-                            Icons.mail,
-                            color: Colors.grey[800],
+                            Icons.mail_sharp,
+                            color: Colors.teal[900],
                           ),
                           title: Text(
                             userData.email,
                             style:
                             TextStyle(fontFamily: 'BalooBhai', fontSize: 18.0),
                           ),
+                          onTap: () => launch("mailto:${userData.email}"),
                         ),
                       ),
                       Card(
                         color: Colors.lightGreenAccent.shade100,
                         margin:
-                        EdgeInsets.symmetric(vertical: 4.0, horizontal: 25.0),
+                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
                         child: ListTile(
                           leading: Icon(
                             Icons.phone,
-                            color: Colors.grey[800],
+                            color: Colors.teal[900],
                           ),
                           title: Text(
-                            userData.phoneNumber,
+                            '+91 ${userData.phoneNumber}',
                             style:
                             TextStyle(fontFamily: 'BalooBhai', fontSize: 18.0),
                           ),
+                          onTap: () => launch("tel:${userData.phoneNumber}"),
                         ),
                       ),
                       Card(
-                        color: Colors.white,
+                        color: Colors.lightGreenAccent.shade100,
                         margin:
-                        EdgeInsets.symmetric(vertical: 4.0, horizontal: 25.0),
+                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
                         child: ListTile(
                           leading: Icon(
                             Icons.location_on,
@@ -227,23 +223,24 @@ class _ProfileState extends State<Profile> {
                             //userData.address ?? 'Not Entered' ,
                             userData.address == null ? 'Not Entered' : userData.address,
                             style:
-                            userData.address == "" ? TextStyle(fontFamily: 'BalooBhai', fontSize: 18.0,color: Colors.black26) : TextStyle(fontFamily: 'BalooBhai', fontSize: 18.0),
+                            userData.address == null ? TextStyle(fontFamily: 'BalooBhai', fontSize: 18.0,color: Colors.black26) : TextStyle(fontFamily: 'BalooBhai', fontSize: 18.0),
                           ),
                         ),
                       ),
                       SizedBox(height: 12.0),
-                      FlatButton.icon(
-                        icon: Icon(Icons.edit),
-                        color: Colors.lightGreenAccent.shade400,
-                        label: Text('Edit'),
-                        onPressed: () => _showSettingsPanel(),
-                      ),
                       SizedBox(
                         height: 0.0,
                         width: 210,
                         child: Divider(
                           color: Colors.grey,
                         ),
+                      ),
+                      SizedBox(height: 12.0),
+                      FlatButton.icon(
+                        icon: Icon(Icons.edit, color: Colors.white,),
+                        color: Colors.green[800],
+                        label: Text('EDIT', style: TextStyle(color: Colors.white),),
+                        onPressed: () => _showSettingsPanel(),
                       ),
 
                     ],

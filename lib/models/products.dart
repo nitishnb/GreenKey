@@ -7,16 +7,16 @@ class Pid {
 }
 
 class Prod {
-
   final String pid;
   final String name;
-  final double mrp;
-  final double price;
-  final double stars;
-  final String company;
+  final num mrp;
+  final num price;
+  final num stars;
+  final String brand;
   final String category;
   final String description;
+  final String image_url;
 
-  Prod({this.pid, this.name, this.mrp, this.price, this.stars, this.company, this.category, this.description});
+  Prod({this.pid, this.name, this.mrp, this.price, this.stars, this.brand, this.category, this.description, this.image_url});
 
 }

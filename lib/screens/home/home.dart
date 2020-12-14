@@ -1,6 +1,5 @@
 import 'package:GreenKey/screens/home/cart.dart';
-import 'package:GreenKey/screens/home/details.dart';
-import 'package:GreenKey/screens/home/product.dart';
+import 'package:GreenKey/screens/home/example.dart';
 import 'package:GreenKey/screens/home/producthome.dart';
 import 'package:GreenKey/screens/home/settings.dart';
 import 'package:flutter/cupertino.dart';
@@ -52,7 +51,6 @@ class Homelayout extends StatefulWidget   {
 
 class _HomelayoutState  extends State<Homelayout> {
   final AuthService _auth = AuthService();
-
 
   GlobalKey<ScaffoldState> _stackKey = GlobalKey<ScaffoldState>();
   int _currentIndex = 0, _selectedindex = -1;
@@ -221,19 +219,26 @@ class _HomelayoutState  extends State<Homelayout> {
                         child: Column(
                           children: <Widget>[
                             SizedBox(height: 20.0),
-                            Container(
-                              margin: EdgeInsets.only(top: 20, bottom: 16),
-                              child: Icon(Icons.account_circle, size: 90,
-                                color: Colors.lightGreenAccent.shade400,
-                              ),
-                            ),
                             StreamBuilder<Info>(
                               stream: DatabaseService(uid: user.uid).userData,
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
                                   Info userData = snapshot.data;
+                                  String url = userData.profile_pic;
                                   return Column(
                                     children: <Widget>[
+                                      SizedBox(height: 20.0,),
+                                      url == "" ?
+                                      Container(
+                                        child: Icon(Icons.account_circle, size: 90,
+                                          color: Colors.lightGreenAccent.shade400,
+                                        ),
+                                      ) :
+                                      CircleAvatar(
+                                          maxRadius: 40.0,
+                                          backgroundImage: NetworkImage(url),
+                                        ),
+                                      SizedBox(height: 20.0,),
                                       Text(userData.name,
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
@@ -434,7 +439,10 @@ class _HomelayoutState  extends State<Homelayout> {
                                         _toggle = false;
                                       });
                                       Navigator.pop(context);
-
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => MyAppRate()),
+                                      );
                                       },
                                   ),
                                 ],
@@ -466,7 +474,7 @@ class _HomelayoutState  extends State<Homelayout> {
                   ),
                   new BottomNavigationBarItem(
                     icon: Icon(
-                      Icons.category, color: Colors.lightGreenAccent.shade400,),
+                      Icons.view_list_rounded, color: Colors.lightGreenAccent.shade400,),
                     title: Text('Category', style: TextStyle(color: Colors.white,),),
                     backgroundColor: Colors.grey[900],
                   ),
@@ -961,7 +969,7 @@ class Help extends StatelessWidget {
               ),
               SizedBox(height: 60.0,),
               Card(
-                color: Colors.green[100],
+                color: Colors.lightGreenAccent.shade100,
                 margin:
                 EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
                 child: ListTile(
@@ -978,7 +986,7 @@ class Help extends StatelessWidget {
                 ),
               ),
               Card(
-                color: Colors.green[100],
+                color: Colors.lightGreenAccent.shade100,
                 margin:
                 EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
                 child: ListTile(
