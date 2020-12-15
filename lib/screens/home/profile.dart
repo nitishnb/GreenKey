@@ -29,15 +29,15 @@ class _ProfileState extends State<Profile> {
     tempimg = await ImagePicker.pickImage(source: x);
     setState((){
       newimg = tempimg;
-      upload = tempimg==null ? false : true;
+      upload = tempimg ==null ? false : true;
     });
   }
+
   String _currentName;
   String _currentPhonenumber;
   String _currentAddress;
   String _currentEmail;
   String currentProfilepic;
-  String a;
 
   @override
   Widget build(BuildContext context) {
@@ -51,14 +51,14 @@ class _ProfileState extends State<Profile> {
       StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
       String downloadUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
       currentProfilepic = downloadUrl;
-      a = downloadUrl;
+      //a = downloadUrl;
       upload = false;
       await DatabaseService(uid: user.uid).updateUserData(
         _currentName,
         _currentPhonenumber,
         _currentEmail,
         _currentAddress,
-        a,
+        currentProfilepic,
       );
       setState(() {
         newimg = null;
@@ -137,11 +137,7 @@ class _ProfileState extends State<Profile> {
                                     },
                                     visualDensity: VisualDensity.compact,
                                     splashColor: Colors.blueGrey,
-
-                                    child: Icon(Icons.file_upload,size: 28,color: Colors.grey[900],)/*Text(
-                                  'upload',
-                                  style: TextStyle(color: Colors.grey[800], fontSize: 18.0,fontWeight: FontWeight.bold),
-                                ),*/
+                                    child: Icon(Icons.file_upload,size: 28,color: Colors.grey[900],)
                                 ),
                               ),
                             ]

@@ -1,5 +1,10 @@
-import'package:flutter/material.dart';
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:uuid/uuid.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:flutter/material.dart';
 import 'package:green_key/services/proDatabase.dart';
+import 'package:green_key/screens/admin/ProductList.dart';
 
 class AddProduct extends StatefulWidget {
   @override
@@ -8,9 +13,10 @@ class AddProduct extends StatefulWidget {
 
 class _AddProductState extends State<AddProduct> {
 
-  final number = TextEditingController();
   var _category;
-  final List<String> _categories = ["Organic Farming", "Remedies", "Seeds", "Equipments", "Fertilisers", "Irrigation", "Others"];
+  var _subcategory;
+
+  String pid = '';
   String brand = '';
   String name = '';
   String actualPrice = '';
@@ -18,6 +24,7 @@ class _AddProductState extends State<AddProduct> {
   String rating = '';
   String quantity = '';
   String description = '';
+  String productPic = '';
 
   showAlertDialog(BuildContext context) {
     Widget continueButton = FlatButton(
@@ -63,17 +70,50 @@ class _AddProductState extends State<AddProduct> {
     );
   }
 
+  File newImg;
+  var tempImg;
+  dynamic x;
+  bool upload = false;
+  Future getImage(x) async {
+    tempImg = await ImagePicker.pickImage(source: x);
+    setState((){
+      newImg = tempImg;
+      upload = tempImg == null ? false : true;
+    });
+  }
+
   @override
 
   final _formKey = GlobalKey<FormState>();
 
+
+  Future uploadPic(BuildContext context) async{
+    StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child('Product Pics/$pid.jpg');
+    StorageUploadTask uploadTask = firebaseStorageRef.putFile(newImg);
+    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+    String downloadUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
+    productPic = downloadUrl;
+    upload = false;
+    setState(() {
+      newImg = null;
+      tempImg = null;
+      print(productPic);
+    });
+  }
+
+
   void initState() {
     super.initState();
-    _category = _categories[0];
+    _category = categories.keys.elementAt(0);
+    var id = Uuid();
+    pid = id.v4();
   }
 
   @override
   Widget build(BuildContext context) {
+
+    print(pid);
+
       return Scaffold(
         appBar: AppBar(
           title: Text(
@@ -83,7 +123,7 @@ class _AddProductState extends State<AddProduct> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          backgroundColor: Colors.green[400],
+          backgroundColor: Colors.green[800],
           centerTitle: true,
           elevation: 4.0,
         ),
@@ -114,6 +154,9 @@ class _AddProductState extends State<AddProduct> {
                       ),
                     ),
                     SizedBox(height: 30.0,),
+                    Text(
+                      "$pid"
+                    ),
                     FormField<String>(
                       builder: (FormFieldState<String> state) {
                         return InputDecorator(
@@ -138,19 +181,55 @@ class _AddProductState extends State<AddProduct> {
                                   });
                                 },
                                 value: _category,
-                                items: _categories.map((String PRO) {
+                                items: categories.keys.map((String category) {
                                   return DropdownMenuItem<String> (
-                                    value: PRO,
-                                   child: Text(PRO),
+                                    value: category,
+                                   child: Text(category),
                                   );
                                 }).toList(),
-                                //value: _category == ' ' ? _categories[0] : _category,
                               ),
                             ),
                           ),
                         );
                       },
   //                    validator: (_category) => _category.isEmpty ? "Please select a category" : null,
+                    ),
+                    SizedBox(height: 15.0,),
+                    FormField<String>(
+                      builder: (FormFieldState<String> state) {
+                        return InputDecorator(
+                          decoration: InputDecoration(
+                            labelText: "Select a subcategory",
+                            labelStyle: TextStyle(color: Colors.grey[600],fontWeight: FontWeight.bold),
+                            errorStyle: TextStyle(color: Colors.redAccent, fontSize: 16.0),
+                            hintText: 'Please select expense',
+                            //border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))
+                          ),
+                          isEmpty: _category == '',
+                          child: DropdownButtonHideUnderline(
+                            child: ButtonTheme(
+                              alignedDropdown: true,
+                              child: DropdownButton<String>(
+                                isDense: true,
+                                isExpanded: true,
+                                onChanged: (String newValue) {
+                                  setState(() {
+                                    _subcategory = newValue;
+                                    state.didChange(newValue);
+                                  });
+                                },
+                                value: categories.values.elementAt(index[_category]).contains(_subcategory) ? _subcategory : categories.values.elementAt(index[_category]).elementAt(0),
+                                items: categories.values.elementAt(index[_category]).map((String subcategory) {
+                                  return DropdownMenuItem<String> (
+                                    value: subcategory,
+                                    child: Text(subcategory),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
                     ),
                     SizedBox(height: 15.0,),
                     TextFormField(
@@ -214,6 +293,7 @@ class _AddProductState extends State<AddProduct> {
                         });
                       },
                     ),
+                    SizedBox(height: 15.0,),
                     TextFormField(
               //        controller: number,
                       cursorColor: Colors.green,
@@ -257,6 +337,7 @@ class _AddProductState extends State<AddProduct> {
                         });
                       },
                     ),
+                    SizedBox(height: 15.0,),
                     TextFormField(
                   //    controller: number,
                       cursorColor: Colors.green,
@@ -311,6 +392,78 @@ class _AddProductState extends State<AddProduct> {
                       },
                     ),
                     SizedBox(height: 15.0,),
+                    productPic == '' ?
+                    upload == false ?
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.max,
+                      children: <Widget>[
+                        FlatButton(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Icon(Icons.camera_enhance),
+                              SizedBox(
+                                width: 5,
+                             ),
+                              Text(
+                                  "Select Product",
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                  color: Colors.grey[600],
+                                )
+                              ),
+                           ],
+                          ),
+                          onPressed: () {
+                            showModalBottomSheet(
+                              context: context,
+                              builder: ((builder) => bottomSheet()),
+                            );
+                          },
+                        ),
+                      ]
+                    )
+                        :
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.max,
+                        children: <Widget>[
+                          FlatButton(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Icon(Icons.file_upload),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                    "Upload",
+                                    style: TextStyle(
+                                      fontSize: 14.0,
+                                      color: Colors.grey[600],
+                                    )
+                                ),
+                              ],
+                            ),
+                            onPressed: () {
+                              uploadPic(context);
+                            },
+                          ),
+                        ]
+                    )
+                        :
+                    Text(
+                        'Product Image was successfully uploaded!',
+                      style: TextStyle(
+                        color: Colors.green,
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                    SizedBox(height: 15.0,), 
                     RaisedButton(
                         textColor: Colors.green[50],
                         color: Colors.green[800],
@@ -322,21 +475,25 @@ class _AddProductState extends State<AddProduct> {
                           ),
                         ),
                         onPressed: () async {
-                          if(_formKey.currentState.validate()) {
+                          if(_formKey.currentState.validate() && productPic != '') {
                             try {
                               await ProductDatabase().updateProductData(
+                                  pid,
                                   _category,
+                                  _subcategory,
                                   brand,
                                   name,
                                   discountPrice,
                                   quantity,
                                   description,
                                   rating,
-                                  actualPrice);
+                                  actualPrice,
+                                  productPic
+                              );
                               showAlertDialog(context);
                             }
                             catch (e) {
-                              showAlertDialogBox(context);
+                             showAlertDialogBox(context);
                             }
                           }
                         }
@@ -348,5 +505,54 @@ class _AddProductState extends State<AddProduct> {
           ),
         ),
       );
+  }
+
+  Widget bottomSheet() {
+    return Container(
+      height: 100.0,
+      width: 280,
+      margin: EdgeInsets.symmetric(
+        horizontal: 20,
+        vertical: 20,
+      ),
+      child: Column(
+        children: <Widget>[
+          Text(
+            "Choose a Product photo",
+            style: TextStyle(
+              fontSize: 20.0,
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+            FlatButton.icon(
+              icon: Icon(Icons.camera),
+              onPressed: () {
+                getImage(ImageSource.camera);
+              },
+              label: Text("Camera"),
+            ),
+            FlatButton.icon(
+              icon: Icon(Icons.image),
+              onPressed: () {
+                getImage(ImageSource.gallery);
+              },
+              label: Text("Gallery"),
+            ),
+          ])
+        ],
+      ),
+    );
+  }
+}
+
+class MyClip extends CustomClipper<Rect> {
+  Rect getClip(Size size) {
+    return Rect.fromLTWH(0, 0, 100, 100);
+  }
+  bool shouldReclip(oldClipper) {
+    return false;
   }
 }
