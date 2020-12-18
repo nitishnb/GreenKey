@@ -13,8 +13,9 @@ class Info {
   final String phoneNumber;
   final String email;
   final String address;
+  final dynamic cart;
   final String profile_pic;
 
-  Info({this.uid, this.name, this.phoneNumber, this.email, this.address, this.profile_pic});
+  Info({this.uid, this.name, this.phoneNumber, this.email, this.address, this.cart, this.profile_pic});
 
 }

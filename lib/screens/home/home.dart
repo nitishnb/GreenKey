@@ -1,4 +1,6 @@
+import 'package:GreenKey/screens/admin/home.dart';
 import 'package:GreenKey/screens/home/cart.dart';
+import 'package:GreenKey/screens/home/details.dart';
 import 'package:GreenKey/screens/home/example.dart';
 import 'package:GreenKey/screens/home/producthome.dart';
 import 'package:GreenKey/screens/home/settings.dart';
@@ -11,6 +13,7 @@ import 'package:GreenKey/screens/home/profile.dart';
 import 'package:GreenKey/shared/loading.dart';
 import 'package:GreenKey/services/database.dart';
 import 'package:GreenKey/models/user.dart';
+import 'package:GreenKey/services/proddatabase.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -56,6 +59,7 @@ class _HomelayoutState  extends State<Homelayout> {
   int _currentIndex = 0, _selectedindex = -1;
   bool _toggle = true;
   dynamic _bottomSelect = MyApp2();
+  String email;
 
   showAlertDialog(BuildContext context) {
 
@@ -224,6 +228,7 @@ class _HomelayoutState  extends State<Homelayout> {
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
                                   Info userData = snapshot.data;
+                                  email = userData.email;
                                   String url = userData.profile_pic;
                                   return Column(
                                     children: <Widget>[
@@ -445,6 +450,20 @@ class _HomelayoutState  extends State<Homelayout> {
                                       );
                                       },
                                   ),
+                                  email == 'admin123@greenkey.co.in' ? ListTile(
+                                    selected: _selectedindex == 9,
+                                    //          selectedTileColor: Colors.green[100],
+                                    title: Text('Admin Login',
+                                      style: TextStyle(fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey[800],
+                                      ),
+                                    ),
+                                    onTap: () {
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => HomeAdmin()));
+                                    },
+                                  ) :
+                                      Text(""),
                                 ],
                               ),
                             ),
@@ -519,7 +538,7 @@ class _HomelayoutState  extends State<Homelayout> {
                         _bottomSelect = Help();
                         break;
                       case 4 :
-                        _bottomSelect = CartScreen();
+                        _bottomSelect = CartScreen(uid: user.uid);
                         break;
                     }
                   }
@@ -611,7 +630,7 @@ class MyApp2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -637,7 +656,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void getPostsData() {
     List<dynamic> responseList = FARM_DATA;
     List<Widget> listItems = [];
-    responseList.forEach((post) {
+    /*responseList.forEach((post) {
       listItems.add(Container(
           height: 150,
           margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -666,25 +685,31 @@ class _MyHomePageState extends State<MyHomePage> {
                     Text(
                       "\$ ${post["price"]}",
                       style: const TextStyle(fontSize: 25, color: Colors.black, fontWeight: FontWeight.bold),
-                    ),
+                    )
                   ],
                 ),
                 Image.asset(
-                  "assets/${post["image"]}",
-                  fit: BoxFit.fill,
+                  "assets/images/${post["image"]}",
+                  height: double.infinity,
                 )
               ],
             ),
           )));
-    });
+    });*/
+
     setState(() {
       itemsData = listItems;
     });
   }
 
+  List products = [];
+  List ids = [];
+
   @override
   void initState() {
     super.initState();
+    fetchDatabaseProducts();
+
     getPostsData();
     controller.addListener(() {
 
@@ -697,60 +722,196 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  fetchDatabaseProducts() async{
+    dynamic resultant = await ProdDatabase().getProductsList();
+    if (resultant == null) {
+      print('Loading Product , please wait.....');
+    } else {
+      setState(() {
+        products = resultant;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    final double categoryHeight = size.height*0.30;
+    final double categoryHeight = size.height*0.34;
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.white,
 
-        body: Container(
-          height: size.height,
-          child: Column(
-            children: <Widget>[
 
-              const SizedBox(
-                height: 20,
-              ),
-              AnimatedOpacity(
-                duration: const Duration(milliseconds: 200),
-                opacity: closeTopContainer?0:1,
-                child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    width: size.width,
-                    alignment: Alignment.topCenter,
-                    height: closeTopContainer?0:categoryHeight,
-                    child: categoriesScroller),
-              ),
-              Expanded(
-                  child: ListView.builder(
-                      controller: controller,
-                      itemCount: itemsData.length,
-                      physics: BouncingScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        double scale = 1.0;
-                        if (topContainer > 0.5) {
-                          scale = index + 0.5 - topContainer;
-                          if (scale < 0) {
-                            scale = 0;
-                          } else if (scale > 1) {
-                            scale = 1;
-                          }
+        body: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          physics: BouncingScrollPhysics(),
+          child: Container(
+            height: size.height + 286,
+            child: Column(
+              children: <Widget>[
+
+                const SizedBox(
+                  height: 20,
+                ),
+                AnimatedOpacity(
+                  duration: const Duration(milliseconds: 200),
+                  opacity: closeTopContainer?0:1,
+                  child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      width: size.width,
+                      alignment: Alignment.topCenter,
+                      height: closeTopContainer?0:categoryHeight,
+                      child: categoriesScroller),
+                ),
+                Column(
+                  children:<Widget>[
+                    Align(alignment: Alignment.centerLeft,child: Text('  Recommended:',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,),textAlign: TextAlign.left,)),
+                    Container(
+                      height: 100,
+                      margin: const EdgeInsets.symmetric(vertical: 4),
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        physics: BouncingScrollPhysics(),
+                        itemCount: products.length,
+                        itemBuilder: (ctx, i) {
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => DetailsScreen(pid: products[i].pid,)),
+                              );
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(9.0),
+                                  color: Colors.white,
+                                ),
+
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  width: MediaQuery.of(context).size.width / 3.0,
+                                  margin: const EdgeInsets.only(right: 8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                    color: Colors.transparent,
+                                  ),
+                                  //child: Text("Test[$i]",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                                  child: Image.network('${products[i].image_url}',fit:BoxFit.cover ,),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  children:<Widget>[
+                    SizedBox(height: 14,),
+                    Align(alignment: Alignment.centerLeft,child: Text('  Popular:',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,),textAlign: TextAlign.left,)),
+                    Container(
+                      height: 100,
+                      margin: const EdgeInsets.symmetric(vertical: 6),
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        physics: BouncingScrollPhysics(),
+                        itemCount: products.length,
+                        itemBuilder: (ctx, i) {
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => DetailsScreen(pid: products[i].pid,)),
+                              );
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(9.0),
+                                  color: Colors.white,
+                                ),
+
+
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  width: MediaQuery.of(context).size.width / 3.0,
+                                  margin: const EdgeInsets.only(right: 8),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                    color: Colors.transparent,
+                                  ),
+                                  //child: Text("Test[$i]",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                                  child: Image.network('${products[i].image_url}',fit:BoxFit.cover ,),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 24,),
+                Align(alignment: Alignment.centerLeft,child: Text('  Explore:',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,),textAlign: TextAlign.left,)),
+                SizedBox(height: 8,),
+                SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  physics: BouncingScrollPhysics(),
+                  child: Container(
+                    height: 500,
+                    child:
+                    GridView.builder(
+                        itemCount: products.length,
+                        gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                        ),
+                        itemBuilder: (BuildContext context, int i){
+                          return Single_prod(
+                            pid: products[i].pid,
+                            name: products[i].name,
+                            img_url: products[i].image_url,
+                            actual_price: products[i].mrp,
+                            discount_price: products[i].price,
+                          );
                         }
-                        return Opacity(
-                          opacity: scale,
-                          child: Transform(
-                            transform:  Matrix4.identity()..scale(scale,scale),
-                            alignment: Alignment.bottomCenter,
-                            child: Align(
-                                heightFactor: 0.7,
-                                alignment: Alignment.topCenter,
-                                child: itemsData[index]),
-                          ),
-                        );
-                      })),
-            ],
+                    ),
+                  ),
+                ),
+
+
+
+                /*Expanded(
+                    child: ListView.builder(
+                        controller: controller,
+                        itemCount: itemsData.length,
+                        physics: BouncingScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          double scale = 1.0;
+                          if (topContainer > 0.5) {
+                            scale = index + 0.5 - topContainer;
+                            if (scale < 0) {
+                              scale = 0;
+                            } else if (scale > 1) {
+                              scale = 1;
+                            }
+                          }
+                          return Opacity(
+                            opacity: scale,
+                            child: Transform(
+                              transform:  Matrix4.identity()..scale(scale,scale),
+                              alignment: Alignment.bottomCenter,
+                              child: Align(
+                                  heightFactor: 0.7,
+                                  alignment: Alignment.topCenter,
+                                  child: itemsData[index]),
+                            ),
+                          );
+                        })),*/
+              ],
+            ),
           ),
         ),
       ),
@@ -763,166 +924,213 @@ class CategoriesScroller extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double categoryHeight = MediaQuery.of(context).size.height * 0.30 - 50;
-    return SingleChildScrollView(
-      physics: BouncingScrollPhysics(),
-      scrollDirection: Axis.horizontal,
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-        child: FittedBox(
-          fit: BoxFit.fill,
-          alignment: Alignment.topCenter,
-          child: Row(
-            children: <Widget>[
+    int index = 0;
+    final double categoryHeight = MediaQuery.of(context).size.height * 0.22 - 24;
+    return Column(
+      children: <Widget>[
+        Container(
+          margin: const EdgeInsets.symmetric(vertical: 10),
+          height: 50,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            physics: BouncingScrollPhysics(),
+            children: [
               Container(
-                width: 250,
-                margin: EdgeInsets.only(right: 10),
-                height: categoryHeight,
+                alignment: Alignment.center,
+                width: MediaQuery.of(context).size.width / 3,
+                margin: const EdgeInsets.only(right: 4),
                 decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(
-                          'assets/equip1.jpg'
-                      ),
-                      fit: BoxFit.fill,
-                    ),
-                    borderRadius: BorderRadius.all(Radius.circular(20.0))
+                  borderRadius: BorderRadius.circular(15.0),
+                  color: Colors.grey[900],
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        "Most Rated\nEquipments",
-                        style: TextStyle(fontSize: 25, color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "20 Items",
-                        style: TextStyle(fontSize: 16, color: Colors.white),
-                      ),
-                    ],
-                  ),
-                ),
+                child: Text("Scientific Farming",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
               ),
               Container(
-                width: 250,
-                margin: EdgeInsets.only(right: 20),
-                height: categoryHeight,
+                alignment: Alignment.center,
+                width: MediaQuery.of(context).size.width / 3,
+                margin: const EdgeInsets.only(right: 4),
                 decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(
-                          'assets/new.jpg'
-                      ),
-                      fit: BoxFit.fill,
-                    ),
-                    borderRadius: BorderRadius.all(Radius.circular(20.0))
+                  borderRadius: BorderRadius.circular(15.0),
+                  color: Colors.grey[900],
                 ),
-                child: Container(
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          "Newest",
-                          style: TextStyle(fontSize: 25, color: Colors.white, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          "20 Items",
-                          style: TextStyle(fontSize: 16, color: Colors.white),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                child: Text("Solar Tech",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
               ),
               Container(
-                width: 250,
-                margin: EdgeInsets.only(right: 20),
-                height: categoryHeight,
+                alignment: Alignment.center,
+                width: MediaQuery.of(context).size.width / 3,
+                margin: const EdgeInsets.only(right: 4),
                 decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(
-                          'assets/agri.jpg'
-                      ),
-                      fit: BoxFit.fill,
-                    ),
-                    borderRadius: BorderRadius.all(Radius.circular(20.0))),
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        "Farmese\nZone",
-                        style: TextStyle(fontSize: 25, color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "20 Items",
-                        style: TextStyle(fontSize: 16, color: Colors.white),
-                      ),
-                    ],
-                  ),
+                  borderRadius: BorderRadius.circular(15.0),
+                  color: Colors.grey[900],
                 ),
+                child: Text("Organic Farm",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
               ),
               Container(
-                width: 250,
-                margin: EdgeInsets.only(right: 20),
-                height: categoryHeight,
+                alignment: Alignment.center,
+                width: MediaQuery.of(context).size.width / 3,
+                margin: const EdgeInsets.only(right: 4),
                 decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(
-                          'assets/deepa.jpg'
-                      ),
-                      fit: BoxFit.fill,
-                    ),
-                    borderRadius: BorderRadius.all(Radius.circular(20.0))
+                  borderRadius: BorderRadius.circular(15.0),
+                  color: Colors.grey[900],
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        "Deepavali\nOffers",
-                        style: TextStyle(fontSize: 25, color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "20 Items",
-                        style: TextStyle(fontSize: 16, color: Colors.white),
-                      ),
-                    ],
-                  ),
+                child: Text("Machinery",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+              ),
+              Container(
+                alignment: Alignment.center,
+                width: MediaQuery.of(context).size.width /2.6,
+                margin: const EdgeInsets.only(right: 4),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15.0),
+                  color: Colors.grey[900],
                 ),
+                child: Text("Chemical Fertilisers",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
               ),
             ],
           ),
         ),
-      ),
+
+        SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          scrollDirection: Axis.horizontal,
+          child: Container(
+            margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            child: FittedBox(
+              fit: BoxFit.fill,
+              alignment: Alignment.topCenter,
+              child: Row(
+                children: <Widget>[
+                  Container(
+                    width: 250,
+                    margin: EdgeInsets.only(right: 10),
+                    height: categoryHeight,
+                    decoration: BoxDecoration(color: Colors.orange.shade400, borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            "Most Rated\nEquipments",
+                            style: TextStyle(fontSize: 25, color: Colors.white, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            "20 Items",
+                            style: TextStyle(fontSize: 16, color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: 250,
+                    margin: EdgeInsets.only(right: 10),
+                    height: categoryHeight,
+                    decoration: BoxDecoration(color: Colors.blue.shade400, borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                    child: Container(
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              "Newest",
+                              style: TextStyle(fontSize: 25, color: Colors.white, fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              "20 Items",
+                              style: TextStyle(fontSize: 16, color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: 250,
+                    margin: EdgeInsets.only(right: 10),
+                    height: categoryHeight,
+                    decoration: BoxDecoration(color: Colors.yellow.shade500, borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            "Farmese\nZone",
+                            style: TextStyle(fontSize: 25, color: Colors.white, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            "20 Items",
+                            style: TextStyle(fontSize: 16, color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: 250,
+                    margin: EdgeInsets.only(right: 10),
+                    height: categoryHeight,
+                    decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            "Deepavali\nOffers",
+                            style: TextStyle(fontSize: 25, color: Colors.white, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            "20 Items",
+                            style: TextStyle(fontSize: 16, color: Colors.white),
+                          ),
+
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: 0),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: List.generate(
+            4,
+                (i) {
+              return Container(
+                width: 9,
+                height: 9,
+                margin: EdgeInsets.symmetric(horizontal: 10),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: i == index ? Colors.black : Colors.grey,
+                ),
+              );
+            },
+          ),
+        )
+      ],
     );
+
   }
 }
 
-class Message extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Center(child: Text("NO MESSAGES",style: TextStyle(fontSize: 40,color: Colors.grey[800]))),
-    );
-  }
-}
 
 class GreenPay extends StatelessWidget {
   @override
@@ -1004,6 +1212,60 @@ class Help extends StatelessWidget {
               ),
               ]
         )
+      ),
+    );
+  }
+}
+
+
+class Single_prod extends StatelessWidget {
+  final name;
+  final img_url;
+  final actual_price;
+  final discount_price;
+  final pid;
+  Single_prod({
+    this.pid,
+    this.name,
+    this.img_url,
+    this.actual_price,
+    this.discount_price,
+  });
+  @override
+
+
+  Widget build(BuildContext context) {
+    return Card(
+      child: Hero(
+        tag: name,
+        child: Material(
+          child: GestureDetector(
+            onTap: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => DetailsScreen(pid: pid,)),
+              );
+            },
+            child: GridTile(
+              footer: Container(
+                color: Colors.white70,
+                child: /*ListTile(
+                    leading: Text('$name', style: TextStyle(fontWeight: FontWeight.bold),),
+                    title: Text('₹ $actual_price', style: TextStyle(fontWeight: FontWeight.bold),),
+                    subtitle: Text('₹ $actual_price', style: TextStyle(fontWeight: FontWeight.bold),),
+                  ),*/Column(
+                  children: <Widget>[
+                    //Text('$name\n', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),),
+                    Align(alignment: Alignment.centerLeft,child: Text('$name',textAlign: TextAlign.left,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),)),
+                    Align(alignment: Alignment.centerLeft,child: Text('₹ $discount_price',textAlign: TextAlign.left,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16,color: Colors.grey[900]),)),
+                    Align(alignment: Alignment.centerLeft,child: Text('₹ $actual_price',textAlign: TextAlign.left,style: TextStyle(fontSize: 14,color: Colors.red,decoration: TextDecoration.lineThrough),)),
+                  ],
+                ),
+              ),
+              child: Image.network(img_url,fit: BoxFit.cover,),
+            ),
+          ),
+        ),
       ),
     );
   }
