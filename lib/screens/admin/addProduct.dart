@@ -86,7 +86,6 @@ class _AddProductState extends State<AddProduct> {
 
   final _formKey = GlobalKey<FormState>();
 
-
   Future uploadPic(BuildContext context) async{
     StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child('Product Pics/$pid.jpg');
     StorageUploadTask uploadTask = firebaseStorageRef.putFile(newImg);
@@ -154,10 +153,10 @@ class _AddProductState extends State<AddProduct> {
                       ),
                     ),
                     SizedBox(height: 30.0,),
-                    Text(
+ /*                   Text(
                       "$pid"
                     ),
-                    FormField<String>(
+ */                   FormField<String>(
                       builder: (FormFieldState<String> state) {
                         return InputDecorator(
                           decoration: InputDecoration(

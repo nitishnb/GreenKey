@@ -61,7 +61,7 @@ class _HomelayoutState  extends State<Homelayout> {
 
     // set up the buttons
     Widget cancelButton = FlatButton(
-      color: Colors.green,
+      //color: Colors.green,
       child: Text("Cancel",
         style: TextStyle(
           color: Colors.black,
@@ -75,14 +75,15 @@ class _HomelayoutState  extends State<Homelayout> {
       },
     );
     Widget continueButton = FlatButton(
-      color: Colors.redAccent,
+      //color: Colors.redAccent,
       child: Text("Logout",
         style: TextStyle(
-          color: Colors.black,
+          color: Colors.red,
         ),
       ),
       onPressed:  () async {
         await _auth.signOut();
+        _auth.signOutGoogle();
         Navigator.pop(context);
       },
     );
@@ -464,6 +465,7 @@ class _HomelayoutState  extends State<Homelayout> {
                                       Navigator.pop(context);
                                     },
                                   ),
+                                  userData.email == 'admin@greenkey.co.in' ?
                                   ListTile(
                                     selected: _selectedindex == 9,
                                     //          selectedTileColor: Colors.green[100],
@@ -474,12 +476,14 @@ class _HomelayoutState  extends State<Homelayout> {
                                       ),
                                     ),
                                     onTap: () {
-                                      if (userData.email == 'admin123@greenkey.co.in')
+                                    //  if (userData.email == 'admin123@greenkey.co.in')
                                         Navigator.push(context, MaterialPageRoute(builder: (context) => HomeAdmin()));
-                                      else
-                                        showAlertDialogBox(context);
-                                    },
-                                  ),
+                                      //else
+                                        //showAlertDialogBox(context);
+                                    }
+                                  )
+                                      :
+                                  Text('')
                                 ],
                               ),
                             ),

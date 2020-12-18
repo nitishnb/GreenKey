@@ -135,7 +135,7 @@ class _SignInState extends State<SignIn> {
                         ),
                       )
                   ),
-//                  SizedBox(height: 5.0,),
+//                  SizedBox(height: 5.0,)
                   RaisedButton(
                     textColor: Colors.green[50],
                     color: Colors.green[800],
@@ -165,6 +165,38 @@ class _SignInState extends State<SignIn> {
                     error,
                     style: TextStyle(
                         color: Colors.red
+                    ),
+                  ),
+                  SizedBox(height: 15.0,),
+                  //Divider(height: 10.0, color: Colors.green[700],),
+                  OutlineButton(
+                    splashColor: Colors.green,
+                    onPressed: () {
+                      _auth.signInWithGoogle().whenComplete(() => Navigator.push(context, MaterialPageRoute(builder: (context) => Home())));
+                    },
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+                    highlightElevation: 0,
+                    borderSide: BorderSide(color: Colors.green),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Image(image: NetworkImage('https://assets.stickpng.com/images/5847f9cbcef1014c0b5e48c8.png'), height: 18.0),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Text(
+                              'Sign in with Google',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.bold
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                   SizedBox(height: 15.0,),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:green_key/screens/admin/addProduct.dart';
+import 'package:green_key/screens/admin/editProduct.dart';
 import 'package:green_key/screens/home/home.dart';
 import 'package:provider/provider.dart';
 import 'package:green_key/models/user.dart';
@@ -94,7 +95,7 @@ class _HomeAdminState extends State<HomeAdmin> {
                   vertical: 10.0, horizontal: 25.0),
               child: InkWell(
                 onTap: () {
-                  print("Hi");
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => EditProduct()));
                 },
                 child: ListTile(
                   leading: Icon(

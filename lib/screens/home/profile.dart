@@ -99,11 +99,13 @@ class _ProfileState extends State<Profile> {
                       Center(
                         child: Stack(
                             children:<Widget>[ Center(
-                              child: newimg == null ?
+                              child: 
+                              
+                              newimg == null ?
                               CircleAvatar(
                                 radius:66,
                                 backgroundColor: Colors.blue,
-                                backgroundImage: NetworkImage('$currentProfilepic'),
+                                backgroundImage: userData.profilePic == null ? AssetImage('assets/account.png') : NetworkImage('$currentProfilepic'),
                               )
                                   :
                               CircleAvatar(
@@ -204,7 +206,7 @@ class _ProfileState extends State<Profile> {
                             color: Colors.teal[900],
                           ),
                           title: Text(
-                            userData.phoneNumber ?? "NO",
+                            userData.phoneNumber ?? "Not Entered",
                             style:
                             TextStyle(fontFamily: 'BalooBhai', fontSize: 13.0),
                           ),
