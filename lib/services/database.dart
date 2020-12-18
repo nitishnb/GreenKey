@@ -11,14 +11,14 @@ class DatabaseService {
   final CollectionReference accountCollection = Firestore.instance.collection(
       'account');
 
-  Future<void> updateUserData(String name, String phoneNumber, String email,
-      String address, String profile_pic) async {
+  Future<void> updateUserData(String name, String phoneNumber, String email, String address, String profile_pic, List cart) async {
     return await accountCollection.document(uid).setData({
       'name': name,
       'phoneNumber': phoneNumber,
       'email': email,
       'address': address == '' ? null : address,
       'profile_pic': profile_pic,
+      'cart' : cart,
     });
   }
 
@@ -32,7 +32,7 @@ class DatabaseService {
         phoneNumber: snapshot.data['phoneNumber'],
         address: snapshot.data['address'],
         cart: snapshot.data['cart'],
-        profile_pic: snapshot.data['profile_pic']
+        profile_pic: snapshot.data['profile_pic'],
     );
   }
 
@@ -47,6 +47,10 @@ class DatabaseService {
   Future getAccountList(String id) async {
     DocumentSnapshot variable = await accountCollection.document(id).get();
     return variable.data['cart'];
+  }
+
+  Future<void> addtoCart(String id, List<dynamic> cart) async {
+    return await accountCollection.document(id).updateData({'cart': cart});
   }
 
 }

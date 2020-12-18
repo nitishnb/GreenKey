@@ -45,6 +45,7 @@ dependencies:
   fluttertoast: ^3.1.0
   flutter_rating_bar: ^3.2.0+1
   uuid: ^2.2.2
+  google_sign_in: ^4.5.3
 
 dev_dependencies:
   flutter_launcher_icons: "^0.7.3"

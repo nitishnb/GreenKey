@@ -2,6 +2,7 @@ import 'package:GreenKey/screens/admin/home.dart';
 import 'package:GreenKey/screens/home/cart.dart';
 import 'package:GreenKey/screens/home/details.dart';
 import 'package:GreenKey/screens/home/example.dart';
+import 'package:GreenKey/screens/home/product/productshome.dart';
 import 'package:GreenKey/screens/home/producthome.dart';
 import 'package:GreenKey/screens/home/settings.dart';
 import 'package:flutter/cupertino.dart';
@@ -58,7 +59,8 @@ class _HomelayoutState  extends State<Homelayout> {
   GlobalKey<ScaffoldState> _stackKey = GlobalKey<ScaffoldState>();
   int _currentIndex = 0, _selectedindex = -1;
   bool _toggle = true;
-  dynamic _bottomSelect = MyApp2();
+  dynamic _bottomSelect = null;
+
   String email;
 
   showAlertDialog(BuildContext context) {
@@ -85,6 +87,7 @@ class _HomelayoutState  extends State<Homelayout> {
       ),
       onPressed:  () async {
         await _auth.signOut();
+        _auth.signOutGoogle();
         Navigator.pop(context);
       },
     );
@@ -110,9 +113,7 @@ class _HomelayoutState  extends State<Homelayout> {
 
   @override
   Widget build(BuildContext context) {
-
   final user = Provider.of<User>(context);
-
     return Scaffold(
               key: _stackKey,
               body: Stack(
@@ -122,7 +123,7 @@ class _HomelayoutState  extends State<Homelayout> {
                     left: 0,
                     right: 0,
                     bottom: 2,
-                    child: _bottomSelect,
+                    child: _bottomSelect ?? MyApp2(ctxt: context),
                   ),
                   Positioned(
                     width: 70,
@@ -185,7 +186,7 @@ class _HomelayoutState  extends State<Homelayout> {
                         SizedBox(height: 10,),
                         Text("Green", style: TextStyle(fontSize: 40,
                           fontWeight: FontWeight.bold,
-                          color: Colors.lightGreenAccent.shade400,),),
+                          color: Colors.green[800],),),
                       ],
                     ),
                   ),
@@ -498,13 +499,6 @@ class _HomelayoutState  extends State<Homelayout> {
                     backgroundColor: Colors.grey[900],
                   ),
                   new BottomNavigationBarItem(
-                    icon: Icon(Icons.mobile_screen_share,
-                      color: Colors.lightGreenAccent.shade400,),
-                    title: Text(
-                      'GreenPay', style: TextStyle(color: Colors.white,),),
-                    backgroundColor: Colors.grey[900],
-                  ),
-                  new BottomNavigationBarItem(
                     icon: Icon(Icons.contact_phone,
                       color: Colors.lightGreenAccent.shade400,),
                     title: Text(
@@ -526,18 +520,15 @@ class _HomelayoutState  extends State<Homelayout> {
                     _currentIndex = index;
                     switch (_currentIndex) {
                       case 0 :
-                        _bottomSelect = MyApp2();
+                        _bottomSelect = MyApp2(ctxt: context);
                         break;
                       case 1 :
                         _bottomSelect = PHome();
                         break;
                       case 2 :
-                        _bottomSelect = GreenPay();
-                        break;
-                      case 3 :
                         _bottomSelect = Help();
                         break;
-                      case 4 :
+                      case 3 :
                         _bottomSelect = CartScreen(uid: user.uid);
                         break;
                     }
@@ -626,6 +617,8 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar> {
 
 
 class MyApp2 extends StatelessWidget {
+  BuildContext ctxt;
+  MyApp2({this.ctxt});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -635,18 +628,22 @@ class MyApp2 extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(),
+      home: MyHomePage(ctxt: ctxt),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
+  BuildContext ctxt;
+  MyHomePage({this.ctxt});
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _MyHomePageState createState() => _MyHomePageState(ctxt: ctxt);
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final CategoriesScroller categoriesScroller = CategoriesScroller();
+  BuildContext ctxt;
+  _MyHomePageState({this.ctxt});
+  CategoriesScroller categoriesScroller;
   ScrollController controller = ScrollController();
   bool closeTopContainer = false;
   double topContainer = 0;
@@ -735,6 +732,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    categoriesScroller = CategoriesScroller(ctxt: ctxt);
     final Size size = MediaQuery.of(context).size;
     final double categoryHeight = size.height*0.34;
     return SafeArea(
@@ -776,8 +774,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           return GestureDetector(
                             onTap: () {
                               Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => DetailsScreen(pid: products[i].pid,)),
+                                ctxt,
+                                MaterialPageRoute(builder: (ctxt) => DetailsScreen(pid: products[i].pid,)),
                               );
                             },
                             child: Padding(
@@ -822,8 +820,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           return GestureDetector(
                             onTap: () {
                               Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => DetailsScreen(pid: products[i].pid,)),
+                                ctxt,
+                                MaterialPageRoute(builder: (ctxt) => DetailsScreen(pid: products[i].pid,)),
                               );
                             },
                             child: Padding(
@@ -875,6 +873,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             img_url: products[i].image_url,
                             actual_price: products[i].mrp,
                             discount_price: products[i].price,
+                            ctxt: ctxt,
                           );
                         }
                     ),
@@ -920,7 +919,8 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class CategoriesScroller extends StatelessWidget {
-  const CategoriesScroller();
+  BuildContext ctxt;
+  CategoriesScroller({this.ctxt});
 
   @override
   Widget build(BuildContext context) {
@@ -935,55 +935,95 @@ class CategoriesScroller extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             physics: BouncingScrollPhysics(),
             children: [
-              Container(
-                alignment: Alignment.center,
-                width: MediaQuery.of(context).size.width / 3,
-                margin: const EdgeInsets.only(right: 4),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.0),
-                  color: Colors.grey[900],
+              GestureDetector(
+                child: Container(
+                  alignment: Alignment.center,
+                  width: MediaQuery.of(context).size.width / 3,
+                  margin: const EdgeInsets.only(right: 4),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15.0),
+                    color: Colors.green[800],
+                  ),
+                  child: Text("Scientific Farming",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
                 ),
-                child: Text("Scientific Farming",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                onTap: (){
+                  Navigator.push(
+                    ctxt,
+                    MaterialPageRoute(builder: (ctxt) => Productlist(category:"Technology", title: "Scientific Farming")),
+                  );
+                },
               ),
-              Container(
-                alignment: Alignment.center,
-                width: MediaQuery.of(context).size.width / 3,
-                margin: const EdgeInsets.only(right: 4),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.0),
-                  color: Colors.grey[900],
+              GestureDetector(
+                child: Container(
+                  alignment: Alignment.center,
+                  width: MediaQuery.of(context).size.width / 3,
+                  margin: const EdgeInsets.only(right: 4),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15.0),
+                    color: Colors.green[800],
+                  ),
+                  child: Text("Solar Tech",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
                 ),
-                child: Text("Solar Tech",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                onTap: (){
+                  Navigator.push(
+                    ctxt,
+                    MaterialPageRoute(builder: (ctxt) => Productlist(category:"Technology", title: "Solar Tech")),
+                  );
+                  },
+                ),
+              GestureDetector(
+                child: Container(
+                  alignment: Alignment.center,
+                  width: MediaQuery.of(context).size.width / 3,
+                  margin: const EdgeInsets.only(right: 4),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15.0),
+                    color: Colors.green[800],
+                  ),
+                  child: Text("Organic Farm",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                ),
+                onTap: (){
+                  Navigator.push(
+                    ctxt,
+                    MaterialPageRoute(builder: (ctxt) => Productlist(category:"Technology", title: "Organic Farm")),
+                  );
+                },
               ),
-              Container(
-                alignment: Alignment.center,
-                width: MediaQuery.of(context).size.width / 3,
-                margin: const EdgeInsets.only(right: 4),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.0),
-                  color: Colors.grey[900],
+              GestureDetector(
+                child: Container(
+                  alignment: Alignment.center,
+                  width: MediaQuery.of(context).size.width / 3,
+                  margin: const EdgeInsets.only(right: 4),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15.0),
+                    color: Colors.green[800],
+                  ),
+                  child: Text("Machinery",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
                 ),
-                child: Text("Organic Farm",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                onTap: (){
+                  Navigator.push(
+                    ctxt,
+                    MaterialPageRoute(builder: (ctxt) => Productlist(category:"Technology", title: "Machinery")),
+                  );
+                },
               ),
-              Container(
-                alignment: Alignment.center,
-                width: MediaQuery.of(context).size.width / 3,
-                margin: const EdgeInsets.only(right: 4),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.0),
-                  color: Colors.grey[900],
+              GestureDetector(
+                child: Container(
+                  alignment: Alignment.center,
+                  width: MediaQuery.of(context).size.width /2.6,
+                  margin: const EdgeInsets.only(right: 4),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15.0),
+                    color: Colors.green[800],
+                  ),
+                  child: Text("Chemical Fertilisers",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
                 ),
-                child: Text("Machinery",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
-              ),
-              Container(
-                alignment: Alignment.center,
-                width: MediaQuery.of(context).size.width /2.6,
-                margin: const EdgeInsets.only(right: 4),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.0),
-                  color: Colors.grey[900],
-                ),
-                child: Text("Chemical Fertilisers",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                onTap: (){
+                  Navigator.push(
+                    ctxt,
+                    MaterialPageRoute(builder: (ctxt) => Productlist(category:"Technology", title: "Chemical Fertilisers")),
+                  );
+                },
               ),
             ],
           ),
@@ -1003,7 +1043,7 @@ class CategoriesScroller extends StatelessWidget {
                     width: 250,
                     margin: EdgeInsets.only(right: 10),
                     height: categoryHeight,
-                    decoration: BoxDecoration(color: Colors.orange.shade400, borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                    decoration: BoxDecoration(image: DecorationImage(image: AssetImage('assets/equip1.jpg'), fit: BoxFit.cover,), borderRadius: BorderRadius.all(Radius.circular(20.0))),
                     child: Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: Column(
@@ -1028,7 +1068,7 @@ class CategoriesScroller extends StatelessWidget {
                     width: 250,
                     margin: EdgeInsets.only(right: 10),
                     height: categoryHeight,
-                    decoration: BoxDecoration(color: Colors.blue.shade400, borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                    decoration: BoxDecoration(image: DecorationImage(image: AssetImage('assets/new.jpg'), fit: BoxFit.cover,), borderRadius: BorderRadius.all(Radius.circular(20.0))),
                     child: Container(
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),
@@ -1055,7 +1095,7 @@ class CategoriesScroller extends StatelessWidget {
                     width: 250,
                     margin: EdgeInsets.only(right: 10),
                     height: categoryHeight,
-                    decoration: BoxDecoration(color: Colors.yellow.shade500, borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                    decoration: BoxDecoration(image: DecorationImage(image: AssetImage('assets/agri.jpg'), fit: BoxFit.cover,), borderRadius: BorderRadius.all(Radius.circular(20.0))),
                     child: Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: Column(
@@ -1080,7 +1120,7 @@ class CategoriesScroller extends StatelessWidget {
                     width: 250,
                     margin: EdgeInsets.only(right: 10),
                     height: categoryHeight,
-                    decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                    decoration: BoxDecoration(image: DecorationImage(image: AssetImage('assets/deepa.jpg'), fit: BoxFit.cover,), borderRadius: BorderRadius.all(Radius.circular(20.0))),
                     child: Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: Column(
@@ -1224,12 +1264,14 @@ class Single_prod extends StatelessWidget {
   final actual_price;
   final discount_price;
   final pid;
+  BuildContext ctxt;
   Single_prod({
     this.pid,
     this.name,
     this.img_url,
     this.actual_price,
     this.discount_price,
+    this.ctxt,
   });
   @override
 
@@ -1242,8 +1284,8 @@ class Single_prod extends StatelessWidget {
           child: GestureDetector(
             onTap: (){
               Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => DetailsScreen(pid: pid,)),
+                ctxt,
+                MaterialPageRoute(builder: (ctxt) => DetailsScreen(pid: pid,)),
               );
             },
             child: GridTile(

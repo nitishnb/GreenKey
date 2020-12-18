@@ -35,7 +35,6 @@ class _ProductlistState extends State<Productlist> {
   @override
   Widget build(BuildContext context) {
     fetchDatabaseProducts();
-    print('This is $products');
     return Scaffold(
         backgroundColor: Colors.green[50],
         appBar: AppBar(

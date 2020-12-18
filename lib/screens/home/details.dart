@@ -1,12 +1,15 @@
 import 'dart:ui';
 
 import 'package:GreenKey/models/products.dart';
+import 'package:GreenKey/models/user.dart';
+import 'package:GreenKey/services/database.dart';
 import 'package:GreenKey/shared/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:GreenKey/global.dart';
 import 'package:GreenKey/ui/widgets/carouselproductslist.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:share/share.dart';
 import 'package:GreenKey/services/proddatabase.dart';
@@ -79,11 +82,26 @@ class _DetailsScreenState extends State<DetailsScreen> {
         msg: "EXTERNAL_WALLET: " + response.walletName, timeInSecForIos: 4);
   }
 
+  List<dynamic> products;
+  List<dynamic> newproducts;
+
+  fetchDatabaseProducts(String uid) async{
+    dynamic resultant = await DatabaseService().getAccountList(uid);
+    if (resultant == null) {
+      print('Loading Product , please wait.....');
+    } else {
+      setState(() {
+        products = resultant;
+      });
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
 
-
+    final user = Provider.of<User>(context);
+    fetchDatabaseProducts(user.uid);
     return StreamBuilder<Prod>(
         stream: ProdDatabase(pid: pid).prodData,
         builder: (context, snapshot) {
@@ -270,7 +288,20 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                     Icons.shopping_cart,
                                     color: Colors.white,
                                   ),
-                                  onPressed: () {},
+                                  onPressed: () async {
+                                    if(products.contains(pid)){
+                                      print('Already Exits in cart');
+                                      Fluttertoast.showToast(msg: 'Already Exits in cart', timeInSecForIos: 4);
+                                    } else {
+                                      setState(() {
+                                        newproducts = products.toList();
+                                        newproducts.add(pid);
+                                      });
+                                      await DatabaseService().addtoCart(user.uid, newproducts);
+                                      print('Added Successfully');
+                                      Fluttertoast.showToast(msg: 'Added Successfully', timeInSecForIos: 4);
+                                    }
+                                  },
                                 ),
                               ),
                               Container(

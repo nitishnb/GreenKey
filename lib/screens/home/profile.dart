@@ -38,6 +38,7 @@ class _ProfileState extends State<Profile> {
   String _currentAddress;
   String _currentEmail;
   String _currentProfilepic;
+  List _currentCart;
 
 
   @override
@@ -58,6 +59,7 @@ class _ProfileState extends State<Profile> {
         _currentEmail,
         _currentAddress,
         _currentProfilepic,
+        _currentCart,
       );
       setState(() {
         newimg = null;
@@ -88,6 +90,7 @@ class _ProfileState extends State<Profile> {
             _currentAddress = userData.address;
             _currentEmail = userData.email;
             _currentProfilepic = userData.profile_pic;
+            _currentCart = userData.cart;
             return Scaffold(
               backgroundColor: Colors.green[50],
               appBar: AppBar(
@@ -202,7 +205,7 @@ class _ProfileState extends State<Profile> {
                             Icons.phone,
                             color: Colors.teal[900],
                           ),
-                          title: Text(
+                          title: userData.phoneNumber==null ? Text('Not Entered', style: TextStyle(fontFamily: 'BalooBhai', fontSize: 18.0,color: Colors.black26),): Text(
                             '+91 ${userData.phoneNumber}',
                             style:
                             TextStyle(fontFamily: 'BalooBhai', fontSize: 18.0),

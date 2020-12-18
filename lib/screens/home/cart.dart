@@ -1,12 +1,16 @@
 
 
+import 'dart:io';
+
 import 'package:GreenKey/models/products.dart';
+import 'package:GreenKey/models/user.dart';
 import 'package:GreenKey/screens/home/details.dart';
 import 'package:GreenKey/services/proddatabase.dart';
 import 'package:flutter/material.dart';
 import 'package:GreenKey/global.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:GreenKey/services/database.dart';
+import 'package:provider/provider.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:GreenKey/shared/loading.dart';
 
@@ -48,12 +52,12 @@ class _CartScreenState extends State<CartScreen> {
     _razorpay.clear();
   }
 
-  void openCheckout() async {
+  void openCheckout(double amount) async {
     var options = {
       'key': 'rzp_test_ZRXnWNrO4XkuSY',
-      'amount': 28200,
+      'amount': amount * 100,
       'name': 'Nitish N Banakar',
-      'description': 'Payment',
+      'description': 'Payment for ${products.length} items',
       'prefill': {'contact': '9380692117', 'email': 'test@razorpay.com'},
       'external': {
         'wallets': ['paytm']
@@ -83,7 +87,7 @@ class _CartScreenState extends State<CartScreen> {
         msg: "EXTERNAL_WALLET: " + response.walletName, timeInSecForIos: 4);
   }
 
-
+  List<dynamic> newproducts;
 
   fetchDatabaseProducts() async{
     dynamic resultant = await DatabaseService().getAccountList(uid);
@@ -101,41 +105,31 @@ class _CartScreenState extends State<CartScreen> {
           setState(() {
             eachprod = resultant;
           });
+          total_amount += eachprod.price;
           cartproducts.add(eachprod);
         }
       }
     }
   }
 
-
-  fetchDatabaseProduct(String id) async{
-    dynamic resultant = await ProdDatabase().getProductList(id);
-    if (resultant == null) {
-      print('Loading Product , please wait.....');
-    } else {
-      setState(() {
-        eachprod = resultant;
-      });
-      cartproducts.add(eachprod);
-    }
-    }
-
   @override
   Widget build(BuildContext context) {
-
+    final user = Provider.of<User>(context);
+    print("The prducts are $products");
     return Padding(
       padding: const EdgeInsets.all(15.0),
-      child: products == null ?
+      child: (products == null || products.length == 0)?
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           SizedBox(height: 25.0,),
-          Text(
+          Center(child: Text(
             "My Bag",
             style: Theme.of(context)
                 .textTheme
                 .display1
                 .copyWith(fontWeight: FontWeight.bold, color: Colors.black),
+          ),
           ),
           SizedBox(height: 255.0,),
           Center(child: Text('No items in your Bag', style: TextStyle(fontSize: 30.0),)),
@@ -145,64 +139,105 @@ class _CartScreenState extends State<CartScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           SizedBox(height: 25.0,),
-          Text(
-            "My Bag",
-            style: Theme.of(context)
-                .textTheme
-                .display1
-                .copyWith(fontWeight: FontWeight.bold, color: Colors.black),
+          GestureDetector(
+            child: Center(child: Text(
+              "My Bag",
+              style: Theme.of(context)
+                  .textTheme
+                  .display1
+                  .copyWith(fontWeight: FontWeight.bold, color: Colors.black),
+              ),
+            ),
+            onTap: (){
+              setState(() {
+
+              });
+            },
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: products.length,
+              itemCount: cartproducts.length,
               itemBuilder: (ctx, i) {
                 return Container(
                   margin: const EdgeInsets.only(bottom: 25),
-                  child: GestureDetector(
-                          child: Row(
+                  child: Row(
                             children: <Widget>[
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15.0),
-                                    color: Colors.white,
-                                  ),
-                                  child: Image.network(
-                                    "${cartproducts[i].image_url}",
-                                    height: 120.0,
+                              GestureDetector(
+                                child: Expanded(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15.0),
+                                      color: Colors.white,
+                                    ),
+                                    child: Image.network(
+                                      "${cartproducts[i].image_url}",
+                                        height: 120.0,
+                                        width: 150.0,
+                                    ),
                                   ),
                                 ),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => DetailsScreen(pid: cartproducts[i].pid,)),
+                                  );
+                                },
                               ),
                               SizedBox(width: 15),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
-                                    Text(
-                                      "${cartproducts[i].name}",
-                                      style: Theme
-                                          .of(context)
-                                          .textTheme
-                                          .title,
+                                    GestureDetector(
+                                      child: Text(
+                                        "${cartproducts[i].name}",
+                                        style: TextStyle(fontSize: 20.0),
+                                      ),
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => DetailsScreen(pid: cartproducts[i].pid,)),
+                                        );
+                                      },
                                     ),
-                                    Text(
-                                      "${cartproducts[i].price}",
+                                    SizedBox(height: 10.0,),
+                                    GestureDetector(
+                                      child: Text(
+                                        "₹ ${cartproducts[i].price}",
+                                          style: TextStyle(color: Colors.red[900], fontStyle: FontStyle.italic, fontSize: 18.0),
+                                      ),
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => DetailsScreen(pid: cartproducts[i].pid,)),
+                                        );
+                                      },
                                     ),
                                     SizedBox(height: 15),
-                                    MyCounter(),
+                                    RaisedButton.icon(
+                                        hoverColor: Colors.red[800],
+                                        color: Colors.red[300],
+                                        onPressed: () async {
+                                          setState(() {
+                                            newproducts = products.toList();
+                                            newproducts.remove(products[i]);
+                                          });
+                                          print('$products - ${products[i]}');
+                                          print(newproducts);
+                                          await DatabaseService().addtoCart(user.uid, newproducts);
+                                          print('Removed Successfully');
+                                          Fluttertoast.showToast(msg: 'Removed Successfully', timeInSecForIos: 4);
+                                        },
+                                        icon: Icon(Icons.remove_circle),
+                                        label: Text("Remove", style: TextStyle(color: Colors.black))
+                                    ),
                                   ],
                                 ),
                               ),
 
                             ],
                           ),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => DetailsScreen(pid: cartproducts[i].pid,)),
-                            );
-                          },
-                        ),
+
                 );
               },
             ),
@@ -215,7 +250,7 @@ class _CartScreenState extends State<CartScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text("TOTAL", style: Theme.of(context).textTheme.subtitle),
-                    Text("${total_amount}",
+                    Text("₹ ${total_amount}",
                         style: Theme.of(context).textTheme.headline),
                   ],
                 ),
@@ -231,7 +266,7 @@ class _CartScreenState extends State<CartScreen> {
                       ),
                     ),
                     onPressed: () {
-                      openCheckout();
+                      openCheckout(total_amount);
                     },
                     color: Colors.green[800],
                     shape: RoundedRectangleBorder(

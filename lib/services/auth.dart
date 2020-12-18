@@ -1,6 +1,7 @@
 import 'package:GreenKey/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:GreenKey/services/database.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
 
@@ -50,7 +51,7 @@ class AuthService {
       FirebaseUser user = result.user;
 
       // create a new document for the user with uid
-      await DatabaseService(uid: user.uid).updateUserData(name, phoneNumber, email, '', null);
+      await DatabaseService(uid: user.uid).updateUserData(name, phoneNumber, email, '', null, []);
       return _userFromFirebaseUser(user);
     } catch(e){
       print(e.toString());
@@ -76,6 +77,34 @@ class AuthService {
       print(e.toString());
       return null;
     }
+  }
+
+  final GoogleSignIn googleSignIn = GoogleSignIn();
+
+  Future signInWithGoogle() async {
+    GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
+    GoogleSignInAuthentication googleSignInAuthentication =
+    await googleSignInAccount.authentication;
+
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+      accessToken: googleSignInAuthentication.accessToken,
+      idToken: googleSignInAuthentication.idToken,
+    );
+
+    AuthResult authResult = await _auth.signInWithCredential(credential);
+    FirebaseUser user = authResult.user;
+
+
+    await DatabaseService(uid : user.uid).updateUserData(user.displayName, user.phoneNumber, user.email, user.phoneNumber, user.photoUrl, []);
+    print('This is uid : ${user.uid}');
+
+    return _userFromFirebaseUser(user);
+  }
+
+  void signOutGoogle() async{
+    await googleSignIn.signOut();
+
+    print("User Sign Out");
   }
 
 }

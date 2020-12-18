@@ -20,37 +20,57 @@ class _ProductTileState extends State<ProductTile> {
   @override
   Widget build(BuildContext context) {
 
-    Color _favIconColor = Colors.red;
 
-    return Padding(
-        padding: EdgeInsets.only(top: 8.0),
-          child: Card(
-              margin: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
-              child: ListTile(
-                leading: Image(
-                  image: NetworkImage('${product.image_url}'),
-                  height: 400.0,
+    return Container(
+      margin: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
+      child: GestureDetector(
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15.0),
+                  color: Colors.white,
                 ),
-                title: Text("${product.name}\n"),
-                subtitle: Text("MRP ₹ ${product.mrp}\nPrice ₹ ${product.price}"),
-                trailing:  IconButton(
-                  icon: Icon(Icons.favorite_rounded),
-                  color: _favIconColor,
-                  tooltip: 'Add to favorite',
-                  onPressed: () {
-                    setState(() {
-                      _favIconColor = _favIconColor == Colors.grey ? Colors.red: Colors.grey;
-                    });
-                  },
+                child: Image.network(
+                  "${product.image_url}",
+                  height: 120.0,
                 ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => DetailsScreen(pid: product.pid,)),
-                  );
-                },
               ),
+            ),
+            SizedBox(width: 15),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "${product.name}",
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .title,
+                  ),
+                  SizedBox(height: 20.0,),
+                  Text("MRP : ₹ ${product.mrp}", style: TextStyle(color: Colors.red[900], fontStyle: FontStyle.italic, decoration: TextDecoration.lineThrough),),
+                  Text(
+                    "Price : ₹ ${product.price}",
+                    style: TextStyle(
+                        color: Colors.red[800], fontStyle: FontStyle.italic, fontSize: 20.0
+                    ),
+                  ),
+                  SizedBox(height: 15),
+                ],
+              ),
+            ),
+          ],
         ),
-      );
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => DetailsScreen(pid: product.pid,)),
+          );
+        },
+      ),
+    );
   }
 }

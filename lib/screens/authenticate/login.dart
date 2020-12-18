@@ -1,3 +1,4 @@
+import 'package:GreenKey/screens/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:GreenKey/services/auth.dart';
 import 'package:GreenKey/shared/loading.dart';
@@ -133,10 +134,47 @@ class _State extends State<LoginPage> {
                     error,
                     style: TextStyle(color: Colors.red, fontSize: 14.0),
                   ),
+                  SizedBox(height: 15.0,),
+                  //Divider(height: 10.0, color: Colors.green[700],),
+                  RaisedButton(
+                    splashColor: Colors.black,
+                    textColor: Colors.white,
+                    color: Colors.white,
+                    onPressed: () async {
+                      _auth.signInWithGoogle().whenComplete(() => Navigator.push(context, MaterialPageRoute(builder: (context) => Home())));
+                      setState(() {
+                        loading = true;
+                      });
+                    },
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+                    highlightElevation: 10,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Image(image: NetworkImage('https://assets.stickpng.com/images/5847f9cbcef1014c0b5e48c8.png'), height: 20.0),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Text(
+                              'Sign in with Google',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.green[800],
+                                  fontWeight: FontWeight.bold
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 15.0,),
                   Container(
                       child: Row(
                         children: <Widget>[
-                          Text('Does not have account?'),
+                          Text("Don't have account?"),
                           FlatButton(
                             textColor: Colors.white,
 

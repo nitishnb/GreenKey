@@ -34,6 +34,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       onPressed:  () async {
         await _auth.signOut();
+        _auth.signOutGoogle();
         Navigator.pop(context);
       },
     );
