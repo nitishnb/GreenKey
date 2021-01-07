@@ -29,15 +29,16 @@ class _State extends State<SignupPage> {
   String conpassword= '';
   String address='';
   String profile_pic='';
+  List cart=[];
 
   @override
   Widget build(BuildContext context) {
     return loading ? Loading() : Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text('GreenKey',textAlign: TextAlign.center,style: TextStyle(fontSize: 32),),
+          title: Text('GreenKey',textAlign: TextAlign.center,style: TextStyle(fontSize: 32,color: Colors.lightGreenAccent.shade200),),
           automaticallyImplyLeading: false,
-          backgroundColor: Colors.lightGreenAccent.shade400,
+          backgroundColor: Colors.blueGrey,
         ),
         body: Padding(
             padding: EdgeInsets.all(10),
@@ -48,7 +49,7 @@ class _State extends State<SignupPage> {
                   Icon(
                     Icons.assignment_ind,
                     size: 140,
-                    color: Colors.lightGreenAccent.shade400,
+                    color: Colors.blueGrey,
                   ),
                   Container(
                       margin: EdgeInsets.only(top: 0,bottom: 30),
@@ -57,18 +58,21 @@ class _State extends State<SignupPage> {
                       child: Text(
                         'SIGN UP',
                         style: TextStyle(
-                            color: Colors.lightGreenAccent.shade400,
+                            color: Colors.blueGrey,
                             fontWeight: FontWeight.bold,
                             fontFamily: 'fonts/IndieFlower-Regular.ttf',
-                            fontSize: 50),
+                            fontSize: 40,
+                        decoration: TextDecoration.underline),
                       )),
                   Container(
                     padding: EdgeInsets.fromLTRB(10, 0, 10, 12),
                     child: TextFormField(
                       decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.lightGreenAccent.shade200,
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0),borderSide: BorderSide(color: Colors.lightGreenAccent.shade400)),
                         labelText: 'User Name :',
-                        labelStyle: TextStyle(color: Colors.lightGreenAccent.shade400,fontWeight: FontWeight.bold),
+                        labelStyle: TextStyle(color: Colors.blueGrey,fontWeight: FontWeight.bold),
                       ),
                       validator: (val) => val.isEmpty ? 'User nam  is mandatory' : null,
                       onChanged: (val) {
@@ -80,9 +84,11 @@ class _State extends State<SignupPage> {
                     child: TextFormField(
                       controller: nameController,
                       decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.lightGreenAccent.shade200,
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0),borderSide: BorderSide(color: Colors.lightGreenAccent.shade400)),
                         labelText: 'Email :',
-                        labelStyle: TextStyle(color: Colors.lightGreenAccent.shade400,fontWeight: FontWeight.bold),
+                        labelStyle: TextStyle(color: Colors.blueGrey,fontWeight: FontWeight.bold),
                       ),
                       validator: (val) => val.isEmpty ? 'Email is mandatory' : null,
                         onChanged: (val) {
@@ -94,9 +100,11 @@ class _State extends State<SignupPage> {
                     child: TextFormField(
 
                       decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.lightGreenAccent.shade200,
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0),borderSide: BorderSide(color: Colors.lightGreenAccent.shade400)),
                         labelText: 'Mobile no :',
-                        labelStyle: TextStyle(color: Colors.lightGreenAccent.shade400,fontWeight: FontWeight.bold),
+                        labelStyle: TextStyle(color: Colors.blueGrey,fontWeight: FontWeight.bold),
                       ),
                       validator: (val) => val.isEmpty ? "Mobile number can't be empty" : null,
                         onChanged: (val) {
@@ -109,9 +117,11 @@ class _State extends State<SignupPage> {
                       obscureText: true,
                       controller: passwordController,
                       decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.lightGreenAccent.shade200,
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0),borderSide: BorderSide(color: Colors.lightGreenAccent.shade400)),
                         labelText: 'Password :',
-                        labelStyle: TextStyle(color: Colors.lightGreenAccent.shade400,fontWeight: FontWeight.bold),
+                        labelStyle: TextStyle(color: Colors.blueGrey,fontWeight: FontWeight.bold),
                       ),
                       validator: (val) => val.length < 6 ? 'Password must include 6+ chars long' : null,
                         onChanged: (val) {
@@ -123,9 +133,11 @@ class _State extends State<SignupPage> {
                     child: TextFormField(
                       obscureText: true,
                       decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.lightGreenAccent.shade200,
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0),borderSide: BorderSide(color: Colors.lightGreenAccent.shade400)),
                         labelText: ' Conform Password :',
-                        labelStyle: TextStyle(color: Colors.lightGreenAccent.shade400,fontWeight: FontWeight.bold),
+                        labelStyle: TextStyle(color: Colors.blueGrey,fontWeight: FontWeight.bold),
                       ),
                       validator: (val) => val != password ? 'Confirm password should match with Password' : null,
                         onChanged: (val) {
@@ -139,18 +151,32 @@ class _State extends State<SignupPage> {
                       height: 50,
                       padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                       child: RaisedButton(
-                        textColor: Colors.white,
-                        color: Colors.lightGreenAccent.shade400,
-                        child: Text('SignUP',style: TextStyle(fontSize: 24),),
+                        textColor: Colors.lightGreenAccent.shade200,
+                        color: Colors.blueGrey,
+                        child: Text('Signup',style: TextStyle(fontSize: 24,),),
                           onPressed: () async {
                             if(_formKey.currentState.validate()){
                               setState(() => loading = true);
-                              dynamic result = await _auth.registerWithEmailAndPassword(uname,mobile,email,password,address,profile_pic);
+                              dynamic result = await _auth.registerWithEmailAndPassword(uname,mobile,email,password,address,profile_pic,cart);
                               if(result == null) {
                                 setState(() {
                                   loading = false;
-                                  error = 'Failed to Register!';
+
                                 });
+                                showDialog(context: context,
+                                    builder:(context){
+                                      return new AlertDialog(
+                                        title: Text("Failed !",style: TextStyle(fontWeight: FontWeight.bold),),
+                                        content: Text("Could'nt Register your account in greenkey!",style: TextStyle(color: Colors.red),),
+                                        actions: <Widget>[
+                                          new MaterialButton(onPressed: (){
+                                            Navigator.pop(context);
+                                          },
+                                            child: Text("OK"),)
+                                        ],
+                                      );
+                                    }
+                                );
                               }
                             }
                           },
@@ -168,12 +194,12 @@ class _State extends State<SignupPage> {
                       child: Row(
                         children: <Widget>[
 
-                          Text('Have an existing account?'),
+                          Text('Have an existing account?',style: TextStyle(color: Colors.blue,fontSize: 18,fontWeight: FontWeight.bold),),
                           FlatButton(
-                            textColor: Colors.lightGreenAccent.shade400,
+                            textColor: Colors.blueGrey,
                             child: Text(
                               'Login',
-                              style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
+                              style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold),
                             ),
                             onPressed: () {
                               widget.toggleView();

@@ -12,10 +12,6 @@ import 'package:provider/provider.dart';
 import 'package:green_key/services/database.dart';
 import 'package:green_key/screens/home/profileform.dart';
 
-
-
-
-
 class Profile extends StatefulWidget {
 
   @override
@@ -60,7 +56,7 @@ class _ProfileState extends State<Profile> {
       String downloadUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
       _currentProfilepic = downloadUrl;
       upload = false;
-      await DatabaseService(uid: user.uid).updateUserData(
+      await DatabaseService(uid: user.uid).updateProfile(
           _currentName,
           _currentPhonenumber,
           _currentEmail,

@@ -32,7 +32,7 @@ class SidebarItem extends StatelessWidget {
                 text,
               ),
               duration: const Duration(milliseconds: 280),
-              style: isSelected ? TextStyle(fontSize: 21.0,color: Colors.grey[900],fontWeight: FontWeight.bold) : TextStyle(fontSize: 20.0,color: Colors.blueGrey,fontWeight: FontWeight.bold),
+              style: isSelected ? TextStyle(fontSize: 21.0,color: Colors.grey[900],fontWeight: FontWeight.bold) : TextStyle(fontSize: 20.0,color: Colors.blue,fontWeight: FontWeight.bold),
             ),
           ],
         ),

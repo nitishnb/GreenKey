@@ -26,12 +26,12 @@ class _State extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return loading ? Loading() : Scaffold(
-        backgroundColor: Colors.lightGreenAccent.shade400,
+        backgroundColor: Colors.lightGreenAccent.shade100,
         appBar: AppBar(
           centerTitle: true,
-          title: Text('GreenKey',textAlign: TextAlign.center,style: TextStyle(fontSize: 32,color: Colors.lightGreenAccent.shade400),),
+          title: Text('GreenKey',textAlign: TextAlign.center,style: TextStyle(fontSize: 32,color: Colors.lightGreenAccent.shade200),),
           automaticallyImplyLeading: false,
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.blueGrey,
         ),
         body: Padding(
             padding: EdgeInsets.all(10),
@@ -42,7 +42,7 @@ class _State extends State<LoginPage> {
                   Icon(
                     Icons.account_box,
                     size: 140,
-                    color: Colors.white,
+                    color: Colors.blueGrey,
                   ),
                   Container(
                       margin: EdgeInsets.only(top: 0,bottom: 30),
@@ -51,19 +51,22 @@ class _State extends State<LoginPage> {
                       child: Text(
                         'LOGIN',
                         style: TextStyle(
-                            color: Colors.white,
+                            color: Colors.blueGrey,
                             fontWeight: FontWeight.bold,
                             fontFamily: 'fonts/IndieFlower-Regular.ttf',
-                            fontSize: 50),
+                            fontSize: 40,
+                        decoration: TextDecoration.underline),
                       )),
                   Container(
                     padding: EdgeInsets.all(10),
                     child: TextFormField(
                       controller: nameController,
                       decoration: InputDecoration(
+                        fillColor: Colors.blueGrey,
+                        filled: true,
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
-                        labelText: 'User Name/ Email',
-                        labelStyle: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),
+                        labelText: 'User Name/ Email :',
+                        labelStyle: TextStyle(color: Colors.lightGreenAccent.shade200,fontWeight: FontWeight.bold),
                       ),
                       validator: (val) => val.isEmpty ? 'Enter an email' : null,
                       onChanged: (val) {
@@ -77,9 +80,11 @@ class _State extends State<LoginPage> {
                       obscureText: true,
                       controller: passwordController,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
-                        labelText: 'Password',
-                        labelStyle: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),
+                        fillColor: Colors.blueGrey,
+                        filled: true,
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.0),),
+                        labelText: 'Password :',
+                        labelStyle: TextStyle(color: Colors.lightGreenAccent.shade200,fontWeight: FontWeight.bold),
                       ),
                       validator: (val) => val.length < 6 ? 'Enter a password 6+ chars long' : null,
                       onChanged: (val) {
@@ -87,19 +92,21 @@ class _State extends State<LoginPage> {
                       },
                     ),
                   ),
+                  SizedBox(height: 20,),
                   FlatButton(
                     onPressed: (){
                       //forgot password screen
                     },
+
                     textColor: Colors.white,
-                    child: Text('Forgot Password..?',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
+                    child: Text('Forgot Password..?',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.blueGrey)),
                   ),
                   Container(
                       height: 50,
                       padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                       child: RaisedButton(
-                        textColor: Colors.lightGreenAccent.shade400,
-                        color: Colors.white,
+                        textColor: Colors.blue,
+                        color: Colors.white70,
                         child: Text('Login',style: TextStyle(fontSize: 24),),
                           onPressed: () async {
                             if(_formKey.currentState.validate()){
@@ -108,8 +115,21 @@ class _State extends State<LoginPage> {
                               if(result == null) {
                                 setState(() {
                                   loading = false;
-                                  error = "Could'nt sign in with\nthese credentials!";
                                 });
+                                showDialog(context: context,
+                                    builder:(context){
+                                      return new AlertDialog(
+                                        title: Text("Failed !",style: TextStyle(fontWeight: FontWeight.bold),),
+                                        content: Text("Could'nt sign in with the provided credentials!",style: TextStyle(color: Colors.red),),
+                                        actions: <Widget>[
+                                          new MaterialButton(onPressed: (){
+                                            Navigator.pop(context);
+                                          },
+                                            child: Text("OK"),)
+                                        ],
+                                      );
+                                    }
+                                );
                               }
                             }
                           }
@@ -126,7 +146,7 @@ class _State extends State<LoginPage> {
                   Container(
                       child: Row(
                         children: <Widget>[
-                          Text('Does not have account?'),
+                          Text('Does not have account?',style: TextStyle(color: Colors.blueGrey,fontSize: 16),),
                           FlatButton(
                             textColor: Colors.white,
 
@@ -135,7 +155,7 @@ class _State extends State<LoginPage> {
                           },
                             child: Text(
                               'Sign Up',
-                              style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
+                              style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold,color: Colors.blue),
                             ),
                           )
                         ],

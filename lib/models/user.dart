@@ -15,6 +15,6 @@ class UserData {
   final String address;
   final String profile_pic;
 
-  UserData({ this.uid, this.uname, this.mobile, this.email ,this.address ,this.profile_pic});
+  UserData({ this.uid, this.uname, this.mobile, this.email ,this.address ,this.profile_pic, cart});
 
 }

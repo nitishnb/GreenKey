@@ -64,9 +64,9 @@ class _SidebarLayoutState extends State<SidebarLayout> with AfterLayoutMixin{
                   begin: Alignment.topRight,
                   end: Alignment.bottomRight,
                   colors:[
-                    Colors.lightGreenAccent.shade400,
-                    Colors.lightGreenAccent.shade400,
-                    Colors.lightGreenAccent.shade400
+                    Colors.lightGreenAccent.shade200,
+                    Colors.lightGreenAccent.shade200,
+                    Colors.lightGreenAccent.shade200
                   ],
                   stops: [
                     0.0,1.0,1.0
