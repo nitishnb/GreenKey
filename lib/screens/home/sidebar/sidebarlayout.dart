@@ -64,9 +64,9 @@ class _SidebarLayoutState extends State<SidebarLayout> with AfterLayoutMixin{
                   begin: Alignment.topRight,
                   end: Alignment.bottomRight,
                   colors:[
-                    Colors.lightGreenAccent.shade200,
-                    Colors.lightGreenAccent.shade200,
-                    Colors.lightGreenAccent.shade200
+                    Colors.grey[800],
+                    Colors.grey[800],
+                    Colors.grey[800]
                   ],
                   stops: [
                     0.0,1.0,1.0
@@ -87,14 +87,14 @@ class _SidebarLayoutState extends State<SidebarLayout> with AfterLayoutMixin{
                 IconButton(
                   icon:Icon(
                   Icons.notifications_active,
-                  color: Colors.black,
+                  color: Colors.white,
                   ),
                 ),
                 SizedBox(height: 18,),
                 IconButton(
                   icon:Icon(
                   Icons.dashboard,
-                  color: Colors.black,
+                  color: Colors.white,
                   ),
                 ),
                 SizedBox(height: 20,),

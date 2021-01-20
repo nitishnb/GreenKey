@@ -96,161 +96,171 @@ class _ProfileState extends State<Profile> {
             _currentProfilepic = userData.profile_pic;
             return loading ? Loading() : Scaffold(
               appBar: AppBar(
-                leading: IconButton(icon: Icon(Icons.arrow_back,size: 30,color: Colors.grey[700],),
+                title: Text('       My Account',
+                  style: TextStyle(
+                  fontFamily: 'SourceSansPro',
+                  fontSize: 25,
+                    color:  Colors.white,
+                ),),
+                leading: IconButton(icon: Icon(Icons.arrow_back,size: 28,color: Colors.white,),
                   highlightColor: Colors.white,
                   onPressed: () {
                   Navigator.pop(context);
                 },),
-                backgroundColor: Colors.lightGreenAccent.shade400,
+                backgroundColor: Colors.black,
               ),
-              body: Container(
-                color: Colors.white,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      SizedBox(height: 10.0),
-                      Center(
-                        child: Stack(
-                          children:<Widget>[ Center(
-                            child: newimg == null ?
+              body: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                physics: BouncingScrollPhysics(),
+                child: Container(
+                  color: Colors.white,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        SizedBox(height: 20.0),
+                        Center(
+                          child: Stack(
+                            children:<Widget>[ Center(
+                              child: newimg == null ?
+                              CircleAvatar(
+                                radius:66,
+                                backgroundColor: Colors.grey,
+                                backgroundImage: NetworkImage('$_currentProfilepic'),
+                              )
+                                  :
                             CircleAvatar(
-                              radius:66,
-                              backgroundColor: Colors.lightGreenAccent.shade200,
-                              backgroundImage: NetworkImage('$_currentProfilepic'),
-                            )  
-                                :
-                          CircleAvatar(
-                          radius: 66,
-                          backgroundColor: Colors.lightGreenAccent.shade200,
-                         backgroundImage:  FileImage(newimg),
-                            //backgroundImage: AssetImage('$newimg'),
+                            radius: 66,
+                            backgroundColor: Colors.greenAccent,
+                           backgroundImage:  FileImage(newimg),
+                              //backgroundImage: AssetImage('$newimg'),
 
-                          ),
-                          ),
-                            Positioned(
-                              top: 90.0,
-                              right: 150.0,
-                              child: upload==false ? InkWell(
-                                onTap: () {
-                                  showModalBottomSheet(
-                                    context: context,
-                                    builder: ((builder) => bottomSheet()),
-                                  );
-                                },
-                                child: Icon(
-                                  Icons.camera_alt,
-                                  color: Colors.grey[800],
-                                  size: 28.0,
-                                ),
-                              ) : FlatButton(
-                                onPressed: () async{
-                                  uploadPic(context);
-                                },
-                                visualDensity: VisualDensity.compact,
-                                splashColor: Colors.blueGrey,
-
-                                child: Icon(Icons.file_upload,size: 50,color: Colors.grey[900],)/*Text(
-                                  'upload',
-                                  style: TextStyle(color: Colors.grey[800], fontSize: 18.0,fontWeight: FontWeight.bold),
-                                ),*/
-                              ),
                             ),
-                        ]
+                            ),
+                              Positioned(
+                                top: 90.0,
+                                right: 150.0,
+                                child: upload==false ? InkWell(
+                                  onTap: () {
+                                    showModalBottomSheet(
+                                      context: context,
+                                      builder: ((builder) => bottomSheet()),
+                                    );
+                                  },
+                                  child: Icon(
+                                    Icons.camera_alt,
+                                    color: Colors.grey[800],
+                                    size: 28.0,
+                                  ),
+                                ) : FlatButton(
+                                  onPressed: () async{
+                                    uploadPic(context);
+                                  },
+                                  visualDensity: VisualDensity.compact,
+                                  splashColor: Colors.blueGrey,
+
+                                  child: Icon(Icons.file_upload,size: 50,color: Colors.grey[900],)/*Text(
+                                    'upload',
+                                    style: TextStyle(color: Colors.grey[800], fontSize: 18.0,fontWeight: FontWeight.bold),
+                                  ),*/
+                                ),
+                              ),
+                          ]
+                          ),
+
                         ),
 
-                      ),
+                        SizedBox(height: 20.0),
+                        Text(
+                          'Profile Pic',
+                          style: TextStyle(
+                            fontFamily: 'SourceSansPro',
+                            fontSize: 25,
+                          ),
+                        ),
+                        Divider(height: 50,thickness: 2,endIndent: 50,indent: 50,color: Colors.black,),
+                        SizedBox(height: 20.0),
 
-                      SizedBox(height: 20.0),
-                      Text(
-                        'My Account',
-                        style: TextStyle(
-                          fontFamily: 'SourceSansPro',
-                          fontSize: 25,
-                        ),
-                      ),
-                      SizedBox(height: 50.0),
-
-                      Card(
-                        color: Colors.lightGreenAccent.shade100,
-                        margin:
-                        EdgeInsets.symmetric(vertical: 4.0, horizontal: 25.0),
-                        child: ListTile(
-                          leading: Icon(
-                            Icons.account_circle,
-                            color: Colors.grey[800],
-                          ),
-                          title: Text(
-                            userData.uname,
-                            style: TextStyle(fontSize: 18.0, fontFamily: 'Neucha'),
-                          ),
-                        ),
-                      ),
-                      Card(
-                        color: Colors.white,
-                        margin:
-                        EdgeInsets.symmetric(vertical: 4.0, horizontal: 25.0),
-                        child: ListTile(
-                          leading: Icon(
-                            Icons.mail,
-                            color: Colors.grey[800],
-                          ),
-                          title: Text(
-                            userData.email,
-                            style:
-                            TextStyle(fontFamily: 'BalooBhai', fontSize: 18.0),
-                          ),
-                        ),
-                      ),
-                      Card(
-                        color: Colors.lightGreenAccent.shade100,
-                        margin:
-                        EdgeInsets.symmetric(vertical: 4.0, horizontal: 25.0),
-                        child: ListTile(
-                          leading: Icon(
-                            Icons.phone,
-                            color: Colors.grey[800],
-                          ),
-                          title: Text(
-                            userData.mobile,
-                            style:
-                            TextStyle(fontFamily: 'BalooBhai', fontSize: 18.0),
-                          ),
-                        ),
-                      ),
-                      Card(
-                        color: Colors.white,
-                        margin:
-                        EdgeInsets.symmetric(vertical: 4.0, horizontal: 25.0),
-                        child: ListTile(
-                          leading: Icon(
-                            Icons.location_on,
-                            color: Colors.grey[800],
-                          ),
-                          title: Text(
-                            //userData.address ?? 'Not Entered' ,
-                            userData.address == "" ? 'Not Entered' : userData.address,
-                            style:
-                            userData.address == "" ? TextStyle(fontFamily: 'BalooBhai', fontSize: 18.0,color: Colors.black26) : TextStyle(fontFamily: 'BalooBhai', fontSize: 18.0),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 12.0),
-                      FlatButton.icon(
-                        icon: Icon(Icons.edit),
-                        color: Colors.lightGreenAccent.shade400,
-                        label: Text('Edit'),
-                        onPressed: () => _showSettingsPanel(),
-                      ),
-                      SizedBox(
-                        height: 0.0,
-                        width: 210,
-                        child: Divider(
+                        Card(
                           color: Colors.grey,
+                          margin:
+                          EdgeInsets.symmetric(vertical: 4.0, horizontal: 25.0),
+                          child: ListTile(
+                            leading: Icon(
+                              Icons.account_circle,
+                              color: Colors.grey[800],
+                            ),
+                            title: Text(
+                              userData.uname,
+                              style: TextStyle(fontSize: 18.0, fontFamily: 'Neucha'),
+                            ),
+                          ),
                         ),
-                      ),
+                        Card(
+                          color: Colors.grey[200],
+                          margin:
+                          EdgeInsets.symmetric(vertical: 4.0, horizontal: 25.0),
+                          child: ListTile(
+                            leading: Icon(
+                              Icons.mail,
+                              color: Colors.grey[800],
+                            ),
+                            title: Text(
+                              userData.email,
+                              style:
+                              TextStyle(fontFamily: 'BalooBhai', fontSize: 18.0),
+                            ),
+                          ),
+                        ),
+                        Card(
+                          color: Colors.grey,
+                          margin:
+                          EdgeInsets.symmetric(vertical: 4.0, horizontal: 25.0),
+                          child: ListTile(
+                            leading: Icon(
+                              Icons.phone,
+                              color: Colors.grey[800],
+                            ),
+                            title: Text(
+                              userData.mobile,
+                              style:
+                              TextStyle(fontFamily: 'BalooBhai', fontSize: 18.0),
+                            ),
+                          ),
+                        ),
+                        Card(
+                          color: Colors.grey[200],
+                          margin:
+                          EdgeInsets.symmetric(vertical: 4.0, horizontal: 25.0),
+                          child: ListTile(
+                            leading: Icon(
+                              Icons.location_on,
+                              color: Colors.grey[800],
+                            ),
+                            title: Text(
+                              userData.address == "" ? 'Not Entered' : userData.address,
+                              style:
+                              userData.address == "" ? TextStyle(fontFamily: 'BalooBhai', fontSize: 18.0,color: Colors.black26) : TextStyle(fontFamily: 'BalooBhai', fontSize: 18.0),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 12.0),
+                        FlatButton.icon(
+                          icon: Icon(Icons.edit,color: Colors.white70,size: 20,),
+                          color: Colors.grey[700],
+                          label: Text('Edit',style: TextStyle(color: Colors.white70,fontSize: 16),),
+                          onPressed: () => _showSettingsPanel(),
+                        ),
+                        SizedBox(
+                          height: 0.0,
+                          width: 210,
+                          child: Divider(
+                            color: Colors.grey,
+                          ),
+                        ),
 
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),

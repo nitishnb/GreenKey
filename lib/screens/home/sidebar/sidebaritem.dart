@@ -25,14 +25,14 @@ class SidebarItem extends StatelessWidget {
               duration: const Duration(milliseconds: 200),
               height: 6,
               width: 6,
-              decoration: BoxDecoration(shape: BoxShape.circle, color: isSelected ? Colors.grey[900] : Colors.transparent),
+              decoration: BoxDecoration(shape: BoxShape.circle, color: isSelected ? Colors.white : Colors.grey[800]),
             ),
             AnimatedDefaultTextStyle(
               child: Text(
                 text,
               ),
               duration: const Duration(milliseconds: 280),
-              style: isSelected ? TextStyle(fontSize: 21.0,color: Colors.grey[900],fontWeight: FontWeight.bold) : TextStyle(fontSize: 20.0,color: Colors.blue,fontWeight: FontWeight.bold),
+              style: isSelected ? TextStyle(fontSize: 21.0,color: Colors.white,fontWeight: FontWeight.bold) : TextStyle(fontSize: 20.0,color: Colors.white,fontWeight: FontWeight.bold),
             ),
           ],
         ),

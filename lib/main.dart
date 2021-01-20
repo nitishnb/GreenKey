@@ -55,12 +55,19 @@ class _StartState extends State<Start> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.black,
     body: Center(
-      child: Image.asset('assets/greenkey4.jpg',fit: BoxFit.fill,
+      //child: Image.asset('assets/greenkey4.jpg',fit: BoxFit.fill,
+      child: Row(
+        children: [
+          SizedBox(width: 110,),
+          Text("Green",style: TextStyle(fontSize: 36,fontWeight: FontWeight.w400,color: Colors.white,letterSpacing: -1),),
+          Text("Key",style: TextStyle(fontSize: 36,fontWeight: FontWeight.w300,color: Colors.grey[700],letterSpacing: -2),),
+        ],
       ),
-    ),
+      ),
     );
+
   }
 }
 

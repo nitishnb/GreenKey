@@ -120,7 +120,7 @@ class _CartScreenState extends State<CartScreen> {
       Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            SizedBox(height: 25.0,),
+            SizedBox(height: 14.0,),
             Center(child: Text(
               "My Bag",
               style: Theme.of(context)
@@ -136,14 +136,14 @@ class _CartScreenState extends State<CartScreen> {
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          SizedBox(height: 25.0,),
+          SizedBox(height: 16.0,),
           GestureDetector(
             child: Center(child: Text(
               "My Bag",
               style: Theme.of(context)
                   .textTheme
                   .display1
-                  .copyWith(fontWeight: FontWeight.bold, color: Colors.black),
+                  .copyWith(fontSize:26,fontWeight: FontWeight.w400, color: Colors.black),
             ),
             ),
             onTap: (){
@@ -191,7 +191,7 @@ class _CartScreenState extends State<CartScreen> {
                             GestureDetector(
                               child: Text(
                                 "${cartproducts[i].name}",
-                                style: TextStyle(fontSize: 20.0),
+                                style: TextStyle(fontSize: 20.0,color: Colors.pink),
                               ),
                               onTap: () {
                                 Navigator.push(
@@ -202,11 +202,11 @@ class _CartScreenState extends State<CartScreen> {
                                 );
                               },
                             ),
-                            SizedBox(height: 10.0,),
+                            SizedBox(height: 4.0,),
                             GestureDetector(
                               child: Text(
                                 "₹ ${cartproducts[i].discountPrice}",
-                                style: TextStyle(color: Colors.red[900], fontStyle: FontStyle.italic, fontSize: 18.0),
+                                style: TextStyle(color: Colors.blue, fontStyle: FontStyle.italic, fontSize: 18.0),
                               ),
                               onTap: () {
                                 Navigator.push(
@@ -220,7 +220,7 @@ class _CartScreenState extends State<CartScreen> {
                             SizedBox(height: 15),
                             RaisedButton.icon(
                                 hoverColor: Colors.red[800],
-                                color: Colors.red[300],
+                                color: Colors.redAccent,
                                 onPressed: () async {
                                   setState(() {
                                     newproducts = products.toList();
@@ -266,15 +266,15 @@ class _CartScreenState extends State<CartScreen> {
                     child: Text(
                       "CHECKOUT",
                       style: Theme.of(context).textTheme.button.copyWith(
-                        color: Colors.blue,fontWeight: FontWeight.bold,
+                        color: Colors.white,fontWeight: FontWeight.w400,
                       ),
                     ),
                     onPressed: () {
                       openCheckout(total_amount);
                     },
-                    color: Colors.lightGreenAccent.shade200,
+                    color: Colors.black,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
+                      borderRadius: BorderRadius.circular(6.0),
                     ),
                   ),
                 ),

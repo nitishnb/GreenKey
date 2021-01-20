@@ -45,18 +45,19 @@ class _CategoryState extends State<Category> {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        elevation: 10,
+        toolbarHeight: 36,
+        elevation: 60,
         title: Text(
           '${this.category}',
-          style: TextStyle(fontSize: 24,color: Colors.grey[900],fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 20,color: Colors.white,fontWeight: FontWeight.w400),
         ),
-        leading: IconButton(icon: Icon(Icons.arrow_back,size: 30,color: Colors.grey[900],),
+        leading: IconButton(icon: Icon(Icons.arrow_back,size: 22,color: Colors.white,),
         highlightColor: Colors.white,
         onPressed: () {
          Navigator.pop(context);
         },
        ),
-        backgroundColor: Colors.lightGreenAccent.shade100,
+        backgroundColor: Colors.black,
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -71,13 +72,13 @@ class _CategoryState extends State<Category> {
               ),
               itemBuilder: (BuildContext context, int i){
                 return Single_prod(
-                  name: products[i]['name'],
-                  productPic: products[i]['productPic'],
-                  actualPrice: products[i]['actualPrice'],
-                  discountPrice: products[i]['discountPrice'],
-                  description: products[i]['description'],
-                  brand: products[i]['brand'],
-                  rating: products[i]['rating'],
+                  name: products[i].name,
+                  productPic: products[i].productPic,
+                  actualPrice: products[i].actualPrice,
+                  discountPrice: products[i].discountPrice,
+                  description: products[i].description,
+                  brand: products[i].brand,
+                  rating: products[i].rating,
                 );
               }
           ),
@@ -108,32 +109,35 @@ class Single_prod extends StatelessWidget {
 
 
   Widget build(BuildContext context) {
-    return Card(
-      child: Hero(
-        tag: name,
-        child: Material(
-          child: InkWell(
-            onTap: (){
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ProductDetails(
-                    detail_name: name,detail_productPic: productPic,detail_actualPrice: actualPrice,detail_discountPrice: discountPrice,detail_description: description,detail_brand: brand,detail_rating: rating,
-                )),
-              );
-            },
-            child: GridTile(
-              footer: Container(
-                color: Colors.white70,
-                child: Column(
-                  children: <Widget>[
-                    //Text('$name\n', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),),
-                    Align(alignment: Alignment.centerLeft,child: Text('$name',textAlign: TextAlign.left,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),)),
-                    Align(alignment: Alignment.centerLeft,child: Text('₹ $discountPrice',textAlign: TextAlign.left,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16,color: Colors.grey[900]),)),
-                    Align(alignment: Alignment.centerLeft,child: Text('₹ $actualPrice',textAlign: TextAlign.left,style: TextStyle(fontSize: 14,color: Colors.red,decoration: TextDecoration.lineThrough),)),
-                  ],
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Card(
+        child: Hero(
+          tag: name,
+          child: Material(
+            child: InkWell(
+              onTap: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProductDetails(
+                      detail_name: name,detail_productPic: productPic,detail_actualPrice: actualPrice,detail_discountPrice: discountPrice,detail_description: description,detail_brand: brand,detail_rating: rating,
+                  )),
+                );
+              },
+              child: GridTile(
+                footer: Container(
+                  color: Colors.white70,
+                  child: Column(
+                    children: <Widget>[
+                      //Text('$name\n', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),),
+                      Align(alignment: Alignment.centerLeft,child: Text('$name',textAlign: TextAlign.left,style: TextStyle(fontWeight: FontWeight.w400,fontSize: 18),)),
+                      Align(alignment: Alignment.centerLeft,child: Text('₹ $discountPrice',textAlign: TextAlign.left,style: TextStyle(fontWeight: FontWeight.w400,fontSize: 14,color: Colors.grey[900]),)),
+                      Align(alignment: Alignment.centerLeft,child: Text('₹ $actualPrice',textAlign: TextAlign.left,style: TextStyle(fontSize: 14,color: Colors.red,decoration: TextDecoration.lineThrough),)),
+                    ],
+                  ),
                 ),
+                child: Image.network(productPic,fit: BoxFit.cover,),
               ),
-              child: Image.network(productPic,fit: BoxFit.cover,),
             ),
           ),
         ),

@@ -67,7 +67,7 @@ class _HomelayoutState  extends State<Homelayout> {
   String _currentProfilepic ="";
   dynamic _bottomSelect = MyApp2();
   bool _toggle = true;
-  final green_clr = Colors.lightGreenAccent.shade200;
+  final green_clr = Colors.white70;
   var email;
   showAlertDialog(BuildContext context) {
 
@@ -128,7 +128,7 @@ class _HomelayoutState  extends State<Homelayout> {
     User user = Provider.of<User>(context);
 
     return Scaffold(
-      backgroundColor: Colors.blueGrey,
+      backgroundColor: Colors.white,
       key: _stackKey,
       body: Stack(
         children:<Widget>[
@@ -152,12 +152,12 @@ class _HomelayoutState  extends State<Homelayout> {
                       begin: Alignment.topRight,
                       end: Alignment.bottomRight,
                       colors:[
-                        green_clr,
-                        green_clr,
-                        green_clr
+                        Colors.white,
+                        Colors.white30,
+                        Colors.white30,
                       ],
                       stops: [
-                        0.0,1.0,1.0
+                        1.0,1.0,1.0
                       ],
                     )
                 ),
@@ -187,32 +187,23 @@ class _HomelayoutState  extends State<Homelayout> {
               ],
             ),
           ),
+
           Positioned(
-            left: MediaQuery.of(context).size.width/8,
-            top: 40,
-            child: Column(
-              children: [
-                SizedBox(height: 10,),
-                Text("Green",style: TextStyle(fontSize: 40,fontWeight: FontWeight.bold,color: Colors.lightGreenAccent.shade700,),),
-              ],
-            ),
-          ),
-          Positioned(
-            left: (MediaQuery.of(context).size.width/8) + 107,
-            top: 40,
-            child: Column(
-              children: [
-                SizedBox(height: 10,),
-                Text("Key",style: TextStyle(fontSize: 40,fontWeight: FontWeight.bold,color: Colors.grey[800]),),
-              ],
-            ),
-          ),
-          Positioned(
-            top: 100,
+            top: 90,
             left: 46,
             child: AnimatedSearchBar(),
           ),
-
+          Positioned(
+            left: MediaQuery.of(context).size.width/8,
+            top: 56,
+            child: Row(
+              children: [
+                SizedBox(width: 2,),
+                Text("Green",style: TextStyle(fontSize: 30,fontWeight: FontWeight.w500,color: Colors.black,letterSpacing: 0),),
+                Text("Key",style: TextStyle(fontSize: 30,fontWeight: FontWeight.w300,color: Colors.grey[700],letterSpacing: -1),),
+              ],
+            ),
+          ),
         ],
 
 
@@ -224,11 +215,11 @@ class _HomelayoutState  extends State<Homelayout> {
           padding: EdgeInsets.zero,
           children: <Widget>[
             Container(
-              color: Colors.grey[800],
+              color: Colors.grey[900],
               child: Center(
                 child: Column(
                   children: <Widget>[
-                    SizedBox(height: 22,),
+                    SizedBox(height: 34,),
 
                     StreamBuilder<UserData>(
                       stream: DatabaseService(uid: user.uid).userData,
@@ -238,25 +229,22 @@ class _HomelayoutState  extends State<Homelayout> {
                           return CircleAvatar(
                             radius: 40,
                             backgroundColor: Colors.white,
-                              //child: _currentProfilepic != "" ? Image.network('$_currentProfilepic',fit: BoxFit.fill,) : Icon(Icons.account_circle,size: 90,color: Colors.lightGreenAccent.shade400,),
-                              backgroundImage: _currentProfilepic != "" ? NetworkImage('$_currentProfilepic') : NetworkImage('')//Icon(Icons.account_circle,size: 90,color: Colors.lightGreenAccent.shade400,),
-
-
+                              backgroundImage: _currentProfilepic != "" ? NetworkImage('$_currentProfilepic') : NetworkImage(''),
                           );
                         }
                     ),
                     SizedBox(
-                      height: 20,
+                      height: 12,
                     ),
                     StreamBuilder<UserData>(
                         stream: DatabaseService(uid: user.uid).userData,
                         builder: (context, snapshot) {
                           UserData userData = snapshot.data;
-                          return Text(userData.uname,
+                          return Text("  ${userData.uname}  ",
                             style: TextStyle(
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w400,
                               fontSize: 20.0,
-                              color: Colors.lightGreenAccent.shade200,
+                              color: Colors.white,
                             ),
                           );
                         }
@@ -267,29 +255,29 @@ class _HomelayoutState  extends State<Homelayout> {
                       builder: (context, snapshot) {
                         UserData userData = snapshot.data;
                         email = userData.email;
-                        return Text(userData.email,
+                        return Text("  ${userData.email}  ",
                           style: TextStyle(
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w400,
                             fontSize: 20.0,
-                            color: Colors.lightGreenAccent.shade200,
+                            color: Colors.white,
                           ),
                         );
                       }
                     ),
                     SizedBox(height: 30,),
                     Container(
-                      color: Colors.blueGrey,
+                      color: Colors.black,
                       child: Column(
                         children: <Widget>[
                           ListTile(
                             selected: _selectedindex == 0,
                             //         selectedTileColor: Colors.green[100],
                             leading: Icon(Icons.account_box,
-                              color: Colors.lightGreenAccent.shade400,
+                              color: Colors.grey,
                             ),
                             title: Text('My Account', style: TextStyle(
                               fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w400,
                               color: Colors.white,
                             ),
                             ),
@@ -304,11 +292,11 @@ class _HomelayoutState  extends State<Homelayout> {
                             selected: _selectedindex == 1,
                             //       selectedTileColor: Colors.green[100],
                             leading: Icon(Icons.build,
-                                color:Colors.lightGreenAccent.shade400,
+                                color:Colors.grey,
                             ),
                             title: Text('Settings', style: TextStyle(
                               fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w400,
                               color: Colors.white,
                             ),),
                             onTap: () {
@@ -324,12 +312,12 @@ class _HomelayoutState  extends State<Homelayout> {
                             selected: _selectedindex == 2,
                             //     selectedTileColor: Colors.green[100],
                             leading: Icon(Icons.lock_outline,
-                                color: Colors.lightGreenAccent.shade400,
+                                color: Colors.grey,
                             ),
                             title: Text('Logout',
                               style: TextStyle(
                                 fontSize: 18,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w400,
                                 color: Colors.white,
                               ),
                             ),
@@ -344,10 +332,10 @@ class _HomelayoutState  extends State<Homelayout> {
                             selected: _selectedindex == 3,
                             //   selectedTileColor: Colors.green[100],
                             leading: Icon(Icons.favorite,
-                              color: Colors.lightGreenAccent.shade400,),
+                              color: Colors.grey,),
                             title: Text('Favorite Lists', style: TextStyle(
                               fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w400,
                               color: Colors.white,
                             ),),
                             onTap: () {
@@ -362,10 +350,10 @@ class _HomelayoutState  extends State<Homelayout> {
                             selected: _selectedindex == 4,
                             // selectedTileColor: Colors.green[100],
                             leading: Icon(Icons.local_offer,
-                              color: Colors.lightGreenAccent.shade400,),
+                              color: Colors.grey,),
                             title: Text('Offer/Reward Area',
                               style: TextStyle(fontSize: 18,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w400,
                                 color: Colors.white,
                               ),),
                             onTap: () {
@@ -380,10 +368,10 @@ class _HomelayoutState  extends State<Homelayout> {
                             selected: _selectedindex == 5,
                             //                 selectedTileColor: Colors.green[100],
                             leading: Icon(Icons.business_center,
-                              color: Colors.lightGreenAccent.shade400,),
+                              color: Colors.grey,),
                             title: Text('Sell on GreenKey',
                               style: TextStyle(fontSize: 18,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w400,
                                 color: Colors.white,
                               ),),
                             onTap: () {
@@ -496,7 +484,7 @@ class _HomelayoutState  extends State<Homelayout> {
       ),
 
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.grey[900],
+        backgroundColor: Colors.black,
         iconSize: 24.0,
         currentIndex: _currentIndex,
         type: BottomNavigationBarType.fixed,
@@ -507,27 +495,27 @@ class _HomelayoutState  extends State<Homelayout> {
           new BottomNavigationBarItem(
             icon: Icon(Icons.home,color: green_clr,),
             title: Text('Home',style: TextStyle(color: Colors.white,),),
-            backgroundColor: Colors.grey[900],
+            backgroundColor: Colors.black,
           ),
           new BottomNavigationBarItem(
             icon: Icon(Icons.mail,color: green_clr,),
             title: Text('Mssg',style: TextStyle(color: Colors.white,),),
-            backgroundColor: Colors.grey[900],
+            backgroundColor: Colors.black,
           ),
           new BottomNavigationBarItem(
             icon: Icon(Icons.mobile_screen_share,color: green_clr,),
             title: Text('GreenPay',style: TextStyle(color: Colors.white,),),
-            backgroundColor: Colors.grey[900],
+            backgroundColor: Colors.black,
           ),
           new BottomNavigationBarItem(
             icon: Icon(Icons.contact_phone,color: green_clr,),
             title: Text('Contact',style: TextStyle(color: Colors.white,),),
-            backgroundColor: Colors.grey[900],
+            backgroundColor: Colors.black,
           ),
           new BottomNavigationBarItem(
             icon: Icon(Icons.shopping_cart,color: green_clr,),
             title: Text('Cart',style: TextStyle(color: Colors.white,),),
-            backgroundColor: Colors.grey[900],
+            backgroundColor: Colors.black,
           ),
         ],
         onTap: (index){setState(() {
@@ -580,65 +568,53 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar> {
 @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      margin: EdgeInsets.only(bottom: 180),
+      margin: EdgeInsets.only(bottom: 80),
       duration: Duration(milliseconds: 400),
-      width: _folded ? 240 : 280,
-      height: 50,
+      width:  290,
+      height: 48,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(32),
+        borderRadius: BorderRadius.circular(8),
         color: Colors.white,
-        boxShadow: kElevationToShadow[1],
+        boxShadow: kElevationToShadow[12],
       ),
-      child: ListView(
+      child: Column(
         children:<Widget>[
           Row(
             children: [
               Expanded(
                 child: Container(
-                  padding: EdgeInsets.only(left: 4,bottom: 10,),
-                  child: _folded
-                      ? TextField(
-                    decoration: InputDecoration(
-                        hintText: 'Type Now',
-                        hintStyle: TextStyle(color: Colors.grey),
-                        border: InputBorder.none),
-                    
-                  )
-                      :  Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
+                  padding: EdgeInsets.only(left: 8,bottom: 0,),
+                  child: Padding(
+                        padding: const EdgeInsets.only(bottom: 0),
                         child: FlatButton(
+                          color: Colors.grey[200],
                             child: Text(
                     'click to search',
-                    style: TextStyle(color: Colors.grey),
+                    style: TextStyle(color: Colors.grey,fontWeight: FontWeight.w400),
                   ),
                     onPressed: ()  {
                           showSearch(context: context, delegate: ProductsSearch(temSearchResults: products));
                           setState(() {
-                            //_folded = !_folded;
                           });
                     },
                           ),
                       ),
-
                 ),
               ),
 
               Container(
+                color: Colors.grey[200],
+                height: 36,
                 child: Material(
                   type: MaterialType.transparency,
                   child: InkWell(
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(_folded ? 32 : 0),
-                      topLeft: Radius.circular(32),
-                      bottomRight: Radius.circular(_folded ? 32 : 0),
-                      bottomLeft: Radius.circular(32),
-                    ),
                     child: Padding(
-                      padding: const EdgeInsets.only(bottom: 20,right: 0,),
+                      padding: const EdgeInsets.only(left: 0,bottom: 0,right: 6,),
                       child: Icon(
-                        _folded ? Icons.search : Icons.close,
-                        color: Colors.grey[900],
-                        size: 28,
+                        Icons.search,
+                        color: Colors.grey[600],
+                        size: 24,
+
                       ),
                     ),
                     onTap: () {
@@ -648,6 +624,46 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar> {
                       });
                     },
                   ),
+                ),
+              ),
+              Container(
+                height: 36,
+                child: Material(
+                  type: MaterialType.transparency,
+                  child:
+                      InkWell(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 16,top: 4,right: 10,),
+                        child:
+                        new Stack(
+                            children: <Widget>[
+                              new Icon( Icons.notifications_active,
+                                color: Colors.grey[600],
+                                size: 24,),
+                              new Positioned(  // draw a red marble
+                                top: 0.0,
+                                right: 0.0,
+                                left: 12,
+                                child: new Icon(Icons.brightness_1, size: 13.0,
+                                    color: Colors.redAccent),
+                              ),
+                              new Positioned(  // draw a red marble
+                                top: 0.0,
+                                right: 0.0,
+                                left: 16,
+                                child: new Text('4',style: TextStyle(fontWeight: FontWeight.bold,fontSize:10,color: Colors.white),),
+                              ),
+
+                            ]
+                        ),
+                      ),
+                      onTap: () {
+
+                        setState(() {
+
+                        });
+                      },
+                    ),
                 ),
               ),
             ],
@@ -768,7 +784,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return SafeArea(
       child: Scaffold(
 
-        backgroundColor: Colors.blueGrey,
+        backgroundColor: Colors.white,
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           physics: BouncingScrollPhysics(),
@@ -778,7 +794,7 @@ class _MyHomePageState extends State<MyHomePage> {
               children: <Widget>[
 
                 const SizedBox(
-                  height: 20,
+                  height: 4,
                 ),
                 AnimatedOpacity(
                   duration: const Duration(milliseconds: 200),
@@ -792,42 +808,37 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
             Column(
               children:<Widget>[
-                Align(alignment: Alignment.centerLeft,child: Text(' Recommended :',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,color: Colors.grey[900]),textAlign: TextAlign.left,)),
+                Align(alignment: Alignment.centerLeft,child: Text('Suggested :',style: TextStyle(fontWeight: FontWeight.w500,fontSize: 18,color: Colors.black),textAlign: TextAlign.left,)),
                 Container(
-                height: 100,
+                height: 104,
                 margin: const EdgeInsets.symmetric(vertical: 4),
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   physics: BouncingScrollPhysics(),
                   itemCount: products.length,
                   itemBuilder: (ctx, i) {
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => ProductDetails(
-                            detail_pid: products[i].pid,detail_name: products[i].name,detail_productPic: products[i].productPic,detail_actualPrice: products[i].actualPrice,detail_discountPrice: products[i].discountPrice,detail_description: products[i].description,detail_brand: products[i].brand,detail_rating: products[i].rating,
-                          )),
-                        );
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(9.0),
-                            color: Colors.white,
-                          ),
-
-                          child: Container(
-                            alignment: Alignment.center,
-                            width: MediaQuery.of(context).size.width / 3.0,
-                            margin: const EdgeInsets.only(right: 0),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15.0),
-                              color: Colors.transparent,
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Card(
+                        child: Hero(
+                          tag: products[i].pid,
+                          child: Padding(
+                            padding: const EdgeInsets.all(0),
+                            child: Container(
+                              child: Material(
+                                child: InkWell(
+                                  child: Image.network(products[i].productPic,fit: BoxFit.cover,),
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => ProductDetails(
+                                        detail_pid: products[i].pid,detail_name: products[i].name,detail_productPic: products[i].productPic,detail_actualPrice: products[i].actualPrice,detail_discountPrice: products[i].discountPrice,detail_description: products[i].description,detail_brand: products[i].brand,detail_rating: products[i].rating,
+                                      )),
+                                    );
+                                  },
+                                ),
+                              ),
                             ),
-                            //child: Text("Test[$i]",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
-                            child: Image.network('${products[i].productPic}',fit:BoxFit.cover ,),
                           ),
                         ),
                       ),
@@ -839,44 +850,42 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
                 Column(
                   children:<Widget>[
-                    SizedBox(height: 14,),
-                    Align(alignment: Alignment.centerLeft,child: Text(' Popular :',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,color: Colors.grey[900]),textAlign: TextAlign.left,)),
+                    SizedBox(height: 0,),
+                    Align(alignment: Alignment.centerLeft,child: Text('Popular :',style: TextStyle(fontWeight: FontWeight.w500,fontSize: 18,color: Colors.black),textAlign: TextAlign.left,)),
                  Container(
-                  height: 100,
+                  height: 104,
                   margin: const EdgeInsets.symmetric(vertical: 6),
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     physics: BouncingScrollPhysics(),
                     itemCount: products.length,
                     itemBuilder: (ctx, i) {
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => ProductDetails(
-                              detail_pid: products[i].pid,detail_name: products[i].name,detail_productPic: products[i].productPic,detail_actualPrice: products[i].actualPrice,detail_discountPrice: products[i].discountPrice,detail_description: products[i].description,detail_brand: products[i].brand,detail_rating: products[i].rating,
-                            )),
-                          );
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(9.0),
-                              color: Colors.white,
-                            ),
-
-
-                            child: Container(
-                              alignment: Alignment.center,
-                              width: MediaQuery.of(context).size.width / 3.0,
-                              margin: const EdgeInsets.only(right: 0),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15.0),
-                                color: Colors.transparent,
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Card(
+                          child: Hero(
+                            tag: products[i].brand,
+                            child: Padding(
+                              padding: const EdgeInsets.all(0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  color: Colors.black,
+                                ),
+                                child: Material(
+                                  child: InkWell(
+                                    child: Image.network(products[i].productPic,fit: BoxFit.cover,),
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => ProductDetails(
+                                          detail_pid: products[i].pid,detail_name: products[i].name,detail_productPic: products[i].productPic,detail_actualPrice: products[i].actualPrice,detail_discountPrice: products[i].discountPrice,detail_description: products[i].description,detail_brand: products[i].brand,detail_rating: products[i].rating,
+                                        )),
+                                      );
+                                    },
+                                  ),
+                                ),
                               ),
-                              //child: Text("Test[$i]",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
-                              child: Image.network('${products[i].productPic}',fit:BoxFit.cover ,),
                             ),
                           ),
                         ),
@@ -886,8 +895,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 ],
             ),
-                SizedBox(height: 24,),
-                Align(alignment: Alignment.centerLeft,child: Text('  Explore :',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,color: Colors.grey[900]),textAlign: TextAlign.left,)),
+                SizedBox(height: 10,),
+                Align(alignment: Alignment.centerLeft,child: Text(' Explore :',style: TextStyle(fontWeight: FontWeight.w500,fontSize: 18,color: Colors.grey[900]),textAlign: TextAlign.left,)),
                 SizedBox(height: 8,),
               SingleChildScrollView(
                 scrollDirection: Axis.vertical,
@@ -932,11 +941,13 @@ class CategoriesScroller extends StatelessWidget {
   Widget build(BuildContext context) {
     int index = 0;
     final double categoryHeight = MediaQuery.of(context).size.height * 0.22 - 18;
+    final clr1 = Colors.black;
+    final clr2 = Colors.white;
     return Column(
         children: <Widget>[
           Container(
             margin: EdgeInsets.only(bottom: 4),
-            height: 50,
+            height: 44,
             child: ListView(
               scrollDirection: Axis.horizontal,
               physics: BouncingScrollPhysics(),
@@ -951,10 +962,10 @@ class CategoriesScroller extends StatelessWidget {
                     width: MediaQuery.of(context).size.width / 3,
                     margin: const EdgeInsets.only(right: 4),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15.0),
-                      color: Colors.grey[800],
+                      borderRadius: BorderRadius.circular(8.0),
+                      color: clr1,
                     ),
-                    child: Text("Organic Farm",style: TextStyle(color: Colors.lightGreenAccent.shade200,fontWeight: FontWeight.bold),),
+                    child: Text("Organic Farm",style: TextStyle(color: clr2,fontWeight: FontWeight.normal),),
                   ),
 
                 ),
@@ -968,10 +979,10 @@ class CategoriesScroller extends StatelessWidget {
                     width: MediaQuery.of(context).size.width / 3,
                     margin: const EdgeInsets.only(right: 4),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15.0),
-                      color: Colors.grey[800],
+                      borderRadius: BorderRadius.circular(8.0),
+                      color: clr1,
                     ),
-                    child: Text("Remedies",style: TextStyle(color: Colors.lightGreenAccent.shade200,fontWeight: FontWeight.bold),),
+                    child: Text("Remedies",style: TextStyle(color: clr2,fontWeight: FontWeight.normal),),
                   ),
                 ),
                 InkWell(
@@ -984,10 +995,10 @@ class CategoriesScroller extends StatelessWidget {
                     width: MediaQuery.of(context).size.width / 3,
                     margin: const EdgeInsets.only(right: 4),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15.0),
-                      color: Colors.grey[800],
+                      borderRadius: BorderRadius.circular(8.0),
+                      color: clr1,
                     ),
-                    child: Text("Seeds",style: TextStyle(color: Colors.lightGreenAccent.shade200,fontWeight: FontWeight.bold),),
+                    child: Text("Seeds",style: TextStyle(color: clr2,fontWeight: FontWeight.normal),),
                   ),
                 ),
                 InkWell(
@@ -1000,10 +1011,10 @@ class CategoriesScroller extends StatelessWidget {
                     width: MediaQuery.of(context).size.width / 3,
                     margin: const EdgeInsets.only(right: 4),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15.0),
-                      color: Colors.grey[800],
+                      borderRadius: BorderRadius.circular(8.0),
+                      color: clr1,
                     ),
-                    child: Text("Equipments",style: TextStyle(color: Colors.lightGreenAccent.shade200,fontWeight: FontWeight.bold),),
+                    child: Text("Equipments",style: TextStyle(color: clr2,fontWeight: FontWeight.normal),),
                   ),
                 ),
                 InkWell(
@@ -1016,10 +1027,10 @@ class CategoriesScroller extends StatelessWidget {
                     width: MediaQuery.of(context).size.width /2.6,
                     margin: const EdgeInsets.only(right: 4),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15.0),
-                      color: Colors.grey[800],
+                      borderRadius: BorderRadius.circular(8.0),
+                      color: clr1,
                     ),
-                    child: Text("Fertilisers",style: TextStyle(color: Colors.lightGreenAccent.shade200,fontWeight: FontWeight.bold),),
+                    child: Text("Fertilisers",style: TextStyle(color: clr2,fontWeight: FontWeight.normal),),
                   ),
                 ),
                 InkWell(
@@ -1032,10 +1043,10 @@ class CategoriesScroller extends StatelessWidget {
                     width: MediaQuery.of(context).size.width /2.6,
                     margin: const EdgeInsets.only(right: 4),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15.0),
-                      color: Colors.grey[800],
+                      borderRadius: BorderRadius.circular(8.0),
+                      color: clr1,
                     ),
-                    child: Text("Irrigation",style: TextStyle(color: Colors.lightGreenAccent.shade200,fontWeight: FontWeight.bold),),
+                    child: Text("Irrigation",style: TextStyle(color: clr2,fontWeight: FontWeight.normal),),
                   ),
                 ),
                 InkWell(
@@ -1048,10 +1059,10 @@ class CategoriesScroller extends StatelessWidget {
                     width: MediaQuery.of(context).size.width /2.6,
                     margin: const EdgeInsets.only(right: 4),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15.0),
-                      color: Colors.grey[800],
+                      borderRadius: BorderRadius.circular(8.0),
+                      color: clr1,
                     ),
-                    child: Text("Others",style: TextStyle(color: Colors.lightGreenAccent.shade200,fontWeight: FontWeight.bold),),
+                    child: Text("Others",style: TextStyle(color: clr2,fontWeight: FontWeight.normal),),
                   ),
                 ),
               ],
@@ -1072,7 +1083,7 @@ class CategoriesScroller extends StatelessWidget {
                   width: 250,
                   margin: EdgeInsets.only(right: 10),
                   height: categoryHeight,
-                  decoration: BoxDecoration(color: Colors.orange.shade400, borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                  decoration: BoxDecoration(color: Colors.deepPurpleAccent, borderRadius: BorderRadius.all(Radius.circular(8.0))),
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: Column(
@@ -1080,7 +1091,7 @@ class CategoriesScroller extends StatelessWidget {
                       children: <Widget>[
                         Text(
                           "Most Rated\nEquipments",
-                          style: TextStyle(fontSize: 25, color: Colors.white, fontWeight: FontWeight.bold),
+                          style: TextStyle(fontSize: 25, color: Colors.white, fontWeight: FontWeight.normal),
                         ),
                         SizedBox(
                           height: 10,
@@ -1097,7 +1108,7 @@ class CategoriesScroller extends StatelessWidget {
                   width: 250,
                   margin: EdgeInsets.only(right: 10),
                   height: categoryHeight,
-                  decoration: BoxDecoration(color: Colors.blue.shade400, borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                  decoration: BoxDecoration(color: Colors.pink, borderRadius: BorderRadius.all(Radius.circular(8.0))),
                   child: Container(
                     child: Padding(
                       padding: const EdgeInsets.all(12.0),
@@ -1106,7 +1117,7 @@ class CategoriesScroller extends StatelessWidget {
                         children: <Widget>[
                           Text(
                             "Newest",
-                            style: TextStyle(fontSize: 25, color: Colors.white, fontWeight: FontWeight.bold),
+                            style: TextStyle(fontSize: 25, color: Colors.white, fontWeight: FontWeight.w400),
                           ),
                           SizedBox(
                             height: 10,
@@ -1124,7 +1135,7 @@ class CategoriesScroller extends StatelessWidget {
                   width: 250,
                   margin: EdgeInsets.only(right: 10),
                   height: categoryHeight,
-                  decoration: BoxDecoration(color: Colors.yellow.shade500, borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                  decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.all(Radius.circular(8.0))),
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: Column(
@@ -1132,7 +1143,7 @@ class CategoriesScroller extends StatelessWidget {
                       children: <Widget>[
                         Text(
                           "Farmese\nZone",
-                          style: TextStyle(fontSize: 25, color: Colors.white, fontWeight: FontWeight.bold),
+                          style: TextStyle(fontSize: 25, color: Colors.white, fontWeight: FontWeight.w400),
                         ),
                         SizedBox(
                           height: 10,
@@ -1149,7 +1160,7 @@ class CategoriesScroller extends StatelessWidget {
                   width: 250,
                   margin: EdgeInsets.only(right: 10),
                   height: categoryHeight,
-                  decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                  decoration: BoxDecoration(color: Colors.redAccent, borderRadius: BorderRadius.all(Radius.circular(8.0))),
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: Column(
@@ -1157,7 +1168,7 @@ class CategoriesScroller extends StatelessWidget {
                       children: <Widget>[
                         Text(
                           "Deepavali\nOffers",
-                          style: TextStyle(fontSize: 25, color: Colors.white, fontWeight: FontWeight.bold),
+                          style: TextStyle(fontSize: 25, color: Colors.white, fontWeight: FontWeight.w400),
                         ),
                         SizedBox(
                           height: 10,
@@ -1274,7 +1285,7 @@ class Single_prod extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20.0),
-                color: Colors.white,
+                color: Colors.black,
               ),
               child: Material(
                 child: InkWell(
@@ -1292,9 +1303,9 @@ class Single_prod extends StatelessWidget {
                         child: Column(
                           children: <Widget>[
                             //Text('$name\n', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),),
-                            Align(alignment: Alignment.centerLeft,child: Text(' $name',textAlign: TextAlign.left,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),)),
-                            Align(alignment: Alignment.centerLeft,child: Text(' ₹ $discountPrice',textAlign: TextAlign.left,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16,color: Colors.grey[900]),)),
-                            Align(alignment: Alignment.centerLeft,child: Text(' ₹ $actualPrice',textAlign: TextAlign.left,style: TextStyle(fontSize: 14,color: Colors.red,decoration: TextDecoration.lineThrough),)),
+                            Align(alignment: Alignment.centerLeft,child: Text(' $name',textAlign: TextAlign.left,style: TextStyle(fontWeight: FontWeight.w500,fontSize: 16),)),
+                            Align(alignment: Alignment.centerLeft,child: Text(' ₹ $discountPrice',textAlign: TextAlign.left,style: TextStyle(fontWeight: FontWeight.w400,fontSize: 12,color: Colors.grey[900]),)),
+                            Align(alignment: Alignment.centerLeft,child: Text(' ₹ $actualPrice',textAlign: TextAlign.left,style: TextStyle(fontSize: 12,color: Colors.red,decoration: TextDecoration.lineThrough),)),
                           ],
                         ),
                       ),

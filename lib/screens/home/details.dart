@@ -56,16 +56,15 @@ class _ProductDetailsState extends State<ProductDetails> {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(icon: Icon(Icons.arrow_back,color: Colors.grey[900],),onPressed: (){Navigator.pop(context);}),
-        backgroundColor: Colors.lightGreenAccent.shade200,
-        elevation: 14,
-        title: Text('${widget.detail_brand}',style: TextStyle(color: Colors.grey[900],fontWeight: FontWeight.bold),),
+        leading: IconButton(icon: Icon(Icons.arrow_back,color: Colors.white,),onPressed: (){Navigator.pop(context);}),
+        backgroundColor: Colors.black,
+        title: Text('${widget.detail_brand}',style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500),),
         actions: <Widget>[
-          new IconButton(icon: Icon(fav,color: Colors.red,),
+          new IconButton(icon: Icon(fav,color: Colors.pink,),
               onPressed: (){setState(() {
                 fav = fav==Icons.favorite_border? Icons.favorite : Icons.favorite_border;
               });},),
-          new IconButton(icon: Icon(Icons.shopping_cart,color: Colors.grey[900],),
+          new IconButton(icon: Icon(Icons.shopping_cart,color: Colors.white,),
             onPressed: (){
                 context;
                 MaterialPageRoute(builder: (context) => CartScreen(uid: user.uid,));
@@ -85,14 +84,14 @@ class _ProductDetailsState extends State<ProductDetails> {
               footer: new Container(
                 color: Colors.white70,
                 child: ListTile(
-                  leading: new Text(widget.detail_name,style: TextStyle(fontWeight: FontWeight.bold,fontSize: 22.0,color: Colors.grey[900]),),
+                  leading: new Text(widget.detail_name,style: TextStyle(fontWeight: FontWeight.w500,fontSize: 22.0,color: Colors.grey[900]),),
                   title: new Row(
                     children: <Widget>[
                       Expanded(
-                          child: new Text(' ₹ ${widget.detail_discountPrice}',style: TextStyle(fontWeight: FontWeight.bold,decoration: TextDecoration.lineThrough,fontSize: 16.0,color: Colors.red),),
+                          child: new Text(' ₹ ${widget.detail_discountPrice}',style: TextStyle(fontWeight: FontWeight.normal,decoration: TextDecoration.lineThrough,fontSize: 14.0,color: Colors.red),),
                       ),
                       Expanded(
-                        child: new Text('   ₹.${widget.detail_actualPrice}',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20.0,color: Colors.grey[900]),),
+                        child: new Text('   ₹ ${widget.detail_actualPrice}',style: TextStyle(fontWeight: FontWeight.normal,fontSize: 20.0,color: Colors.grey[900]),),
                       )
                     ],
                   ),
@@ -106,11 +105,11 @@ class _ProductDetailsState extends State<ProductDetails> {
                 rating:  double.tryParse(widget.detail_rating),
                 itemBuilder: (context, index) => Icon(
                   Icons.star,
-                  color: Colors.blue,
+                  color: Colors.yellowAccent.shade700,
                 ),
                 itemCount: 5,
                 itemSize: 25.0,
-                unratedColor: Colors.grey,
+                unratedColor: Colors.black,
                 direction: Axis.horizontal,
               ),
               Expanded(
@@ -176,7 +175,9 @@ class _ProductDetailsState extends State<ProductDetails> {
               Expanded(
                   child: MaterialButton(
                     padding: EdgeInsets.only(top: 15,bottom: 17),
-                    onPressed: (){},
+                    onPressed: (){
+                      return CartScreen(uid: user.uid,);
+                    },
                     color: Colors.red,
                     textColor: Colors.white,
                     elevation: 2,
