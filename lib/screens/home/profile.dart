@@ -38,6 +38,7 @@ class _ProfileState extends State<Profile> {
   String _currentAddress;
   String _currentEmail;
   String currentProfilepic;
+  List cart;
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +60,7 @@ class _ProfileState extends State<Profile> {
         _currentEmail,
         _currentAddress,
         currentProfilepic,
+        cart
       );
       setState(() {
         newimg = null;
@@ -87,7 +89,7 @@ class _ProfileState extends State<Profile> {
             _currentPhonenumber = userData.phoneNumber;
             _currentAddress = userData.address;
             _currentEmail = userData.email;
-            currentProfilepic = userData.profilePic;
+            currentProfilepic   = userData.profilePic;
             print(currentProfilepic);
             return SingleChildScrollView(
               child: Container(
@@ -99,8 +101,8 @@ class _ProfileState extends State<Profile> {
                       Center(
                         child: Stack(
                             children:<Widget>[ Center(
-                              child: 
-                              
+                              child:
+
                               newimg == null ?
                               CircleAvatar(
                                 radius:66,

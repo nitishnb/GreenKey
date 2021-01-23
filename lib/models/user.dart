@@ -13,7 +13,8 @@ class Info {
   final String email;
   final String address;
   final String profilePic;
+  final List cart;
 
-  Info({this.uid, this.name, this.phoneNumber, this.email, this.address, this.profilePic});
+  Info({this.uid, this.name, this.phoneNumber, this.email, this.address, this.profilePic, this.cart});
 
 }

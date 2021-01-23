@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:green_key/models/user.dart';
-import 'package:green_key/screens/admin/home.dart';
+import 'package:green_key/screens/admin/homeAdmin.dart';
 import 'package:green_key/screens/authenticate/authenticate.dart';
 import 'package:green_key/screens/authenticate/signIn.dart';
 import 'package:green_key/screens/home/home.dart';

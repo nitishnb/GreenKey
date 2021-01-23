@@ -19,6 +19,7 @@ class _SettingsFormState extends State<SettingsForm> {
   String _currentAddress;
   String _currentEmail;
   String _currentProfilePic;
+  List cart;
 
   @override
   Widget build(BuildContext context) {
@@ -134,7 +135,8 @@ class _SettingsFormState extends State<SettingsForm> {
                               _currentPhonenumber ?? userData.phoneNumber,
                               _currentEmail ?? userData.email,
                               _currentAddress ?? userData.address,
-                              _currentProfilePic ?? userData.profilePic
+                              _currentProfilePic ?? userData.profilePic,
+                                userData.cart
                             );
                             Navigator.pop(context);
                           }

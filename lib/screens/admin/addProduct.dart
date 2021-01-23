@@ -1,10 +1,11 @@
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:uuid/uuid.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:green_key/services/proDatabase.dart';
-import 'package:green_key/screens/admin/ProductList.dart';
+import 'package:green_key/services/prodDatabase.dart';
+import 'package:green_key/screens/admin/productsList.dart';
 
 class AddProduct extends StatefulWidget {
   @override
@@ -25,50 +26,6 @@ class _AddProductState extends State<AddProduct> {
   String quantity = '';
   String description = '';
   String productPic = '';
-
-  showAlertDialog(BuildContext context) {
-    Widget continueButton = FlatButton(
-      child: Text("OK", style: TextStyle(color: Colors.green),),
-      onPressed:  () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => AddProduct()));
-      },
-    );
-    AlertDialog alert = AlertDialog(
-      title: Text("Success"),
-      content: Text("Product is added!"),
-      actions: [
-        continueButton,
-      ],
-    );
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
-
-  showAlertDialogBox(BuildContext context) {
-    Widget continueButton = FlatButton(
-      child: Text("OK", style: TextStyle(color: Colors.green),),
-      onPressed:  () {
-        Navigator.pop(context);
-      },
-    );
-    AlertDialog alert = AlertDialog(
-      title: Text("Failure"),
-      content: Text("Product cannot be added! Check the fields again"),
-      actions: [
-        continueButton,
-      ],
-    );
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
 
   File newImg;
   var tempImg;
@@ -116,7 +73,7 @@ class _AddProductState extends State<AddProduct> {
       return Scaffold(
         appBar: AppBar(
           title: Text(
-            "GreenKey ADMIN",
+            "Add product",
             style: TextStyle(
               fontSize: 22.0,
               fontWeight: FontWeight.bold,
@@ -136,12 +93,12 @@ class _AddProductState extends State<AddProduct> {
                   children: [
                     SizedBox(height: 15.0,),
                     Image(
-                      image: NetworkImage('https://cdn3.iconfinder.com/data/icons/ecommerce-flat-style-2/512/e_-_Commerce_-_Flat_Style_2-05-512.png'),
+                      image: NetworkImage('https://cdn2.iconfinder.com/data/icons/e-commerce-14/57/basket_add-512.png'),
                       width: 100.0,
                       height: 100.0,
                       color: Colors.green[400],
                     ),
-                    SizedBox(height: 5.0,),
+                    SizedBox(height: 10.0,),
                     Text(
                       "ADD PRODUCT",
                       textAlign: TextAlign.center,
@@ -153,10 +110,7 @@ class _AddProductState extends State<AddProduct> {
                       ),
                     ),
                     SizedBox(height: 30.0,),
- /*                   Text(
-                      "$pid"
-                    ),
- */                   FormField<String>(
+                    FormField<String>(
                       builder: (FormFieldState<String> state) {
                         return InputDecorator(
                           decoration: InputDecoration(
@@ -243,6 +197,7 @@ class _AddProductState extends State<AddProduct> {
                         labelText: 'Brand',
                         labelStyle: TextStyle(color: Colors.grey[600],fontWeight: FontWeight.bold),
                       ),
+                      keyboardType: TextInputType.name,
                       validator: (val) => val.isEmpty ? "Please provide a Brand" : RegExp(r"[a-zA-Z ]").hasMatch(val) ? null : "Please provide a proper Brand",
                       onChanged: (val) {
                         setState(() {
@@ -263,6 +218,7 @@ class _AddProductState extends State<AddProduct> {
                         labelText: 'Name',
                         labelStyle: TextStyle(color: Colors.grey[600],fontWeight: FontWeight.bold),
                       ),
+                      keyboardType: TextInputType.name,
                       validator: (val) => val.isEmpty ? "Please provide a name" : RegExp(r"[a-zA-Z0-9 ]").hasMatch(val) ? null : "Please provide a proper name",
                       onChanged: (val) {
                         setState(() {
@@ -393,42 +349,42 @@ class _AddProductState extends State<AddProduct> {
                     SizedBox(height: 15.0,),
                     productPic == '' ?
                     upload == false ?
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.max,
-                      children: <Widget>[
-                        FlatButton(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Icon(Icons.camera_enhance),
-                              SizedBox(
-                                width: 5,
-                             ),
-                              Text(
-                                  "Select Product",
-                                style: TextStyle(
-                                  fontSize: 14.0,
-                                  color: Colors.grey[600],
-                                )
-                              ),
-                           ],
+                    FlatButton(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Icon(Icons.camera_enhance),
+                          SizedBox(
+                            width: 5,
+                         ),
+                          Text(
+                              "Select Product Image",
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              color: Colors.grey[600],
+                            )
                           ),
-                          onPressed: () {
-                            showModalBottomSheet(
-                              context: context,
-                              builder: ((builder) => bottomSheet()),
-                            );
-                          },
-                        ),
-                      ]
+                       ],
+                      ),
+                      onPressed: () {
+                        showModalBottomSheet(
+                          context: context,
+                          builder: ((builder) => bottomSheet()),
+                        );
+                      },
                     )
-                        :
-                    Row(
+                        :                        
+                    Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         mainAxisSize: MainAxisSize.max,
                         children: <Widget>[
+                          CircleAvatar(
+                            radius: 60,
+                            backgroundColor: Colors.lightGreenAccent.shade200,
+                            backgroundImage: FileImage(newImg),
+                            //backgroundImage: AssetImage('$newimg'),
+                          ),
                           FlatButton(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -454,13 +410,23 @@ class _AddProductState extends State<AddProduct> {
                         ]
                     )
                         :
-                    Text(
-                        'Product Image was successfully uploaded!',
-                      style: TextStyle(
-                        color: Colors.green,
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.bold
-                      ),
+                    Column(
+                      children: [
+                        CircleAvatar(
+                          radius: 60,
+                          backgroundColor: Colors.lightGreenAccent.shade200,
+                          backgroundImage: NetworkImage(productPic),
+                          //backgroundImage: AssetImage('$newimg'),
+                        ),
+                        Text(
+                            'Product Image was successfully uploaded!',
+                          style: TextStyle(
+                            color: Colors.green,
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.bold
+                          ),
+                        ),
+                      ],
                     ),
                     SizedBox(height: 15.0,), 
                     RaisedButton(
@@ -474,10 +440,9 @@ class _AddProductState extends State<AddProduct> {
                           ),
                         ),
                         onPressed: () async {
-                          if(_formKey.currentState.validate() && productPic != '') {
+                          if(_formKey.currentState.validate() && productPic != '' && _subcategory != '') {
                             try {
-                              await ProductDatabase().updateProductData(
-                                  pid,
+                              await ProductDatabase(pid: pid).updateProductData(
                                   _category,
                                   _subcategory,
                                   brand,
@@ -489,12 +454,15 @@ class _AddProductState extends State<AddProduct> {
                                   actualPrice,
                                   productPic
                               );
-                              showAlertDialog(context);
+                              Fluttertoast.showToast(msg: "Product added successfully!", timeInSecForIos: 5);
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => AddProduct()));
                             }
                             catch (e) {
-                             showAlertDialogBox(context);
+                             print(e);
                             }
                           }
+                          else
+                            Fluttertoast.showToast(msg: "Please check the fields again", timeInSecForIos: 5);
                         }
                     ),
                   ]

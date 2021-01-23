@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:green_key/screens/admin/editProductForm.dart';
 import 'package:green_key/services/prodDatabase.dart';
 import 'package:green_key/screens/admin/productsList.dart';
 
-class EditProduct extends StatefulWidget {
+class DeleteProduct extends StatefulWidget {
   @override
-  _EditProductState createState() => _EditProductState();
+  _DeleteProductState createState() => _DeleteProductState();
 }
 
-class _EditProductState extends State<EditProduct> {
+class _DeleteProductState extends State<DeleteProduct> {
 
   var _category;
   var _subcategory;
@@ -25,17 +24,6 @@ class _EditProductState extends State<EditProduct> {
   String productPic = '';
   String prod = '';
 
-  void _editProductPanel(String subcategory, String name) {
-    showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return Container(
-            padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
-            child: EditProductForm(subcategory, name),
-          );
-        });
-  }
-
   @override
   void initState() {
     super.initState();
@@ -46,6 +34,50 @@ class _EditProductState extends State<EditProduct> {
 
   var produ;
 
+  showAlertDialog(BuildContext context, String id) {
+
+    // set up the buttons
+    Widget cancelButton = FlatButton(
+      child: Text("Cancel",
+        style: TextStyle(
+          color: Colors.black,
+        ),
+      ),
+      onPressed:  () {
+        Navigator.pop(context);
+      },
+    );
+    Widget continueButton = FlatButton(
+      child: Text("Yes, Delete",
+        style: TextStyle(
+          color: Colors.red,
+        ),
+      ),
+      onPressed:  () async {
+        ProductDatabase().deleteProduct(id);
+        Navigator.push(context, MaterialPageRoute(builder: (context) => DeleteProduct()));
+        Fluttertoast.showToast(msg: "Product has been deleted successfully!", timeInSecForIos: 5);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Delete"),
+      content: Text("Are you sure?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
 
   Future fetchDatabaseProducts(String subcategory) async {
 
@@ -66,7 +98,6 @@ class _EditProductState extends State<EditProduct> {
     }
     return product;
   }
-
 
 
   Future fetch(String subcategory, String name) async {
@@ -100,6 +131,7 @@ class _EditProductState extends State<EditProduct> {
 
   var produ1 = [];
   var pro1 = [];
+
   void getc(String subcategory, String name) async {
     produ1 = [];
     produ1 = await fetch(subcategory, name);
@@ -109,19 +141,16 @@ class _EditProductState extends State<EditProduct> {
 
   Widget build(BuildContext context) {
 
-     if (_subcategory != null)
-       get(_subcategory);
-
+    _subcategory == null ? Text('') : get(_subcategory);
     //print(prod);
     //print(_subcategory);
-
     getc(_subcategory, prod);
-    //print(pro1[0].pid);
+//    print(pro1[0].pid);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Edit product",
+          "Delete product",
           style: TextStyle(
             fontSize: 22.0,
             fontWeight: FontWeight.bold,
@@ -143,7 +172,7 @@ class _EditProductState extends State<EditProduct> {
                 ),
                 Image(
                   image: NetworkImage(
-                      'https://cdn2.iconfinder.com/data/icons/e-commerce-14/57/basket_delete-512.png'),
+                      'https://cdn0.iconfinder.com/data/icons/shopping-and-e-commerce-51/60/basket__trolley__cart__shopping__remove-256.png'),
                   width: 100.0,
                   height: 100.0,
                   color: Colors.green[400],
@@ -152,7 +181,7 @@ class _EditProductState extends State<EditProduct> {
                   height: 5.0,
                 ),
                 Text(
-                  "EDIT PRODUCT",
+                  "DELETE PRODUCT",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontSize: 32.0,
@@ -173,7 +202,7 @@ class _EditProductState extends State<EditProduct> {
                             color: Colors.grey[600],
                             fontWeight: FontWeight.bold),
                         errorStyle:
-                            TextStyle(color: Colors.redAccent, fontSize: 16.0),
+                        TextStyle(color: Colors.redAccent, fontSize: 16.0),
                         hintText: 'Please select expense',
                         //border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))
                       ),
@@ -190,7 +219,6 @@ class _EditProductState extends State<EditProduct> {
                                 state.didChange(newValue);
                               });
                             },
-
                             value: _category,
                             items: categories.keys.map((String category) {
                               return DropdownMenuItem<String>(
@@ -216,7 +244,7 @@ class _EditProductState extends State<EditProduct> {
                             color: Colors.grey[600],
                             fontWeight: FontWeight.bold),
                         errorStyle:
-                            TextStyle(color: Colors.redAccent, fontSize: 16.0),
+                        TextStyle(color: Colors.redAccent, fontSize: 16.0),
                         hintText: 'Please select expense',
                         //border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))
                       ),
@@ -260,14 +288,14 @@ class _EditProductState extends State<EditProduct> {
                 ),
                 pro.length == 0 ?
                 Text(
-                    "No products available under this subcategory",
+                  "No products available under this subcategory",
                   style: TextStyle(
-                    fontSize: 15.0,
-                    color: Colors.green,
-                    fontWeight: FontWeight.bold
+                      fontSize: 15.0,
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold
                   ),
                 )
-                  :
+                    :
                 Column(
                   children: [
                     FormField(
@@ -283,7 +311,7 @@ class _EditProductState extends State<EditProduct> {
                             hintText: 'Please select expense',
                             //border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))
                           ),
- //                         isEmpty: prod == pro[0],
+                          //                         isEmpty: prod == pro[0],
                           child: DropdownButtonHideUnderline(
                             child: ButtonTheme(
                               alignedDropdown: true,
@@ -311,21 +339,21 @@ class _EditProductState extends State<EditProduct> {
                     ),
                     SizedBox(height: 15.0,),
                     prod.isEmpty ?
-                        Text('')
-                    :
+                    Text('')
+                        :
                     RaisedButton(
                       textColor: Colors.green[50],
                       color: Colors.green[800],
                       child: Text(
-                        "EDIT PRODUCT",
+                        "DELETE PRODUCT",
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 15.0
                         ),
                       ),
                       onPressed: () {
-                        _editProductPanel(_subcategory, prod);
-                       },
+                        showAlertDialog(context, pro1[0].pid);
+                      },
                     ),
                   ],
                 ),

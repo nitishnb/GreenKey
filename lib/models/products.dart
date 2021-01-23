@@ -1,3 +1,9 @@
+class Pid {
+  String pid;
+
+  Pid({this.pid});
+}
+
 class Prod {
   String pid;
   String category;
@@ -11,6 +17,5 @@ class Prod {
   String description;
   String productPic;
 
-  Prod({this.pid, this.category, this.subcategory, this.brand, this.name, this.actualPrice,
-    this.discountPrice, this.rating, this.quantity, this.description, this.productPic});
+  Prod({this.pid, this.category, this.subcategory, this.brand, this.name, this.actualPrice, this.discountPrice, this.rating, this.quantity, this.description, this.productPic});
 }
