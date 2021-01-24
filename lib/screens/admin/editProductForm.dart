@@ -136,397 +136,405 @@ class _EditProductFormState extends State<EditProductForm> {
       pic = pro1[0].productPic;
       id = pro1[0].pid;
       print(_subcategory);
-      return SingleChildScrollView(
-        padding:
-        EdgeInsets.only(bottom: MediaQuery
-            .of(context)
-            .viewInsets
-            .bottom),
-        reverse: true,
-        child: Container(
-          child: Form(
-            key: _formKey,
-            child: Center(
-              child: Column(children: [
-                SizedBox(
-                  height: 5.0,
-                ),
-                newimg == null
-                    ? CircleAvatar(
-                  radius: 60,
-                  backgroundColor: Colors.blue,
-                  backgroundImage: NetworkImage('$pic'),
-                )
-                    : CircleAvatar(
-                  radius: 60,
-                  backgroundColor: Colors.lightGreenAccent.shade200,
-                  backgroundImage: FileImage(newimg),
-                  //backgroundImage: AssetImage('$newimg'),
-                ),
-                SizedBox(
-                  height: 5.0,
-                ),
-                upload == false
-                    ? InkWell(
-                  onTap: () {
-                    showModalBottomSheet(
-                      context: context,
-                      builder: ((builder) => bottomSheet()),
-                    );
-                  },
-                  child: Icon(
-                    Icons.camera_alt,
-                    color: Colors.grey[800],
-                    size: 28.0,
+      return Container(
+        child: SingleChildScrollView(
+          padding:
+          EdgeInsets.only(bottom: MediaQuery
+              .of(context)
+              .viewInsets
+              .bottom),
+          reverse: true,
+          child: Container(
+            child: Form(
+              key: _formKey,
+              child: Center(
+                child: Column(children: [
+                  SizedBox(
+                    height: 5.0,
                   ),
-                )
-                    : FlatButton(
-                    onPressed: () {
-                      uploadPic(context);
+                  newimg == null
+                      ? CircleAvatar(
+                    radius: 60,
+                    backgroundColor: Colors.blue,
+                    backgroundImage: NetworkImage('$pic'),
+                  )
+                      : CircleAvatar(
+                    radius: 60,
+                    backgroundColor: Colors.lightGreenAccent.shade200,
+                    backgroundImage: FileImage(newimg),
+                    //backgroundImage: AssetImage('$newimg'),
+                  ),
+                  SizedBox(
+                    height: 5.0,
+                  ),
+                  upload == false
+                      ? InkWell(
+                    onTap: () {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: ((builder) => bottomSheet()),
+                      );
                     },
-                    visualDensity: VisualDensity.compact,
-                    splashColor: Colors.blueGrey,
                     child: Icon(
-                      Icons.file_upload,
-                      size: 28,
-                      color: Colors.grey[900],
-                    )),
-                FormField<String>(
-                  builder: (FormFieldState<String> state) {
-                    return InputDecorator(
-                      decoration: InputDecoration(
-                        labelText: "Select a category",
-                        labelStyle: TextStyle(
-                            color: Colors.grey[600],
-                            fontWeight: FontWeight.bold),
-                        errorStyle:
-                        TextStyle(color: Colors.redAccent, fontSize: 16.0),
-                        hintText: 'Please select expense',
-                        //border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))
-                      ),
-                      isEmpty: _category == '',
-                      child: DropdownButtonHideUnderline(
-                        child: ButtonTheme(
-                          alignedDropdown: true,
-                          child: DropdownButton<String>(
-                            isDense: true,
-                            isExpanded: true,
-                            onChanged: (String newValue) {
-                              setState(() {
-                                _category = newValue;
-                                state.didChange(newValue);
-                              });
-                            },
-                            value:
-                            _category == null ? pro1[0].category : _category,
-                            items: categories.keys.map((String category) {
-                              return DropdownMenuItem<String>(
-                                value: category,
-                                child: Text(category),
-                              );
-                            }).toList(),
-                          ),
+                      Icons.camera_alt,
+                      color: Colors.grey[800],
+                      size: 28.0,
+                    ),
+                  )
+                      : FlatButton(
+                      onPressed: () {
+                        uploadPic(context);
+                      },
+                      visualDensity: VisualDensity.compact,
+                      splashColor: Colors.blueGrey,
+                      child: Icon(
+                        Icons.file_upload,
+                        size: 28,
+                        color: Colors.grey[900],
+                      )),
+                  FormField<String>(
+                    builder: (FormFieldState<String> state) {
+                      return InputDecorator(
+                        decoration: InputDecoration(
+                          labelText: "Select a category",
+                          labelStyle: TextStyle(
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.bold),
+                          errorStyle:
+                          TextStyle(color: Colors.redAccent, fontSize: 16.0),
+                          hintText: 'Please select expense',
+                          //border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))
                         ),
-                      ),
-                    );
-                  },
-                ),
-                SizedBox(
-                  height: 15.0,
-                ),
-                FormField<String>(
-                  builder: (FormFieldState<String> state) {
-                    return InputDecorator(
-                      decoration: InputDecoration(
-                        labelText: "Select a subcategory",
-                        labelStyle: TextStyle(
-                            color: Colors.grey[600],
-                            fontWeight: FontWeight.bold),
-                        errorStyle:
-                        TextStyle(color: Colors.redAccent, fontSize: 16.0),
-                        hintText: 'Please select expense',
-                        //border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))
-                      ),
-                      isEmpty: _category == '',
-                      child: DropdownButtonHideUnderline(
-                        child: ButtonTheme(
-                          alignedDropdown: true,
-                          child: DropdownButton<String>(
-                            isDense: true,
-                            isExpanded: true,
-                            onChanged: (String newValue) {
-                              setState(() {
-                                prod = '';
-                                _subcategory = newValue;
-                                state.didChange(newValue);
-                              });
-                            },
-                              value: _subcategory == null ? widget.subcategory : _subcategory,
-                              items: categories.values
-                                  .elementAt(index[_category])
-                                  .map((String subcategory) {
+                        isEmpty: _category == '',
+                        child: DropdownButtonHideUnderline(
+                          child: ButtonTheme(
+                            alignedDropdown: true,
+                            child: DropdownButton<String>(
+                              isDense: true,
+                              isExpanded: true,
+                              onChanged: (String newValue) {
+                                setState(() {
+                                  _category = newValue;
+                                  state.didChange(newValue);
+                                });
+                              },
+                              value:
+                              _category == null ? pro1[0].category : _category,
+                              items: categories.keys.map((String category) {
                                 return DropdownMenuItem<String>(
-                                value: subcategory,
-                                child: Text(subcategory),
-                              );
-                            }).toList(),
+                                  value: category,
+                                  child: Text(category),
+                                );
+                              }).toList(),
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  },
-                ),
-                SizedBox(
-                  height: 15.0,
-                ),
-                TextFormField(
-                  initialValue: pro1[0].brand,
-                  cursorColor: Colors.green,
-                  decoration: InputDecoration(
-                    focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.green[400],
-                        )),
-                    focusColor: Colors.green[400],
-                    labelText: 'Brand',
-                    labelStyle: TextStyle(
-                        color: Colors.grey[600], fontWeight: FontWeight.bold),
+                      );
+                    },
                   ),
-                  validator: (val) =>
-                  val.isEmpty
-                      ? "Please provide a Brand"
-                      : RegExp(r"[a-zA-Z ]").hasMatch(val)
-                      ? null
-                      : "Please provide a proper Brand",
-                  onChanged: (val) {
-                    setState(() {
-                      brand = val;
-                    });
-                  },
-                ),
-                SizedBox(
-                  height: 15.0,
-                ),
-                TextFormField(
-                  initialValue: pro1[0].name,
-                  cursorColor: Colors.green,
-                  decoration: InputDecoration(
-                    focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.green[400],
-                        )),
-                    focusColor: Colors.green[400],
-                    labelText: 'Name',
-                    labelStyle: TextStyle(
-                        color: Colors.grey[600], fontWeight: FontWeight.bold),
+                  SizedBox(
+                    height: 15.0,
                   ),
-                  validator: (val) =>
-                  val.isEmpty
-                      ? "Please provide a name"
-                      : RegExp(r"[a-zA-Z0-9 ]").hasMatch(val)
-                      ? null
-                      : "Please provide a proper name",
-                  onChanged: (val) {
-                    setState(() {
-                      name = val;
-                    });
-                  },
-                ),
-                SizedBox(
-                  height: 15.0,
-                ),
-                TextFormField(
-                  //          controller: number,
-                  initialValue: pro1[0].actualPrice,
-                  cursorColor: Colors.green,
-                  decoration: InputDecoration(
-                    focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.green[400],
-                        )),
-                    focusColor: Colors.green[400],
-                    labelText: 'Actual Price',
-                    labelStyle: TextStyle(
-                        color: Colors.grey[600], fontWeight: FontWeight.bold),
+                  FormField<String>(
+                    builder: (FormFieldState<String> state) {
+                      return InputDecorator(
+                        decoration: InputDecoration(
+                          labelText: "Select a subcategory",
+                          labelStyle: TextStyle(
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.bold),
+                          errorStyle:
+                          TextStyle(color: Colors.redAccent, fontSize: 16.0),
+                          hintText: 'Please select expense',
+                          //border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))
+                        ),
+                        isEmpty: _category == '',
+                        child: DropdownButtonHideUnderline(
+                          child: ButtonTheme(
+                            alignedDropdown: true,
+                            child: DropdownButton<String>(
+                              isDense: true,
+                              isExpanded: true,
+                              onChanged: (String newValue) {
+                                setState(() {
+                                  prod = '';
+                                  _subcategory = newValue;
+                                  state.didChange(newValue);
+                                });
+                              },
+                                value: _category == null ? widget.subcategory : categories.values
+                                    .elementAt(index[_category])
+                                    .contains(_subcategory)
+                                    ? _subcategory
+                                    : categories.values
+                                    .elementAt(index[_category])
+                                    .elementAt(0),
+                                items: categories.values
+                                    .elementAt(index[_category])
+                                    .map((String subcategory) {
+                                  return DropdownMenuItem<String>(
+                                  value: subcategory,
+                                  child: Text(subcategory),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                  keyboardType: TextInputType.number,
-                  validator: (val) =>
-                  val.isEmpty
-                      ? "Please provide a Price"
-                      : RegExp(r'^[0-9.]*$').hasMatch(val)
-                      ? null
-                      : "Please provide a proper Price",
-                  onChanged: (val) {
-                    setState(() {
-                      actualPrice = val;
-                    });
-                  },
-                ),
-                SizedBox(
-                  height: 15.0,
-                ),
-                TextFormField(
-                  //        controller: number,
-                  initialValue: pro1[0].discountPrice,
-                  cursorColor: Colors.green,
-                  decoration: InputDecoration(
-                    focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.green[400],
-                        )),
-                    focusColor: Colors.green[400],
-                    labelText: 'Discount Price',
-                    labelStyle: TextStyle(
-                        color: Colors.grey[600], fontWeight: FontWeight.bold),
+                  SizedBox(
+                    height: 15.0,
                   ),
-                  keyboardType: TextInputType.number,
-                  validator: (val) =>
-                  val.isEmpty
-                      ? "Please provide a Price"
-                      : RegExp(r'^[0-9.]*$').hasMatch(val)
-                      ? null
-                      : "Please provide a proper Price",
-                  onChanged: (val) {
-                    setState(() {
-                      discountPrice = val;
-                    });
-                  },
-                ),
-                SizedBox(
-                  height: 15.0,
-                ),
-                TextFormField(
-                  //      controller: number,
-                  initialValue: pro1[0].rating,
-                  cursorColor: Colors.green,
-                  decoration: InputDecoration(
-                    focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.green[400],
-                        )),
-                    focusColor: Colors.green[400],
-                    labelText: 'Rating',
-                    labelStyle: TextStyle(
-                        color: Colors.grey[600], fontWeight: FontWeight.bold),
+                  TextFormField(
+                    initialValue: pro1[0].brand,
+                    cursorColor: Colors.green,
+                    decoration: InputDecoration(
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.green[400],
+                          )),
+                      focusColor: Colors.green[400],
+                      labelText: 'Brand',
+                      labelStyle: TextStyle(
+                          color: Colors.grey[600], fontWeight: FontWeight.bold),
+                    ),
+                    validator: (val) =>
+                    val.isEmpty
+                        ? "Please provide a Brand"
+                        : RegExp(r"[a-zA-Z ]").hasMatch(val)
+                        ? null
+                        : "Please provide a proper Brand",
+                    onChanged: (val) {
+                      setState(() {
+                        brand = val;
+                      });
+                    },
                   ),
-                  keyboardType: TextInputType.number,
-                  validator: (val) =>
-                  val.isEmpty
-                      ? "Please provide a Rating"
-                      : RegExp(r'^[0-9.]*$').hasMatch(val)
-                      ? double.parse(val) > 10.0
-                      ? "Please provide a rating below or equal to 5.0"
-                      : null
-                      : "Please provide a proper Price",
-                  onChanged: (val) {
-                    setState(() {
-                      rating = val;
-                    });
-                  },
-                ),
-                SizedBox(
-                  height: 15.0,
-                ),
-                TextFormField(
-                  //    controller: number,
-                  initialValue: pro1[0].quantity,
-                  cursorColor: Colors.green,
-                  decoration: InputDecoration(
-                    focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.green[400],
-                        )),
-                    focusColor: Colors.green[400],
-                    labelText: 'Quantities available',
-                    labelStyle: TextStyle(
-                        color: Colors.grey[600], fontWeight: FontWeight.bold),
+                  SizedBox(
+                    height: 15.0,
                   ),
-                  keyboardType: TextInputType.number,
-                  validator: (val) =>
-                  val.isEmpty
-                      ? "Please provide a Quantity"
-                      : RegExp(r"^[0-9.]*$").hasMatch(val)
-                      ? null
-                      : "Please provide a proper Quantity",
-                  onChanged: (val) {
-                    setState(() {
-                      quantity = val;
-                    });
-                  },
-                ),
-                SizedBox(
-                  height: 15.0,
-                ),
-                TextFormField(
-                  initialValue: pro1[0].description,
-                  maxLines: 10,
-                  cursorColor: Colors.green,
-                  decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
+                  TextFormField(
+                    initialValue: pro1[0].name,
+                    cursorColor: Colors.green,
+                    decoration: InputDecoration(
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.green[400],
+                          )),
+                      focusColor: Colors.green[400],
+                      labelText: 'Name',
+                      labelStyle: TextStyle(
+                          color: Colors.grey[600], fontWeight: FontWeight.bold),
+                    ),
+                    validator: (val) =>
+                    val.isEmpty
+                        ? "Please provide a name"
+                        : RegExp(r"[a-zA-Z0-9 ]").hasMatch(val)
+                        ? null
+                        : "Please provide a proper name",
+                    onChanged: (val) {
+                      setState(() {
+                        name = val;
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    height: 15.0,
+                  ),
+                  TextFormField(
+                    //          controller: number,
+                    initialValue: pro1[0].actualPrice,
+                    cursorColor: Colors.green,
+                    decoration: InputDecoration(
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.green[400],
+                          )),
+                      focusColor: Colors.green[400],
+                      labelText: 'Actual Price',
+                      labelStyle: TextStyle(
+                          color: Colors.grey[600], fontWeight: FontWeight.bold),
+                    ),
+                    keyboardType: TextInputType.number,
+                    validator: (val) =>
+                    val.isEmpty
+                        ? "Please provide a Price"
+                        : RegExp(r'^[0-9.]*$').hasMatch(val)
+                        ? null
+                        : "Please provide a proper Price",
+                    onChanged: (val) {
+                      setState(() {
+                        actualPrice = val;
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    height: 15.0,
+                  ),
+                  TextFormField(
+                    //        controller: number,
+                    initialValue: pro1[0].discountPrice,
+                    cursorColor: Colors.green,
+                    decoration: InputDecoration(
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.green[400],
+                          )),
+                      focusColor: Colors.green[400],
+                      labelText: 'Discount Price',
+                      labelStyle: TextStyle(
+                          color: Colors.grey[600], fontWeight: FontWeight.bold),
+                    ),
+                    keyboardType: TextInputType.number,
+                    validator: (val) =>
+                    val.isEmpty
+                        ? "Please provide a Price"
+                        : RegExp(r'^[0-9.]*$').hasMatch(val)
+                        ? null
+                        : "Please provide a proper Price",
+                    onChanged: (val) {
+                      setState(() {
+                        discountPrice = val;
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    height: 15.0,
+                  ),
+                  TextFormField(
+                    //      controller: number,
+                    initialValue: pro1[0].rating,
+                    cursorColor: Colors.green,
+                    decoration: InputDecoration(
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.green[400],
+                          )),
+                      focusColor: Colors.green[400],
+                      labelText: 'Rating',
+                      labelStyle: TextStyle(
+                          color: Colors.grey[600], fontWeight: FontWeight.bold),
+                    ),
+                    keyboardType: TextInputType.number,
+                    validator: (val) =>
+                    val.isEmpty
+                        ? "Please provide a Rating"
+                        : RegExp(r'^[0-9.]*$').hasMatch(val)
+                        ? double.parse(val) > 10.0
+                        ? "Please provide a rating below or equal to 5.0"
+                        : null
+                        : "Please provide a proper Price",
+                    onChanged: (val) {
+                      setState(() {
+                        rating = val;
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    height: 15.0,
+                  ),
+                  TextFormField(
+                    //    controller: number,
+                    initialValue: pro1[0].quantity,
+                    cursorColor: Colors.green,
+                    decoration: InputDecoration(
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.green[400],
+                          )),
+                      focusColor: Colors.green[400],
+                      labelText: 'Quantities available',
+                      labelStyle: TextStyle(
+                          color: Colors.grey[600], fontWeight: FontWeight.bold),
+                    ),
+                    keyboardType: TextInputType.number,
+                    validator: (val) =>
+                    val.isEmpty
+                        ? "Please provide a Quantity"
+                        : RegExp(r"^[0-9.]*$").hasMatch(val)
+                        ? null
+                        : "Please provide a proper Quantity",
+                    onChanged: (val) {
+                      setState(() {
+                        quantity = val;
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    height: 15.0,
+                  ),
+                  TextFormField(
+                    initialValue: pro1[0].description,
+                    maxLines: 10,
+                    cursorColor: Colors.green,
+                    decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16.0),
+                          borderSide: BorderSide(color: Colors.black)),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.green[400]),
                         borderRadius: BorderRadius.circular(16.0),
-                        borderSide: BorderSide(color: Colors.black)),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.green[400]),
-                      borderRadius: BorderRadius.circular(16.0),
+                      ),
+                      focusColor: Colors.green[400],
+                      labelText: 'Description',
+                      alignLabelWithHint: true,
+                      labelStyle: TextStyle(
+                        color: Colors.grey[600],
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    focusColor: Colors.green[400],
-                    labelText: 'Description',
-                    alignLabelWithHint: true,
-                    labelStyle: TextStyle(
-                      color: Colors.grey[600],
-                      fontWeight: FontWeight.bold,
-                    ),
+                    validator: (val) =>
+                    val.isEmpty ? "Please provide a Description" : null,
+                    onChanged: (val) {
+                      setState(() {
+                        description = val;
+                      });
+                    },
                   ),
-                  validator: (val) =>
-                  val.isEmpty ? "Please provide a Description" : null,
-                  onChanged: (val) {
-                    setState(() {
-                      description = val;
-                    });
-                  },
-                ),
-                SizedBox(
-                  height: 15.0,
-                ),
-                RaisedButton(
-                    textColor: Colors.green[50],
-                    color: Colors.green[800],
-                    child: Text(
-                      "UPDATE",
-                      style:
-                      TextStyle(fontWeight: FontWeight.bold, fontSize: 15.0),
-                    ),
-                    onPressed: () async {
-                      if (_formKey.currentState.validate())
-                        await ProductDatabase(pid: id).updateProductData(
-                            _category == null ? pro1[0].category : _category,
-                            _subcategory == null
-                                ? pro1[0].subcategory
-                                : _subcategory,
-                            brand.isEmpty ? pro1[0].brand : brand,
-                            name.isEmpty ? pro1[0].name : name,
-                            discountPrice.isEmpty
-                                ? pro1[0].discountPrice
-                                : discountPrice,
-                            quantity.isEmpty ? pro1[0].quantity : quantity,
-                            description.isEmpty
-                                ? pro1[0].description
-                                : description,
-                            rating.isEmpty ? pro1[0].rating : rating,
-                            actualPrice.isEmpty
-                                ? pro1[0].actualPrice
-                                : actualPrice,
-                            productPic.isEmpty
-                                ? pro1[0].productPic
-                                : productPic);
-                      Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => EditProduct()));
-                      Fluttertoast.showToast(
-                          msg: "Product has been edited successfully!",
-                          timeInSecForIos: 5);
-                    }
-                ),
-              ]),
+                  SizedBox(
+                    height: 15.0,
+                  ),
+                  RaisedButton(
+                      textColor: Colors.green[50],
+                      color: Colors.green[800],
+                      child: Text(
+                        "UPDATE",
+                        style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 15.0),
+                      ),
+                      onPressed: () async {
+                        if (_formKey.currentState.validate())
+                          await ProductDatabase(pid: id).updateProductData(
+                              _category == null ? pro1[0].category : _category,
+                              _subcategory == null
+                                  ? pro1[0].subcategory
+                                  : _subcategory,
+                              brand.isEmpty ? pro1[0].brand : brand,
+                              name.isEmpty ? pro1[0].name : name,
+                              discountPrice.isEmpty
+                                  ? pro1[0].discountPrice
+                                  : discountPrice,
+                              quantity.isEmpty ? pro1[0].quantity : quantity,
+                              description.isEmpty
+                                  ? pro1[0].description
+                                  : description,
+                              rating.isEmpty ? pro1[0].rating : rating,
+                              actualPrice.isEmpty
+                                  ? pro1[0].actualPrice
+                                  : actualPrice,
+                              productPic.isEmpty
+                                  ? pro1[0].productPic
+                                  : productPic);
+                        Navigator.push(context, MaterialPageRoute(
+                            builder: (context) => EditProduct()));
+                        Fluttertoast.showToast(
+                            msg: "Product has been edited successfully!",
+                            timeInSecForIos: 5);
+                      }
+                  ),
+                ]),
+              ),
             ),
           ),
         ),
