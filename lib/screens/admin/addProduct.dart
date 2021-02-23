@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:green_key/screens/admin/homeAdmin.dart';
 import 'package:uuid/uuid.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
@@ -381,7 +382,7 @@ class _AddProductState extends State<AddProduct> {
                         children: <Widget>[
                           CircleAvatar(
                             radius: 60,
-                            backgroundColor: Colors.lightGreenAccent.shade200,
+                            backgroundColor: Colors.white,
                             backgroundImage: FileImage(newImg),
                             //backgroundImage: AssetImage('$newimg'),
                           ),
@@ -414,7 +415,7 @@ class _AddProductState extends State<AddProduct> {
                       children: [
                         CircleAvatar(
                           radius: 60,
-                          backgroundColor: Colors.lightGreenAccent.shade200,
+                          backgroundColor: Colors.white,
                           backgroundImage: NetworkImage(productPic),
                           //backgroundImage: AssetImage('$newimg'),
                         ),
@@ -455,7 +456,7 @@ class _AddProductState extends State<AddProduct> {
                                   productPic
                               );
                               Fluttertoast.showToast(msg: "Product added successfully!", timeInSecForIos: 5);
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => AddProduct()));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => HomeAdmin()));
                             }
                             catch (e) {
                              print(e);

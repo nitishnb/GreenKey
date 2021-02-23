@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:green_key/screens/admin/homeAdmin.dart';
 import 'package:green_key/screens/admin/productsList.dart';
 import 'package:green_key/screens/admin/editProduct.dart';
 import 'package:green_key/services/prodDatabase.dart';
@@ -130,8 +131,10 @@ class _EditProductFormState extends State<EditProductForm> {
     get(widget.subcategory, widget.prodName);
    // print(pro1[0].category);
     //print(pro1[0].actualPrice,);
-    if (_category == null)
+    if (_category == null) {
       _category = pro1[0].category;
+      _subcategory = widget.subcategory;
+    }
     if (pro1.isNotEmpty) {
       pic = pro1[0].productPic;
       id = pro1[0].pid;
@@ -262,7 +265,7 @@ class _EditProductFormState extends State<EditProductForm> {
                                   state.didChange(newValue);
                                 });
                               },
-                                value: _category == null ? widget.subcategory : categories.values
+                                value: categories.values
                                     .elementAt(index[_category])
                                     .contains(_subcategory)
                                     ? _subcategory
@@ -504,33 +507,39 @@ class _EditProductFormState extends State<EditProductForm> {
                         TextStyle(fontWeight: FontWeight.bold, fontSize: 15.0),
                       ),
                       onPressed: () async {
-                        if (_formKey.currentState.validate())
-                          await ProductDatabase(pid: id).updateProductData(
-                              _category == null ? pro1[0].category : _category,
-                              _subcategory == null
-                                  ? pro1[0].subcategory
-                                  : _subcategory,
-                              brand.isEmpty ? pro1[0].brand : brand,
-                              name.isEmpty ? pro1[0].name : name,
-                              discountPrice.isEmpty
-                                  ? pro1[0].discountPrice
-                                  : discountPrice,
-                              quantity.isEmpty ? pro1[0].quantity : quantity,
-                              description.isEmpty
-                                  ? pro1[0].description
-                                  : description,
-                              rating.isEmpty ? pro1[0].rating : rating,
-                              actualPrice.isEmpty
-                                  ? pro1[0].actualPrice
-                                  : actualPrice,
-                              productPic.isEmpty
-                                  ? pro1[0].productPic
-                                  : productPic);
-                        Navigator.push(context, MaterialPageRoute(
-                            builder: (context) => EditProduct()));
-                        Fluttertoast.showToast(
-                            msg: "Product has been edited successfully!",
-                            timeInSecForIos: 5);
+                        if (_formKey.currentState.validate()) {
+                          try {
+                            await ProductDatabase(pid: id).updateProductData(
+                                _category == null ? pro1[0].category : _category,
+                                _subcategory == null
+                                    ? pro1[0].subcategory
+                                    : _subcategory,
+                                brand.isEmpty ? pro1[0].brand : brand,
+                                name.isEmpty ? pro1[0].name : name,
+                                discountPrice.isEmpty
+                                    ? pro1[0].discountPrice
+                                    : discountPrice,
+                                quantity.isEmpty ? pro1[0].quantity : quantity,
+                                description.isEmpty
+                                    ? pro1[0].description
+                                    : description,
+                                rating.isEmpty ? pro1[0].rating : rating,
+                                actualPrice.isEmpty
+                                    ? pro1[0].actualPrice
+                                    : actualPrice,
+                                productPic.isEmpty
+                                    ? pro1[0].productPic
+                                    : productPic);
+                            Navigator.push(context, MaterialPageRoute(
+                                builder: (context) => HomeAdmin()));
+                            Fluttertoast.showToast(
+                                msg: "Product has been edited successfully!",
+                                timeInSecForIos: 5);
+                          }
+                          catch (e) {
+                            print(e);
+                          }
+                        }
                       }
                   ),
                 ]),

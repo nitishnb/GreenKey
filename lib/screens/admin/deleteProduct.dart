@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:green_key/screens/admin/homeAdmin.dart';
 import 'package:green_key/services/prodDatabase.dart';
 import 'package:green_key/screens/admin/productsList.dart';
 
@@ -55,7 +56,7 @@ class _DeleteProductState extends State<DeleteProduct> {
       ),
       onPressed:  () async {
         ProductDatabase().deleteProduct(id);
-        Navigator.push(context, MaterialPageRoute(builder: (context) => DeleteProduct()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => HomeAdmin()));
         Fluttertoast.showToast(msg: "Product has been deleted successfully!", timeInSecForIos: 5);
       },
     );
