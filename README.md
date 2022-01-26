@@ -1,8 +1,10 @@
-# my_app
+# GreenKey
 
-A new Flutter application.
+Farmer Friendly App
 
-## Getting Started
+## Download the APK [here](https://github.com/nitishnb/GreenKey/raw/master/build/app/outputs/apk/debug/app-debug.apk)
+
+Getting Started
 
 This project is a starting point for a Flutter application.
 
