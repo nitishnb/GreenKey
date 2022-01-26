@@ -4,6 +4,20 @@ Farmer Friendly App
 
 ### Download the APK [here](https://github.com/nitishnb/GreenKey/raw/master/build/app/outputs/apk/debug/app-debug.apk)
 
+### Contributors
+
+<table>
+  <tr>
+
+<td align="center"><a href="https://github.com/madhukeshbhatm-99"><sub><b>Madhukesh Bhat M</b></sub></a><br />
+
+  <td align="center"><a href="https://github.com/Nikhil5320"><sub><b>Nikhil A S</b></sub></a><br />
+
+  <td align="center"><a href="https://github.com/nitishnb"><sub><b>Nitish N Banakar</b></sub></a><br />
+
+</tr>
+</table>
+
 ### Getting Started
 
 This project is a starting point for a Flutter application.
