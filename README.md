@@ -11,7 +11,7 @@ Farmer Friendly App
 
 <td align="center"><a href="https://github.com/madhukeshbhatm-99"><img src="https://media-exp1.licdn.com/dms/image/C5603AQFCpBAS4NfRPA/profile-displayphoto-shrink_800_800/0/1640459524186?e=1648684800&v=beta&t=UDsN5ChUzI-e7ZU-x4EO2P7rJIjCwBHJrH_f7qtP1Dk" width="180px;" alt=""/><br /><sub><b>Madhukesh Bhat M</b></sub></a><br />
 
-  <td align="center"><a href="https://github.com/Nikhil5320"><img src="https://media-exp1.licdn.com/dms/image/C5603AQFCpBAS4NfRPA/profile-displayphoto-shrink_800_800/0/1640459524186?e=1648684800&v=beta&t=UDsN5ChUzI-e7ZU-x4EO2P7rJIjCwBHJrH_f7qtP1Dk" width="180px;" alt=""/><br /><sub><b>Nikhil A S</b></sub></a><br />
+  <td align="center"><a href="https://github.com/Nikhil5320"><img src="https://media-exp1.licdn.com/dms/image/D4D35AQFiOCtRcshR7w/profile-framedphoto-shrink_800_800/0/1633759953933?e=1643266800&v=beta&t=MPY8juUzFMlusEuorE4QFwEh2dt5EqJJ2fiEB5Lwr04" width="180px;" alt=""/><br /><sub><b>Nikhil A S</b></sub></a><br />
 
   <td align="center"><a href="https://github.com/nitishnb"><img src="https://media-exp1.licdn.com/dms/image/C5603AQGbQt9fJj9NtQ/profile-displayphoto-shrink_800_800/0/1638449415089?e=1648684800&v=beta&t=8eYu1wl4Nd5rmJv91ikKH6G7OUr8oAcww6es72FdZ9s" width="180px;" alt=""/><br /><sub><b>Nitish N Banakar</b></sub></a><br />
   <td align="center"><sub><b>Pranav Jagadeesh</b></sub><br />
