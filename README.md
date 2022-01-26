@@ -1,10 +1,10 @@
-# GreenKey
+# GreenKey 🌱
 
 Farmer Friendly App
 
-## Download the APK [here](https://github.com/nitishnb/GreenKey/raw/master/build/app/outputs/apk/debug/app-debug.apk)
+### Download the APK [here](https://github.com/nitishnb/GreenKey/raw/master/build/app/outputs/apk/debug/app-debug.apk)
 
-Getting Started
+### Getting Started
 
 This project is a starting point for a Flutter application.
 
