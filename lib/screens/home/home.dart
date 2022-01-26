@@ -1,3 +1,4 @@
+import 'package:GreenKey/screens/PlantDiseaseDetector/pdhome.dart';
 import 'package:GreenKey/screens/admin/home.dart';
 import 'package:GreenKey/screens/home/cart.dart';
 import 'package:GreenKey/screens/home/details.dart';
@@ -11,6 +12,7 @@ import 'package:GreenKey/screens/home/sidebar/sidebarlayout.dart';
 import 'package:GreenKey/services/auth.dart';
 import 'package:GreenKey/screens/home/constants.dart';
 import 'package:GreenKey/screens/home/profile.dart';
+import 'package:GreenKey/screens/home/searchexample.dart';
 import 'package:GreenKey/shared/loading.dart';
 import 'package:GreenKey/services/database.dart';
 import 'package:GreenKey/models/user.dart';
@@ -25,6 +27,7 @@ void main() {
       )
   );
 }
+
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
@@ -119,7 +122,7 @@ class _HomelayoutState  extends State<Homelayout> {
               body: Stack(
                 children: <Widget>[
                   Positioned(
-                    top: 110,
+                    top: 60,
                     left: 0,
                     right: 0,
                     bottom: 2,
@@ -191,7 +194,7 @@ class _HomelayoutState  extends State<Homelayout> {
                     ),
                   ),
                   Positioned(
-                    left: 148,
+                    left: 170,
                     top: 40,
                     child: Column(
                       children: [
@@ -203,8 +206,8 @@ class _HomelayoutState  extends State<Homelayout> {
                     ),
                   ),
                   Positioned(
-                    top: 90,
-                    left: 46,
+                    top: 50,
+                    left: 340,
                     child: (_toggle) ? AnimatedSearchBar() : Container() ,
                   ),
 
@@ -271,6 +274,31 @@ class _HomelayoutState  extends State<Homelayout> {
                               color: Colors.white,
                               child: Column(
                                 children: <Widget>[
+                                  ListTile(
+                                    selected: _selectedindex == 4,
+                                    selectedTileColor: Colors.deepOrange[100],
+                                    tileColor:  Colors.deepOrange,
+                                    leading: Icon(Icons.search_rounded,
+                                      color: Colors.deepOrange,
+                                    ),
+                                    title: Text('Plant Disease Detector', style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.deepOrange,
+                                    ),
+                                    ),
+                                    onTap: () {
+                                      setState(() {
+                                        _selectedindex = 4;
+                                        _toggle = false;
+                                      });
+                                      Navigator.pop(context);
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => ImageDetectApp()),
+                                      );
+                                    },
+                                  ),
                                   ListTile(
                                     selected: _selectedindex == 0,
                                     selectedTileColor: Colors.green[100],
@@ -383,10 +411,10 @@ class _HomelayoutState  extends State<Homelayout> {
                                       ),),
                                     onTap: () {
                                       setState(() {
-                                        _selectedindex = 5;
                                         _toggle = false;
                                       });
                                       Navigator.pop(context);
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => HomeAdmin()));
                                     },
                                   ),
                                   Padding(
@@ -410,6 +438,7 @@ class _HomelayoutState  extends State<Homelayout> {
                                         _toggle = false;
                                       });
                                       Navigator.pop(context);
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp3()));
                                     },
                                   ),
                                   ListTile(
@@ -451,20 +480,6 @@ class _HomelayoutState  extends State<Homelayout> {
                                       );
                                       },
                                   ),
-                                  email == 'admin123@greenkey.co.in' ? ListTile(
-                                    selected: _selectedindex == 9,
-                                    //          selectedTileColor: Colors.green[100],
-                                    title: Text('Admin Login',
-                                      style: TextStyle(fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.grey[800],
-                                      ),
-                                    ),
-                                    onTap: () {
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => HomeAdmin()));
-                                    },
-                                  ) :
-                                      Text(""),
                                 ],
                               ),
                             ),
@@ -549,61 +564,43 @@ class AnimatedSearchBar extends StatefulWidget {
 
 class _AnimatedSearchBarState extends State<AnimatedSearchBar> {
   bool _folded = true;
+  List products = [];
+
+  @override
+  void initState(){
+    super.initState();
+    fetchDatabaseProducts();
+  }
+  fetchDatabaseProducts() async{
+    dynamic resultant = await ProdDatabase().getProductsList();
+
+    if (resultant == null) {
+      print('Loading Product , please wait.....');
+    }else{
+      setState(() {
+        products = resultant;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      margin: EdgeInsets.only(bottom: 180),
-      duration: Duration(milliseconds: 400),
-      width: _folded ? 280 : 320,
-      height: 50,
+    return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(32),
+        shape: BoxShape.circle,
         color: Colors.white,
-        boxShadow: kElevationToShadow[6],
       ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              padding: EdgeInsets.only(left: 16),
-              child: !_folded
-                  ? TextField(
-                decoration: InputDecoration(
-                    hintText: 'Key Search',
-                    hintStyle: TextStyle(color: Colors.grey),
-                    border: InputBorder.none),
-              )
-                  : null,
-            ),
-          ),
-          Container(
-            child: Material(
-              type: MaterialType.transparency,
-              child: InkWell(
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(_folded ? 32 : 0),
-                  topLeft: Radius.circular(32),
-                  bottomRight: Radius.circular(_folded ? 32 : 0),
-                  bottomLeft: Radius.circular(32),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 2,right: 8),
-                  child: Icon(
-                    _folded ? Icons.search : Icons.close,
-                    color: Colors.grey[900],
-                    size: 28,
-                  ),
-                ),
-                onTap: () {
-                  setState(() {
-                    _folded = !_folded;
-                  });
-                },
-              ),
-            ),
-          )
-        ],
+      child: IconButton(
+        icon: Icon(
+          Icons.search,
+          color: Colors.black,
+        ),
+        onPressed: () {
+          showSearch(context: context, delegate: ProductsSearch(temSearchResults: products));
+          setState(() {
+            //_folded = !_folded;
+          });
+        },
       ),
     );
   }
@@ -611,7 +608,50 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar> {
 
 
 
+class ProductsSearch extends SearchDelegate<String>{
+  final List temSearchResults;
+  ProductsSearch({
+    this.temSearchResults,
+  });
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    // TODO: implement buildActions
+  }
 
+  @override
+  Widget buildLeading(BuildContext context) {
+    // TODO: implement buildLeading
+
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    // TODO: implement buildResults
+  }
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    // TODO: implement buildSuggestions
+    final dynamic products= query.isEmpty ? temSearchResults
+        : temSearchResults.where((p) => p.name.toUpperCase().startsWith(query.toUpperCase())).toList();
+    return ListView.builder(itemBuilder: (context,i)=>
+        ListTile(
+          leading: Icon(Icons.category),
+          title: Text(products[i].name),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => DetailsScreen(
+                pid: products[i].pid,
+              )
+              ),
+            );
+          },
+        ),
+      itemCount: products.length,
+    );
+  }
+
+}
 
 
 
@@ -859,7 +899,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   scrollDirection: Axis.vertical,
                   physics: BouncingScrollPhysics(),
                   child: Container(
-                    height: 500,
+                    height: 470,
                     child:
                     GridView.builder(
                         itemCount: products.length,
@@ -944,12 +984,12 @@ class CategoriesScroller extends StatelessWidget {
                     borderRadius: BorderRadius.circular(15.0),
                     color: Colors.green[800],
                   ),
-                  child: Text("Scientific Farming",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                  child: Text("Machinery",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
                 ),
                 onTap: (){
                   Navigator.push(
                     ctxt,
-                    MaterialPageRoute(builder: (ctxt) => Productlist(category:"Technology", title: "Scientific Farming")),
+                    MaterialPageRoute(builder: (ctxt) => Productlist(category:"Technology", title: "Small Machinery")),
                   );
                 },
               ),
@@ -962,12 +1002,12 @@ class CategoriesScroller extends StatelessWidget {
                     borderRadius: BorderRadius.circular(15.0),
                     color: Colors.green[800],
                   ),
-                  child: Text("Solar Tech",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                  child: Text("Organic Fertilizer",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
                 ),
                 onTap: (){
                   Navigator.push(
                     ctxt,
-                    MaterialPageRoute(builder: (ctxt) => Productlist(category:"Technology", title: "Solar Tech")),
+                    MaterialPageRoute(builder: (ctxt) => Productlist(category:"Technology", title: "Organic Fertilizer")),
                   );
                   },
                 ),
@@ -980,12 +1020,12 @@ class CategoriesScroller extends StatelessWidget {
                     borderRadius: BorderRadius.circular(15.0),
                     color: Colors.green[800],
                   ),
-                  child: Text("Organic Farm",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                  child: Text("Spray Pump",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
                 ),
                 onTap: (){
                   Navigator.push(
                     ctxt,
-                    MaterialPageRoute(builder: (ctxt) => Productlist(category:"Technology", title: "Organic Farm")),
+                    MaterialPageRoute(builder: (ctxt) => Productlist(category:"Technology", title: "Spray Pump")),
                   );
                 },
               ),
@@ -998,12 +1038,12 @@ class CategoriesScroller extends StatelessWidget {
                     borderRadius: BorderRadius.circular(15.0),
                     color: Colors.green[800],
                   ),
-                  child: Text("Machinery",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                  child: Text("Scientific farming",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
                 ),
                 onTap: (){
                   Navigator.push(
                     ctxt,
-                    MaterialPageRoute(builder: (ctxt) => Productlist(category:"Technology", title: "Machinery")),
+                    MaterialPageRoute(builder: (ctxt) => Productlist(category:"Technology", title: "Plant Growth Promoter")),
                   );
                 },
               ),
@@ -1016,12 +1056,12 @@ class CategoriesScroller extends StatelessWidget {
                     borderRadius: BorderRadius.circular(15.0),
                     color: Colors.green[800],
                   ),
-                  child: Text("Chemical Fertilisers",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                  child: Text("Chemical Fertilizers",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
                 ),
                 onTap: (){
                   Navigator.push(
                     ctxt,
-                    MaterialPageRoute(builder: (ctxt) => Productlist(category:"Technology", title: "Chemical Fertilisers")),
+                    MaterialPageRoute(builder: (ctxt) => Productlist(category:"Technology", title: "Chemical Fertilizers")),
                   );
                 },
               ),
@@ -1207,13 +1247,13 @@ class Help extends StatelessWidget {
         child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              SizedBox(height: 60.0,),
+              SizedBox(height: 55.0,),
               Text(
-                'Help Center',
-                style: TextStyle(
-                  fontFamily: 'SourceSansPro',
-                  fontSize: 45,
-                ),
+                "Help Centre",
+                style: Theme.of(context)
+                    .textTheme
+                    .display1
+                    .copyWith(color: Colors.black, fontSize: 33),
               ),
               SizedBox(height: 60.0,),
               Card(

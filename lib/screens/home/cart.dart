@@ -122,13 +122,13 @@ class _CartScreenState extends State<CartScreen> {
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          SizedBox(height: 25.0,),
+          SizedBox(height: 35.0,),
           Center(child: Text(
             "My Bag",
             style: Theme.of(context)
                 .textTheme
                 .display1
-                .copyWith(fontWeight: FontWeight.bold, color: Colors.black),
+                .copyWith(color: Colors.black),
           ),
           ),
           SizedBox(height: 255.0,),
@@ -222,11 +222,11 @@ class _CartScreenState extends State<CartScreen> {
                                             newproducts = products.toList();
                                             newproducts.remove(products[i]);
                                           });
-                                          print('$products - ${products[i]}');
-                                          print(newproducts);
                                           await DatabaseService().addtoCart(user.uid, newproducts);
                                           print('Removed Successfully');
                                           Fluttertoast.showToast(msg: 'Removed Successfully', timeInSecForIos: 4);
+                                          products = [];
+                                          fetchDatabaseProducts();
                                         },
                                         icon: Icon(Icons.remove_circle),
                                         label: Text("Remove", style: TextStyle(color: Colors.black))

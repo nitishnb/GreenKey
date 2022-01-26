@@ -35,7 +35,20 @@ class _ProductlistState extends State<Productlist> {
   @override
   Widget build(BuildContext context) {
     fetchDatabaseProducts();
-    return Scaffold(
+    return (products.length == 0 || products == null) ?
+    Scaffold(
+      backgroundColor: Colors.green[50],
+      appBar: AppBar(
+        title: Text(title),
+        backgroundColor: Colors.lightGreen[700],
+        elevation: 0.0,
+      ),
+      body:  Center(
+        child: Text("Fetching...\nNo Items found :(", style: TextStyle(fontSize: 20.0),),
+      )
+    )
+        :
+    Scaffold(
         backgroundColor: Colors.green[50],
         appBar: AppBar(
           title: Text(title),

@@ -18,15 +18,16 @@ class _PHomeState extends State<PHome> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          SizedBox(height: 20.0,),
-          Text(
-            "Categories",
-            style: Theme.of(context)
-                .textTheme
-                .display1
-                .copyWith(fontWeight: FontWeight.bold, color: Colors.black),
+          SizedBox(height: 35.0,),
+          Center(
+            child: Text(
+              "Categories",
+              style: Theme.of(context)
+                  .textTheme
+                  .display1
+                  .copyWith(color: Colors.black),
+            ),
           ),
-          SizedBox(height: 15),
           Expanded(
             child: Row(
               children: <Widget>[

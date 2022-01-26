@@ -106,6 +106,33 @@ class ProdDatabase{
     }
   }
 
+  Future<List> getProductsDetails(String subcategory, String name) async {
+    List itemsList = [];
+    try {
+      await productCollection.where('subcategory', isEqualTo: subcategory).where('name', isEqualTo: name).getDocuments().then((querySnapshot) {
+        querySnapshot.documents.forEach((snapshot) {
+          itemsList.add(Prod(
+            pid: snapshot.documentID.toString(),
+            name: snapshot.data['name'].toString(),
+            brand: snapshot.data['brand'].toString(),
+            mrp: snapshot.data['mrp'],
+            price: snapshot.data['price'],
+            stars: snapshot.data['stars'],
+            image_url: snapshot.data['image_url'].toString(),
+            category: snapshot.data['category'].toString(),
+            subcategory: snapshot.data['subcategory'].toString(),
+            quantity: snapshot.data['quantity'],
+            description: snapshot.data['description'].toString(),
+          ));
+        });
+      });
+      return itemsList;
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
   Future<Prod> getProductList(String id) async {
     DocumentSnapshot snapshot = await productCollection.document(id).get();
     Prod result = Prod(
@@ -122,5 +149,9 @@ class ProdDatabase{
       image_url: snapshot.data['image_url'],
     );
     return result;
+  }
+
+  Future<void> deleteProduct(String pid) async {
+    return productCollection.document(pid).delete();
   }
 }
